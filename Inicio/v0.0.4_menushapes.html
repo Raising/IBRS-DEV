@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>V 0.0.3, inicio</title>
+        <title>V 0.0.4, menu shapes</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		
@@ -50,16 +50,14 @@
 				});
 				jQuery("ul.nav > li > a").click(function(){	
 					var thisMenu =jQuery(this);
+					thisMenu.parent().parent().children().removeClass("active");
 					thisMenu.parent().addClass("active");
-					var nuevo = thisMenu.attr("href");
-					
-					jQuery("[href="+secondMenu+"]").parent().removeClass("active");
-					jQuery("[id$="+secondMenu+"]").slideUp("slow",function() {	jQuery("[id$="+nuevo+"]").slideDown("slow");});
-					secondMenu = firstMenu;
-					firstMenu = nuevo;
-	
-					
-					
+					var displaying_menu = thisMenu.attr("href");
+					jQuery("#menu_area").slideUp(function(){
+					jQuery("#menu_area > div").appendTo(jQuery("#hidden_storage"));
+					jQuery(displaying_menu).appendTo(jQuery("#menu_area"));
+					if (displaying_menu == "#menu_initial_status" || displaying_menu == "#menu_events" ){jQuery("#canvas").appendTo(jQuery("#menu_area"));}
+						}).slideDown();
 					return false;
 				});
 
@@ -70,86 +68,23 @@
     <body>
        	<div class="container show-top-margin">
 			<div id="cabecera" class="row show-grid">
-				<div class="col-md-12">
-					<h1>Infinity Battle Report System   <small>By Raising Spirit</small></h1>
-					<h3>Herramienta de creación y visualización de informes de batalla</h3>
+				<div class="col-md-12 ">
+					<h3>Infinity Battle Report System   <small>By Raising Spirit</small></h3>
+					<h5>Herramienta de creación y visualización de informes de batalla</h5>
 				</div>
 			</div>
-						
+			
 			<div id="cuerpo" class="row show-grid">
 				<ul id="tabs" class="nav nav-tabs">
-					<li class="active"><a href="1">Menu 1</a>
-					<li class="active"><a href="2">Menu 2</a>
-					<li ><a href="3">Menu3</a>
-					<li ><a href="4">Menu4</a>
+					<li ><a href="#menu_search">Search</a></li>
+					<li class="active"><a href="#menu_initial_status">Initial State</a></li>
+					<li ><a href="#menu_events">Event manager</a></li>
 
 				</ul> 		
-			
-				<div id="menu_search"	class="col-md-12 col-sm-12 col-xs-12"><h5>Content Search Menu</h5>
-			
-					<div id="search_arguments" class="col-md-3 col-sm-6 col-xs-12">
-						
-						<div class="input-group-sm input-group ">
-     					 	<span class="input-group-addon ">User :</span>
-      						<input type="text" class="form-control">
-      						<span class="input-group-addon"><input type="checkbox"></span>
-    					</div>
-    					<div class="input-group-sm input-group c">
-     					 	<span class="input-group-addon">Group :</span>
-      						<input type="text" class="form-control">
-      						<span class="input-group-addon"><input type="checkbox"></span>
-    					</div>
-    					<div class="input-group-sm input-group ">
-     					 	<span class="input-group-addon">Army :</span>
-      						<input type="text" class="form-control">
-      						<span class="input-group-addon"><input type="checkbox"></span>
-    					</div>
-    					
-    					<div class="input-group-sm input-group ">
-     					 	<span class="input-group-addon">Place :</span>
-      						<input type="text" class="form-control">
-      						<span class="input-group-addon"><input type="checkbox"></span>
-    					</div>
-    					<div class="btn-group-xs">
-   							<button id="MainSearch" type="button" class="btn btn-default">
-  							Search</span>
-  							</button>
-  						</div>
-
+				<div id="menu_area" class="col-md-12 col-sm-12 col-xs-12" >
+					<div id="menu_initial_status" class="col-md-6 col-sm-6 col-xs-12 ">Div dedicado las los menus que crean el estado inicial.
 					</div>
-
-					<div id="search-results" class="col-md-9 col-sm-9 col-xs-12"><h5>Resultados de busqueda</h5>
-						<table class="table table-hover table-striped opacity-striped-table">
-							<tr>
-								<td><h5>Name</h5></td>
-								<td><h5>Date</h5></td>
-								<td><h5>User</h5></td>
-								<td><h5>Army1</h5></td>
-								<td><h5>Army2</h5></td>
-							</tr>	<tr>
-								<td>Demolition</td>
-								<td>27/11/2013</td>
-								<td>Raising</td>
-								<td>EC</td>
-								<td>Panoceania</td>
-							</tr>	<tr>
-								<td>Un turno</td>
-								<td>3/12/2013</td>
-								<td>Urobros</td>
-								<td>Acontecimiento</td>
-								<td>Nomadas</td>
-							</tr>
-						</table>
-					</div>
-
-				</div>
- 				<div id="menu-bar" class="col-md-6 col-sm-12 col-xs-12">	
-					
-					<div id="menu3" class="col-md-6 col-sm-6 col-xs-12 ">Menu3</div>
-					<div id="menu4" class="col-md-6 col-sm-6 col-xs-12 ">Menu4</div>				
-					<div 			class="clearfix visible-sm visible-xs"></div>
-				</div>
-  				<div id="canvas" class="col-md-6 col-sm-12 col-xs-12 col-md-pull-0">
+<div id="canvas" class="col-md-6 col-sm-12 col-xs-12 col-md-pull-0">
   					<div class="btn-toolbar" role="toolbar">
   						<div class="btn-group">
    							<button id="fullscreen-canvas" type="button" class="btn btn-default">
@@ -184,6 +119,70 @@
 						  </ul>
   						</div>
   					</div>
+  				</div>
+				</div>
+				<div id="hidden_storage" class= "hidden">
+				<div id="menu_search"	class="col-md-12 col-sm-12 col-xs-12"><h5>Content Search Menu</h5>
+			
+					<div id="search_arguments" class="col-md-3 col-sm-6 col-xs-12">
+						
+						<div class="input-group-sm input-group ">
+     					 	<span class="input-group-addon ">User :</span>
+      						<input type="text" class="form-control">
+      						<span class="input-group-addon"><input type="checkbox"></span>
+    					</div>
+    					<div class="input-group-sm input-group c">
+     					 	<span class="input-group-addon">Group :</span>
+      						<input type="text" class="form-control">
+      						<span class="input-group-addon"><input type="checkbox"></span>
+    					</div>
+    					<div class="input-group-sm input-group ">
+     					 	<span class="input-group-addon">Army :</span>
+      						<input type="text" class="form-control">
+      						<span class="input-group-addon"><input type="checkbox"></span>
+    					</div>
+    					
+    					<div class="input-group-sm input-group ">
+     					 	<span class="input-group-addon">Place :</span>
+      						<input type="text" class="form-control">
+      						<span class="input-group-addon"><input type="checkbox"></span>
+    					</div>
+    					<div class="btn-group-md">
+   							<button id="MainSearch" type="button" class="btn btn-default">
+  							Search</span>
+  							</button>
+  						</div>
+					</div>
+
+					<div id="search-results" class="col-md-9 col-sm-9 col-xs-12"><h5>Resultados de busqueda</h5>
+						<table class="table table-hover table-striped opacity-striped-table">
+							<tr>
+								<td><h5>Name</h5></td>
+								<td><h5>Date</h5></td>
+								<td><h5>User</h5></td>
+								<td><h5>Army1</h5></td>
+								<td><h5>Army2</h5></td>
+							</tr>	<tr>
+								<td>Demolition</td>
+								<td>27/11/2013</td>
+								<td>Raising</td>
+								<td>EC</td>
+								<td>Panoceania</td>
+							</tr>	<tr>
+								<td>Un turno</td>
+								<td>3/12/2013</td>
+								<td>Urobros</td>
+								<td>Acontecimiento</td>
+								<td>Nomadas</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				
+	
+				<div id="menu_events" class="col-md-6 col-sm-6 col-xs-12 ">Div dedicado a los menus que gestionan los eventos de partida</div>				
+					
+  				
   				</div>
 			</div>	
 		</div>
