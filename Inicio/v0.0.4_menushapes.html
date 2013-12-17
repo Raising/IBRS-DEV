@@ -1,0 +1,191 @@
+<html>
+    <head>
+        <title>V 0.0.3, inicio</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		
+		<link href="../libs/css/main.css" rel="stylesheet">
+		
+		<link href="../libs/css/bootstrap.css" rel="stylesheet">
+		<link href="../libs/css/bootstrap-theme.css" rel="stylesheet">
+		
+		<script type="text/javascript" src="../libs/js/jquery-1.9.1.js"></script>
+		<script>jQuery.noConflict();</script>
+		<script type="text/javascript" src="../libs/js/bootstrap.js"></script>
+		<script type="text/javascript" src="../libs/js/mootools.js"></script>
+		<script type="text/javascript" src="../libs/js/three.min.js"></script>
+		<script src="../personal/js/scenery.js"></script>
+		<script src="../personal/js/scenery_element.js"></script>
+		<script src="../personal/js/scenery_geometry_utils.js"></script>
+		<script type="text/javascript" src="../personal/js/Iniciar_canvas.js"></script>
+		<script type="text/javascript">
+
+			jQuery(function(){
+				webGLStart();
+				jQuery(render.domElement).attr("id","render").addClass(" canvas-look col-md-12 col-sm-12 col-xs-12");
+				jQuery("#canvas").append(jQuery(render.domElement));
+				var firstMenu =1;
+				var secondMenu = 2;
+			
+					
+				jQuery("#fullscreen-canvas").click(function(){
+					jQuery(this).hide();		
+					jQuery("#resize-canvas").show();
+					jQuery("#cabecera").slideUp();
+					jQuery("#cuerpo").children().slideUp( function(){jQuery("#canvas").queue(function(){jQuery( this ).removeClass("col-md-6").addClass("col-md-12").dequeue();}).slideDown("slow");}	);
+					return false;
+				});
+
+				jQuery("#resize-canvas").click(function(){	
+					jQuery(this).hide();		
+					jQuery("#fullscreen-canvas").show();
+					jQuery("#cabecera").slideDown();
+					jQuery("#tabs").slideDown("slow");
+					jQuery("#menu-bar").slideDown("slow");
+				
+					
+					jQuery("#canvas").slideUp(function() {	jQuery( "#canvas").removeClass("col-md-12").addClass("col-md-6");}).slideDown();
+					return false;
+				});
+				jQuery("ul.nav > li > a").click(function(){	
+					var thisMenu =jQuery(this);
+					thisMenu.parent().addClass("active");
+					var nuevo = thisMenu.attr("href");
+					
+					jQuery("[href="+secondMenu+"]").parent().removeClass("active");
+					jQuery("[id$="+secondMenu+"]").slideUp("slow",function() {	jQuery("[id$="+nuevo+"]").slideDown("slow");});
+					secondMenu = firstMenu;
+					firstMenu = nuevo;
+	
+					
+					
+					return false;
+				});
+
+
+			});
+		</script>
+    </head>
+    <body>
+       	<div class="container show-top-margin">
+			<div id="cabecera" class="row show-grid">
+				<div class="col-md-12">
+					<h1>Infinity Battle Report System   <small>By Raising Spirit</small></h1>
+					<h3>Herramienta de creación y visualización de informes de batalla</h3>
+				</div>
+			</div>
+						
+			<div id="cuerpo" class="row show-grid">
+				<ul id="tabs" class="nav nav-tabs">
+					<li class="active"><a href="1">Menu 1</a>
+					<li class="active"><a href="2">Menu 2</a>
+					<li ><a href="3">Menu3</a>
+					<li ><a href="4">Menu4</a>
+
+				</ul> 		
+			
+				<div id="menu_search"	class="col-md-12 col-sm-12 col-xs-12"><h5>Content Search Menu</h5>
+			
+					<div id="search_arguments" class="col-md-3 col-sm-6 col-xs-12">
+						
+						<div class="input-group-sm input-group ">
+     					 	<span class="input-group-addon ">User :</span>
+      						<input type="text" class="form-control">
+      						<span class="input-group-addon"><input type="checkbox"></span>
+    					</div>
+    					<div class="input-group-sm input-group c">
+     					 	<span class="input-group-addon">Group :</span>
+      						<input type="text" class="form-control">
+      						<span class="input-group-addon"><input type="checkbox"></span>
+    					</div>
+    					<div class="input-group-sm input-group ">
+     					 	<span class="input-group-addon">Army :</span>
+      						<input type="text" class="form-control">
+      						<span class="input-group-addon"><input type="checkbox"></span>
+    					</div>
+    					
+    					<div class="input-group-sm input-group ">
+     					 	<span class="input-group-addon">Place :</span>
+      						<input type="text" class="form-control">
+      						<span class="input-group-addon"><input type="checkbox"></span>
+    					</div>
+    					<div class="btn-group-xs">
+   							<button id="MainSearch" type="button" class="btn btn-default">
+  							Search</span>
+  							</button>
+  						</div>
+
+					</div>
+
+					<div id="search-results" class="col-md-9 col-sm-9 col-xs-12"><h5>Resultados de busqueda</h5>
+						<table class="table table-hover table-striped opacity-striped-table">
+							<tr>
+								<td><h5>Name</h5></td>
+								<td><h5>Date</h5></td>
+								<td><h5>User</h5></td>
+								<td><h5>Army1</h5></td>
+								<td><h5>Army2</h5></td>
+							</tr>	<tr>
+								<td>Demolition</td>
+								<td>27/11/2013</td>
+								<td>Raising</td>
+								<td>EC</td>
+								<td>Panoceania</td>
+							</tr>	<tr>
+								<td>Un turno</td>
+								<td>3/12/2013</td>
+								<td>Urobros</td>
+								<td>Acontecimiento</td>
+								<td>Nomadas</td>
+							</tr>
+						</table>
+					</div>
+
+				</div>
+ 				<div id="menu-bar" class="col-md-6 col-sm-12 col-xs-12">	
+					
+					<div id="menu3" class="col-md-6 col-sm-6 col-xs-12 ">Menu3</div>
+					<div id="menu4" class="col-md-6 col-sm-6 col-xs-12 ">Menu4</div>				
+					<div 			class="clearfix visible-sm visible-xs"></div>
+				</div>
+  				<div id="canvas" class="col-md-6 col-sm-12 col-xs-12 col-md-pull-0">
+  					<div class="btn-toolbar" role="toolbar">
+  						<div class="btn-group">
+   							<button id="fullscreen-canvas" type="button" class="btn btn-default">
+  							<span class="glyphicon glyphicon-fullscreen"></span>
+  							</button>
+  							<button id="resize-canvas" type="button" class="btn btn-default " style="display: none;">
+  							<span class="glyphicon glyphicon-resize-small"></span>
+  							</button>
+   							<button type="button" class="btn btn-default">
+  							<span class="glyphicon glyphicon-forward"></span>
+  							</button>
+   							<button type="button" class="btn btn-default">
+  							<span class="glyphicon glyphicon-play"></span>
+  							</button>
+  							
+						 
+  						</div>
+  						<div class="btn-group">
+  							<button type="button" class="btn btn-danger"><small>Título del botón</small></button>
+						  <button type="button" class="btn btn-danger "
+						          data-toggle="dropdown">
+						    <span class="caret"></span>
+						  
+						  </button>
+						 
+						  <ul class="dropdown-menu" role="menu">
+						    <li><a href="#">Acción #1</a></li>
+						    <li><a href="#">Acción #2</a></li>
+						    <li><a href="#">Acción #3</a></li>
+						    <li class="divider"></li>
+						    <li><a href="#">Acción #4</a></li>
+						  </ul>
+  						</div>
+  					</div>
+  				</div>
+			</div>	
+		</div>
+    </body>
+</html>
