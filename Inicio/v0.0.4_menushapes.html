@@ -33,16 +33,17 @@
 					jQuery(this).hide();		
 					jQuery("#resize-canvas").show();
 					jQuery("#cabecera").slideUp();
-					jQuery("#cuerpo").children().slideUp( function(){jQuery("#canvas").queue(function(){jQuery( this ).removeClass("col-md-6").addClass("col-md-12").dequeue();}).slideDown("slow");}	);
+					jQuery("#tabs").slideUp();
+					jQuery("#menu_area").children().slideUp( function(){jQuery("#canvas").queue(function(){jQuery( this ).removeClass("col-md-6").addClass("col-md-12").dequeue();}).slideDown("slow");}	);
 					return false;
 				});
 
 				jQuery("#resize-canvas").click(function(){	
 					jQuery(this).hide();		
 					jQuery("#fullscreen-canvas").show();
-					jQuery("#cabecera").slideDown();
+					jQuery("#menu_area").children().slideDown();
 					jQuery("#tabs").slideDown("slow");
-					jQuery("#menu-bar").slideDown("slow");
+					jQuery("#cabecera").slideDown("slow");
 				
 					
 					jQuery("#canvas").slideUp(function() {	jQuery( "#canvas").removeClass("col-md-12").addClass("col-md-6");}).slideDown();
