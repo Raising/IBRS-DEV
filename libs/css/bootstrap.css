@@ -1380,7 +1380,7 @@ th {
 .table > thead > tr > td,
 .table > tbody > tr > td,
 .table > tfoot > tr > td {
-  padding: 8px;
+  padding: 2px;
   line-height: 1.428571429;
   vertical-align: top;
   border-top: 1px solid #1d57db;
@@ -1432,7 +1432,7 @@ th {
 }
 .table-hover > tbody > tr:hover > td,
 .table-hover > tbody > tr:hover > th {
-  background-color: #09328e;
+  background-color: #3962de;
 }
 table col[class*="col-"] {
   position: static;
@@ -1458,7 +1458,7 @@ table th[class*="col-"] {
 .table-hover > tbody > tr > .active:hover,
 .table-hover > tbody > .active:hover > td,
 .table-hover > tbody > .active:hover > th {
-  background-color: #072a76;
+  background-color: #173a96;
 }
 .table > thead > tr > .success,
 .table > tbody > tr > .success,
@@ -2898,7 +2898,7 @@ input[type="button"].btn-block {
   display: inline-block;
   width: 0;
   height: 0;
-  margin-left: 2px;
+  margin: 8px;
   vertical-align: middle;
   border-top: 4px solid;
   border-right: 4px solid transparent;
@@ -4587,25 +4587,26 @@ a.thumbnail.active {
   list-style: none;
 }
 .list-group {
+  margin-top: 10px;
   margin-bottom: 20px;
   padding-left: 0;
 }
 .list-group-item {
   position: relative;
   display: block;
-  padding: 10px 15px;
-  margin-bottom: -1px;
+  padding: 3px 7px;
+  margin-bottom: 0px;
   background-color: #ffffff;
-  border: 1px solid #dddddd;
+  border: 1px solid #77dddd;
 }
 .list-group-item:first-child {
-  border-top-right-radius: 6px;
-  border-top-left-radius: 6px;
+  border-top-right-radius: 2px;
+  border-top-left-radius: 2px;
 }
 .list-group-item:last-child {
   margin-bottom: 0;
-  border-bottom-right-radius: 6px;
-  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
 }
 .list-group-item > .badge {
   float: right;
