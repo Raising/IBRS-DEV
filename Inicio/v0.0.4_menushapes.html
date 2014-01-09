@@ -23,21 +23,22 @@
 
 			jQuery(function(){
 				webGLStart();
+
 				jQuery(render.domElement).attr("id","render").addClass(" canvas-look col-md-12 col-sm-12 col-xs-12");
 				jQuery("#canvas").append(jQuery(render.domElement));
 				var firstMenu =1;
 				var secondMenu = 3;
 			
-					
+				//boton ampliar canvas	
 				jQuery("#fullscreen-canvas").click(function(){
 					jQuery(this).hide();		
 					jQuery("#resize-canvas").show();
 					jQuery("#cabecera").slideUp();
 					jQuery("#tabs").slideUp();
-					jQuery("#menu_area").children().slideUp( function(){jQuery("#canvas").queue(function(){jQuery( this ).removeClass("col-md-6").addClass("col-md-12").dequeue();}).slideDown("slow");}	);
+					jQuery("#menu_area").children().slideUp( function(){jQuery("#canvas").queue(function(){jQuery( this ).removeClass("col-md-6").addClass("col-md-12").dequeue();}).slideDown("slow");});
 					return false;
 				});
-
+				//boton reducir canvas
 				jQuery("#resize-canvas").click(function(){	
 					jQuery(this).hide();		
 					jQuery("#fullscreen-canvas").show();
@@ -49,6 +50,14 @@
 					jQuery("#canvas").slideUp(function() {	jQuery( "#canvas").removeClass("col-md-12").addClass("col-md-6");}).slideDown();
 					return false;
 				});
+				//boton acceso a register
+				jQuery("#button_register_menu").click(function(){
+					jQuery("#menu_area").slideUp(function(){
+					jQuery("#menu_area > div").appendTo(jQuery("#hidden_storage"));
+					jQuery("#menu_user_register").appendTo(jQuery("#menu_area"));
+						}).slideDown();
+				});
+				// Script de Pestañas, para añadir una nueva simplemente crear el li con su a correspondiente en la parte html y ponerle de href el nombre del div a cargar 
 				jQuery("ul.nav > li > a").click(function(){	
 					var thisMenu =jQuery(this);
 					thisMenu.parent().parent().children().removeClass("active");
@@ -63,11 +72,14 @@
 				});
 
 
+
 			});
 		</script>
     </head>
     <body>
        	<div class="show-top-margin container ">
+
+       		<!--Cabecera, probablemente requiera cambiar de dimensiones para optimizar el uso del espacio-->
 			<div id="cabecera" class="row show-grid">
 				<div class="col-md-12 ">
 					<h3>Infinity Battle Report System   <small>By Raising Spirit</small></h3>
@@ -75,18 +87,21 @@
 				</div>
 			</div>
 			
+
 			<div id="cuerpo" class="row show-grid">
+				<!--Pestañas-->
 				<ul id="tabs" class="nav nav-tabs">
 					<li ><a href="#menu_search">Search</a></li>
 					<li ><a href="#menu_initial">Initial State</a></li>
 					<li ><a href="#menu_events">Event manager</a></li>
-					<li ><a href="#menu_user">User</a></li>
+					<li class="pull-right"><a href="#menu_user_login">User</a></li>
 
 				</ul> 		
 				<div id="menu_area" class="col-md-12 col-sm-12 col-xs-12" >
 				</div>
 				<div id="hidden_storage" class= "hidden">
-						<div id="menu_user" class="col-md-push-3 col-md-6 col-sm-12 col-xs-12 ">
+						<!--Register-->
+						<div id="menu_user_register" class="col-md-push-3 col-md-6 col-sm-12 col-xs-12 ">
 							<form>
 								<div class="input-group">
 								  <span class="input-group-addon">User</span>
@@ -94,10 +109,38 @@
 								</div>
 								<div class="input-group">
 								  <span class="input-group-addon">Pass</span>
-								  <input type="text" class="form-control" placeholder="Password">
+								  <input type="password" class="form-control" placeholder="Password">
 								</div>
-								<button id="button_login" type="button" class="btn btn-default"> Login 
+								<div class="input-group">
+								  <span class="input-group-addon">Pass</span>
+								  <input type="password" class="form-control" placeholder="rewrite your password">
+								</div>
+
+								<div class="input-group">
+								  <span class="input-group-addon">Email</span>
+								  <input type="text" class="form-control" placeholder="email">
+								</div>
+								<button id="button_login" type="button" class="btn btn-warning"> Send 
  	 							</button>
+ 	 							
+							</form>
+						</div>
+						<!--User login-->
+						<div id="menu_user_login" class="col-md-push-3 col-md-6 col-sm-12 col-xs-12 ">
+							<form>
+								<div class="input-group">
+								  <span class="input-group-addon">User</span>
+								  <input type="text" class="form-control" placeholder="Username">
+								</div>
+								<div class="input-group">
+								  <span class="input-group-addon">Pass</span>
+								  <input type="password" class="form-control" placeholder="Password">
+								</div>
+								<button id="button_login" type="button" class="btn btn-success"> Login 
+ 	 							</button>
+ 	 							<button id="button_register_menu" type="button" class="btn btn-warning"> Register
+ 	 							</button>
+ 	 							<a class="pull-right color-orange" href="#menu_search">Recover acount</a>
 							</form>
 						</div>
 						<!-- #INITIAL #ESTADO -->
