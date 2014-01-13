@@ -25,7 +25,7 @@ function iniciarEscena(){
 				escena = new THREE.Scene();
 
 				//Camara
-				camara = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 0.1, 1000);
+				camara = new THREE.PerspectiveCamera(5, canvasWidth / canvasHeight, 0.1, 1000);
 				camara.position.set(-140, 60, -80);
 				camara.lookAt(escena.position);
 				escena.add(camara);
@@ -55,9 +55,9 @@ function iniciarEscena(){
 				elementos = new THREE.Object3D();
 				territory.calculateRepresentation(elementos);
 				//mapGeometria.computeVertexNormals();
-			
-				
-				
+				var lapida = new THREE.LapidaGeometry();
+				var miniatura = new THREE.Mesh(lapida,new THREE.MeshLambertMaterial( { map: THREE.ImageUtils.loadTexture('img/asuang.jpg')} ));
+				elementos.add(miniatura);
 	
 
 				
