@@ -3,8 +3,6 @@ jQuery(function(){
 
 				jQuery(render.domElement).attr("id","render").addClass(" canvas-look col-md-12 col-sm-12 col-xs-12");
 				jQuery("#canvas").append(jQuery(render.domElement));
-				var firstMenu =1;
-				var secondMenu = 3;
 			
 				//boton ampliar canvas	
 				jQuery("#fullscreen-canvas").click(function(){

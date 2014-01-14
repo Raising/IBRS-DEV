@@ -25,7 +25,8 @@ var scenery = new Class({
 		this.tapeteRepresentation = new THREE.Mesh(new THREE.PlaneGeometry(this.size, this.size, 1,1),this.tapeteMaterial);
 		this.tapeteRepresentation.rotation.set(-Math.PI/2,0,0);
 		this.tapeteRepresentation.position.set(0, 0.1,0);
-		
+		this.tapeteRepresentation.ID="tapete";
+		this.representation.ID="bloque";
 		scene.add(this.representation);
 		scene.add(this.tapeteRepresentation);
 				
