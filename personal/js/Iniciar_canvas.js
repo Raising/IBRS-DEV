@@ -9,9 +9,9 @@ function iniciarEscena(){
 				//Render
 				
 				
-				render = new THREE.WebGLRenderer({premultipliedAlpha: false});
+				render = new THREE.WebGLRenderer({premultipliedAlpha:false, alpha:true});
 
-				render.setClearColor(0x660066, 0.0);
+				render.setClearColor(new THREE.Color(0xff0000),0);
 
 				var canvasWidth = 1280;
 				var canvasHeight = 720;
@@ -25,7 +25,7 @@ function iniciarEscena(){
 				escena = new THREE.Scene();
 
 				//Camara
-				camara = new THREE.PerspectiveCamera(5, canvasWidth / canvasHeight, 0.1, 1000);
+				camara = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 0.1, 1000);
 				camara.position.set(-140, 60, -80);
 				camara.lookAt(escena.position);
 				escena.add(camara);
@@ -35,31 +35,15 @@ function iniciarEscena(){
     			//mapTextura.magFilter = THREE.NearestFilter;
     			
 				
-				  var material = new THREE.MeshLambertMaterial({
-					color:0x334490,
-					
-					transparent: false,
-					side:THREE.FrontSide
-					});
-					
-					 var nodeMaterial = new THREE.MeshLambertMaterial({
-					color:0xAA44B0,
-					
-					transparent: false,
-					side:THREE.FrontSide
-					});
-				
-				var mapMaterial = new THREE.MeshBasicMaterial({ color:0x5588AA, side:THREE.FrontSide });
-				
 				var territory = new scenery(120);
 				elementos = new THREE.Object3D();
 				territory.calculateRepresentation(elementos);
 				//mapGeometria.computeVertexNormals();
-				var lapida = new THREE.LapidaGeometry();
-				var miniatura = new THREE.Mesh(lapida,new THREE.MeshLambertMaterial( { map: THREE.ImageUtils.loadTexture('img/asuang.jpg')} ));
-				elementos.add(miniatura);
-	
-
+			
+				var asuangMini = new Miniature(3,2.5,'img/Asuang.jpg','img/CA.png');
+				asuangMini.position.set(-20,18,2.5);
+				elementos.add(asuangMini);
+	   
 				
 				//luz
 				var light = new THREE.PointLight(0xffffff);
