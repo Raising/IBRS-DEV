@@ -130,7 +130,7 @@ THREE.BaseGeometry = function ( radiusTop, radiusBottom, height, radialSegments,
 
                         var vertex = new THREE.Vector3();
                         vertex.x = radius * Math.sin( u * Math.PI * 2 );
-                        vertex.y = - v * height + heightHalf;
+                        vertex.y = - Math.sin(v * Math.PI/2*v* Math.PI/2)* height + heightHalf;
                         vertex.z = radius * Math.cos( u * Math.PI * 2 );
 
                         this.vertices.push( vertex );
@@ -265,7 +265,7 @@ var Miniature = function(height,baseDiameter,miniatureTexture,baseTexture){
        var baseHeight = 0.5
        var MiniatureTextureMap = new THREE.ImageUtils.loadTexture(miniatureTexture);
        var BaseTextureMap = new THREE.ImageUtils.loadTexture(baseTexture);
-       var GeoBase = new THREE.BaseGeometry(baseDiameter*0.45,baseDiameter/2,baseHeight,16,1);
+       var GeoBase = new THREE.BaseGeometry(baseDiameter*0.45,baseDiameter/2,baseHeight,20,1);
        var GeoLapida = new THREE.LapidaGeometry(baseDiameter*0.8,height,0.3);
        var Lapida= new THREE.Mesh(GeoLapida,new THREE.MeshLambertMaterial( { map: MiniatureTextureMap} ));
        var Base = new THREE.Mesh(GeoBase,new THREE.MeshFaceMaterial([new THREE.MeshLambertMaterial( { map: BaseTextureMap}),new THREE.MeshBasicMaterial( { color:0x000000})]));
