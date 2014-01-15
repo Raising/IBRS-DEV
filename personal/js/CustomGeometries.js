@@ -256,23 +256,56 @@ THREE.BaseGeometry = function ( radiusTop, radiusBottom, height, radialSegments,
 }
 
 THREE.BaseGeometry.prototype = Object.create( THREE.Geometry.prototype );
+//Elementos compuestos
+var BasicElement = function(){
+    THREE.Object3D.call(this);
+}
 
-
-
+BasicElement.prototype = Object.create(THREE.Object3D.prototype);
 
 var Miniature = function(height,baseDiameter,miniatureTexture,baseTexture){
-       THREE.Object3D.call(this);
+       BasicElement.call(this);
        var baseHeight = 0.5
        var MiniatureTextureMap = new THREE.ImageUtils.loadTexture(miniatureTexture);
        var BaseTextureMap = new THREE.ImageUtils.loadTexture(baseTexture);
        var GeoBase = new THREE.BaseGeometry(baseDiameter*0.45,baseDiameter/2,baseHeight,20,1);
        var GeoLapida = new THREE.LapidaGeometry(baseDiameter*0.8,height,0.3);
-       var Lapida= new THREE.Mesh(GeoLapida,new THREE.MeshLambertMaterial( { map: MiniatureTextureMap} ));
-       var Base = new THREE.Mesh(GeoBase,new THREE.MeshFaceMaterial([new THREE.MeshLambertMaterial( { map: BaseTextureMap}),new THREE.MeshBasicMaterial( { color:0x000000})]));
-        Base.position.set(0,baseHeight/2,0);
-        Lapida.position.set(0,baseHeight,0);
-        this.add(Lapida);
-        this.add(Base);
+       this.TopPiece= new THREE.Mesh(GeoLapida,new THREE.MeshLambertMaterial( { map: MiniatureTextureMap} ));
+       this.BasePiece = new THREE.Mesh(GeoBase,
+        new THREE.MeshFaceMaterial([
+            new THREE.MeshLambertMaterial( { map: BaseTextureMap}),
+            new THREE.MeshBasicMaterial( { color:0x000000})]));
+        this.BasePiece.position.set(0,baseHeight/2,0);
+        this.TopPiece.position.set(0,baseHeight,0);
+        this.add(this.TopPiece);
+        this.add(this.BasePiece);
        
 }
-Miniature.prototype = Object.create(THREE.Object3D.prototype);
+Miniature.prototype = Object.create(BasicElement.prototype);
+
+var TableBoard = function(dimensions,coverTexture){
+    BasicElement.call(this);
+    var CoverTextureMap =  new THREE.ImageUtils.loadTexture(coverTexture);
+    var WoodTextureMap =  new THREE.ImageUtils.loadTexture("img/woodtexture.jpg");
+    var GeoTop = new THREE.CubeGeometry(dimensions.x,dimensions.y,dimensions.z);
+    for (var i = 0; i<GeoTop.faces.length;i++){ GeoTop.faces[i].materialIndex = 0;}
+    GeoTop.faces[4].materialIndex = GeoTop.faces[5].materialIndex = 1;
+    var GeoLeg = new THREE.CubeGeometry(dimensions.x*0.1,dimensions.y*4,dimensions.z*0.1);
+    
+    this.TableTop = new THREE.Mesh(GeoTop,
+        new THREE.MeshFaceMaterial([
+            new THREE.MeshLambertMaterial({ map: WoodTextureMap}),
+            new THREE.MeshLambertMaterial({ map: CoverTextureMap} )]));
+    
+    this.TableTop.position.set(0,-dimensions.y/2,0);
+    this.add(this.TableTop);
+    this.TableLegs=[];
+     for (var i = 0;i<4;i++){
+        var leg =new THREE.Mesh(GeoLeg,new THREE.MeshLambertMaterial( { map: WoodTextureMap}));
+        leg.position.set((1-(i%2)*2)*dimensions.x*0.4,-dimensions.y*3,(1-parseInt(i/2)*2)*dimensions.z*0.4); 
+        
+        this.TableLegs.push(leg);
+        this.add(this.TableLegs[i]);
+        }
+    }
+TableBoard.prototype = Object.create(BasicElement.prototype);

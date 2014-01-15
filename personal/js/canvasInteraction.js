@@ -1,25 +1,86 @@
 var CurrentCamera ;
 
-function SetunOpMouseDown(currentRenderDomElement){
-			jQuery('#canvas').mousedown(function(event) {
-			    switch (event.which) {
-			        case 1://left mouse
-			            alert('Left mouse button pressed');
-			            break;
-			        case 2://middle mouse
-			            alert('Middle mouse button pressed');
-			            break;
-			        case 3://right mouse
-			            alert('Right mouse button pressed');
-			            break;
-			        default://something wierd
-			            alert('You have a strange mouse');
-			    }
-			    return false;
-			});
+function SetunUpMouseInteraction(currentRenderDomElement){
+	var mouseIsDown = 0;
+	var mouseDownPosition = new THREE.Vector3(0,0,0);
+
+	currentRenderDomElement.addEventListener('contextmenu', function (evt){evt.preventDefault();}, false);
+	currentRenderDomElement.addEventListener('mousedown', function (evt) {
+	    mouseIsDown=evt.which;
+	    mouseDownPosition.x = evt.pageX;
+	    mouseDownPosition.y = evt.pageY;        
+	    switch (evt.which) {
+	        case 1://left mouse
+	            
+	            break;
+	        case 2://middle mouse
+	        	
+	            //alert('Middle mouse button pressed');
+	            break;
+	        case 3://right mouse
+	            break;
+	        default://something wierd
+	            alert('You have a strange mouse');
+	    }
+	},false);
+
+	currentRenderDomElement.addEventListener('mousemove', function (evt) {
+		if (mouseIsDown==3){
+			//turn camera
+			CameraReposition(0,
+				0.03*(evt.pageX - mouseDownPosition.x),
+				0.03*(evt.pageY - mouseDownPosition.y)
+			);
+		mouseDownPosition.x = evt.pageX;
+	    mouseDownPosition.y = evt.pageY;
+		}
+	},false);
+
+	currentRenderDomElement.addEventListener('mouseup', function (evt) {
+		if (mouseIsDown==1 && evt.pageX == mouseDownPosition.x && evt.pageY == mouseDownPosition.y)
+			{ findObjectByProyection(evt,this);}
+
+		mouseIsDown=0;
+
+	    
+	    
+	},false);
+
 }
+function getCanvasStats(scope){
+	var canvasStat = [] ;
+	canvasStat.Offset = jQuery(scope).offset();
+  	canvasStat.width =jQuery(scope).width(); 
+  	canvasStat.height =jQuery(scope).height();
+  	canvasStat.paddingtop = 5;
+  	canvasStat.paddingleft = 15;
+  	return canvasStat; 
+}	
+function findObjectByProyection(evt,scope){
+
+	var projector = new THREE.Projector();
+	var directionVector = new THREE.Vector3();
+  	var CanvasStats = getCanvasStats(scope);
+
+    var clickx = evt.pageX - CanvasStats.Offset.left - CanvasStats.paddingleft;
+    var clicky = evt.pageY - CanvasStats.Offset.top - CanvasStats.paddingtop ;
+    directionVector.x = ( clickx / CanvasStats.width ) * 2 - 1;
+    directionVector.y = -( clicky / CanvasStats.height ) * 2 + 1;
+
+    var ray = projector.pickingRay(directionVector,CurrentCamera);
+	var intersects = ray.intersectObjects(escena.children, true);
+	if (intersects.length) {
+		var target = intersects[0].object; 
+			//target.scale.set(0.6,0.6,0.6);
+		CameraReposition(0,0,0,target)  ;
+	} 
+}
+
+
+
+
 function SetupOnClick(currentRenderDomElement) {
-				currentRenderDomElement.addEventListener('contextmenu', function (evt){evt.preventDefault();}, false);
+				
 				currentRenderDomElement.addEventListener('click', function (evt) {
 			  	var projector = new THREE.Projector();
     			var directionVector = new THREE.Vector3();
@@ -67,6 +128,7 @@ function CameraReposition(distance_inc,hoizontalAngle_inc,verticalAngle_inc,targ
 	Camera_Distance += distance_inc;
 	Camera_Horizonatl_Angle += hoizontalAngle_inc;
 	Camera_Vertical_Angle += verticalAngle_inc;
+	Camera_Vertical_Angle = Math.max(0,Math.min(Math.PI,Camera_Vertical_Angle));
 	var current_target_position = new THREE.Vector3();
 	current_target_position.setFromMatrixPosition( Camera_lookAt.matrixWorld );
 	CurrentCamera.position.set(

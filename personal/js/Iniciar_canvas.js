@@ -29,15 +29,18 @@ function iniciarEscena(){
                                 CameraReposition(0,0,0,escena);
                                 
                                 escena.add(cameraAtScene);
-                                //SetunOpMouseDown(render.domElement);
-                                SetupOnClick(render.domElement);
+
+                                //establecimiento de eventos
+                                SetunUpMouseInteraction(render.domElement);
+                                //SetupOnClick(render.domElement);
                                 SetupOnScroll(render.domElement);
                                 
-                                var territory = new scenery(120);
+                                //var territory = new scenery(120);
                                 elementos = new THREE.Object3D();
                                 elementos.ID = "elementos";
-                                territory.calculateRepresentation(elementos);
-                                
+                                //territory.calculateRepresentation(elementos);
+                                var mesa = new TableBoard(new THREE.Vector3(120,20,120),'img/terrain01.png');
+                                elementos.add(mesa);
                         
                                 var asuangMini = new Miniature(3,2.5,'img/Asuang.jpg','img/CA.png');
                                 asuangMini.position.set(-16.25,18,1.25);
@@ -90,7 +93,7 @@ function iniciarEscena(){
                                 AnguloRotado = AnguloRotado - 0.30*delta;
                                 
                                 //elementos.rotation.set(0,AnguloRotado,0);
-                                CameraReposition(0,0.05*delta,0);
+                                //CameraReposition(0,0.05*delta,0);
                                 renderEscena();
                                 requestAnimationFrame(animarEscena);
                         }

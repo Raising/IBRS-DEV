@@ -30,20 +30,6 @@ var scenery = new Class({
 		scene.add(this.representation);
 		scene.add(this.tapeteRepresentation);
 				
-	},
-	
-	loadSceneryElements: function(density){
-		this.nodes = [];
-		this.nodes.size=0;
-		for(j = 0; j < this.size; j++){			
-			for(i = 0; i < this.size; i++){
-						if (i%density ==0 || j%density ==0){
-							this.nodes.push(new Node(2*i+0.5-this.size,2*j+0.5-this.size,this.grill[i][j].elevation));
-							this.nodes.size+=1;
-						}
-					}
-				}
-		return this.nodes;
 	}
 });
 
