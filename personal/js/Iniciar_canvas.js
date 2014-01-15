@@ -1,6 +1,6 @@
 
 var escena;
-var camara;
+var cameraAtScene;
 var render;
 var ultimoTiempo;
 var elementos;
@@ -26,10 +26,10 @@ function iniciarEscena(){
 
 
 				//Camara
-				camara = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 0.1, 1000);
-				camara.position.set(-140, 60, -80);
-				camara.lookAt(escena.position);
-				escena.add(camara);
+				cameraAtScene = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 0.1, 1000);
+				CameraReposition(0,0,0,escena);
+				
+				escena.add(cameraAtScene);
 				
 				SetupOnClick(render.domElement);
 				SetupOnScroll(render.domElement);
@@ -43,6 +43,7 @@ function iniciarEscena(){
 				var asuangMini = new Miniature(3,2.5,'img/Asuang.jpg','img/CA.png');
 				asuangMini.position.set(-20,18,2.5);
 				asuangMini.ID = "asuang";
+				CameraReposition(0,0,0,asuangMini);
 				elementos.add(asuangMini);
 	   
 				
@@ -79,7 +80,7 @@ function iniciarEscena(){
 				}
 			function renderEscena(){
 				
-				render.render(escena, camara);
+				render.render(escena, cameraAtScene);
 
 			}
 			function animarEscena(){
@@ -87,7 +88,9 @@ function iniciarEscena(){
 				ultimoTiempo=Date.now();
 				
 				AnguloRotado = AnguloRotado - 0.30*delta;
+				
 				elementos.rotation.set(0,AnguloRotado,0);
+				CameraReposition(0,0,0);
 				renderEscena();
 				requestAnimationFrame(animarEscena);
 			}

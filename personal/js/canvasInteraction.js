@@ -1,3 +1,4 @@
+var CurrentCamera ;
 function SetupOnClick(currentRenderDomElement) {
 				currentRenderDomElement.addEventListener('click', function (evt) {
 			  	var projector = new THREE.Projector();
@@ -9,12 +10,13 @@ function SetupOnClick(currentRenderDomElement) {
 			    var clicky = evt.pageY - Offset.top - 5;
 			    directionVector.x = ( clickx / width ) * 2 - 1;
 			    directionVector.y = -( clicky / height ) * 2 + 1;
-			    var ray = projector.pickingRay(directionVector,camara);
+			    var ray = projector.pickingRay(directionVector,CurrentCamera);
 			
     			var intersects = ray.intersectObjects(escena.children, true);
 					if (intersects.length) {
 					var target = intersects[0].object; 
-					target.scale.set(0.2,0.2,0.2);
+					target.scale.set(0.6,0.6,0.6);
+					CameraReposition(0,0,0,target)  ;
 					}
 			    }, false);	
 }
@@ -23,10 +25,41 @@ function SetupOnScroll(currentRenderDomElement){
         var scrollStatus=0; 
 		var lastScrollPosition=0;
         var ScrollDirection;
-	currentRenderDomElement.addEventListener('scroll', function() {
-		scrollStatus = currentRenderDomElement.pageYOffset;
-		if (scrollStatus > lastScrollTop) {ScrollDirection = "down";} else {ScrollDirection = "up";}
-        lastScrollTop = scrollStatus;
-        console.log(ScrollDirection);    
-    },false);
+		// IE9, Chrome, Safari, Opera
+		currentRenderDomElement.addEventListener("mousewheel", MouseWheelHandler, false);
+		// Firefox
+		currentRenderDomElement.addEventListener("DOMMouseScroll", MouseWheelHandler, false);
+		
+	function MouseWheelHandler(e) {
+	var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+	CameraReposition(delta*10,0,0)  ;
+	}
+
+	
+        
+    
+}
+//Camera setup
+var Camera_Distance = 150;
+var Camera_Horizonatl_Angle = 0;
+var Camera_Vertical_Angle = Math.PI/4;
+var Camera_lookAt ;
+
+function CameraReposition(distance_inc,hoizontalAngle_inc,verticalAngle_inc,targetObject){
+	Camera_lookAt = targetObject = targetObject !== undefined ? targetObject : Camera_lookAt;
+	CurrentCamera= cameraAtScene;
+	Camera_Distance += distance_inc;
+	Camera_Horizonatl_Angle += hoizontalAngle_inc;
+	Camera_Vertical_Angle += verticalAngle_inc;
+	var current_target_position = new THREE.Vector3();
+	current_target_position.setFromMatrixPosition( Camera_lookAt.matrixWorld );
+	CurrentCamera.position.set(
+		current_target_position.x + Camera_Distance*Math.sin(Camera_Horizonatl_Angle)*(1-Math.cos(Camera_Vertical_Angle)),
+		current_target_position.y + Camera_Distance*Math.sin(Camera_Vertical_Angle),
+		current_target_position.z + Camera_Distance*(1-Math.sin(Camera_Horizonatl_Angle))*(1-Math.cos(Camera_Vertical_Angle))
+	);
+	var current_target_position = new THREE.Vector3();
+	current_target_position.setFromMatrixPosition( Camera_lookAt.matrixWorld );
+	CurrentCamera.lookAt(current_target_position);
+
 }
