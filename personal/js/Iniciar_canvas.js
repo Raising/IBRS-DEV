@@ -4,6 +4,7 @@ var render;
 var ultimoTiempo;
 var elementos;
 var AnguloRotado = 0;
+var TargeteableElementsList = [];
 function iniciarEscena(){
                                 //Render
                                 
@@ -13,7 +14,7 @@ function iniciarEscena(){
                                 
 
                                 render.setClearColor(new THREE.Color(0xff0000),0);
-
+								
                                 var canvasWidth = 1280;
                                 var canvasHeight = 720;
                                 render.setSize(canvasWidth, canvasHeight);
@@ -33,7 +34,7 @@ function iniciarEscena(){
                                 //establecimiento de eventos
                                 SetunUpMouseInteraction(render.domElement);
                                 //SetupOnClick(render.domElement);
-                                SetupOnScroll(render.domElement);
+                                
                                 
                                 //var territory = new scenery(120);
                                 elementos = new THREE.Object3D();

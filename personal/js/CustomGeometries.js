@@ -91,7 +91,7 @@ THREE.LapidaGeometry = function (weigth,height,deep,radiusTopCornerProportion) {
         }
         this.computeCentroids();
         this.computeFaceNormals();
-        this.computeVertexNormals();
+        
 }
 
 THREE.LapidaGeometry.prototype = Object.create( THREE.Geometry.prototype );
@@ -256,15 +256,51 @@ THREE.BaseGeometry = function ( radiusTop, radiusBottom, height, radialSegments,
 }
 
 THREE.BaseGeometry.prototype = Object.create( THREE.Geometry.prototype );
+//
+//
 //Elementos compuestos
+//
+//
 var BasicElement = function(){
     THREE.Object3D.call(this);
 }
-
 BasicElement.prototype = Object.create(THREE.Object3D.prototype);
 
+
+var TargeteableElement = function(){
+    BasicElement.call(this);
+	TargeteableElementsList.push(this);
+	this.htmlRepresentation = new Object();
+	this.name = "no name";
+	this.htmlRepresentation.position = new Object();
+	this.status = "normal";
+	
+	
+	this.container = jQuery('<tr id="'+this.id+'"></tr>');
+	this.updateHtml = function (){
+		this.container.empty().append('<td>'+this.name+
+		'</td><td>'+parseInt(this.position.x*10)/10+':'+parseInt(this.position.y*10)/10+':'+parseInt(this.position.z*10)/10+
+		'</td><td>'+this.status+'</td>');
+		
+	};
+	this.onElementClick = function(){
+		this.updateHtml;
+	}
+	
+	jQuery('#inBoardElements').append(this.container);
+	
+}
+//
+TargeteableElement.prototype = Object.create(BasicElement.prototype);
+	//constructor: BasicElement,
+
+	
+
+
+THREE.EventDispatcher.prototype.apply( TargeteableElement.prototype );
+
 var Miniature = function(height,baseDiameter,miniatureTexture,baseTexture){
-       BasicElement.call(this);
+       TargeteableElement.call(this);
        var baseHeight = 0.5
        var MiniatureTextureMap = new THREE.ImageUtils.loadTexture(miniatureTexture);
        var BaseTextureMap = new THREE.ImageUtils.loadTexture(baseTexture);
@@ -277,11 +313,16 @@ var Miniature = function(height,baseDiameter,miniatureTexture,baseTexture){
             new THREE.MeshBasicMaterial( { color:0x000000})]));
         this.BasePiece.position.set(0,baseHeight/2,0);
         this.TopPiece.position.set(0,baseHeight,0);
-        this.add(this.TopPiece);
+        
         this.add(this.BasePiece);
-       
+       this.add(this.TopPiece);
+	   for (var i = 0; i< this.children.length;i++){
+			this.children[i].onClick = this;
+		}
 }
-Miniature.prototype = Object.create(BasicElement.prototype);
+Miniature.prototype = Object.create(TargeteableElement.prototype);
+
+
 
 var TableBoard = function(dimensions,coverTexture){
     BasicElement.call(this);
@@ -290,7 +331,7 @@ var TableBoard = function(dimensions,coverTexture){
     var GeoTop = new THREE.CubeGeometry(dimensions.x,dimensions.y,dimensions.z);
     for (var i = 0; i<GeoTop.faces.length;i++){ GeoTop.faces[i].materialIndex = 0;}
     GeoTop.faces[4].materialIndex = GeoTop.faces[5].materialIndex = 1;
-    var GeoLeg = new THREE.CubeGeometry(dimensions.x*0.1,dimensions.y*4,dimensions.z*0.1);
+    var GeoLeg = new THREE.CubeGeometry(dimensions.x*0.1,dimensions.y*2,dimensions.z*0.1);
     
     this.TableTop = new THREE.Mesh(GeoTop,
         new THREE.MeshFaceMaterial([
@@ -302,7 +343,7 @@ var TableBoard = function(dimensions,coverTexture){
     this.TableLegs=[];
      for (var i = 0;i<4;i++){
         var leg =new THREE.Mesh(GeoLeg,new THREE.MeshLambertMaterial( { map: WoodTextureMap}));
-        leg.position.set((1-(i%2)*2)*dimensions.x*0.4,-dimensions.y*3,(1-parseInt(i/2)*2)*dimensions.z*0.4); 
+        leg.position.set((1-(i%2)*2)*dimensions.x*0.4,-dimensions.y*2,(1-parseInt(i/2)*2)*dimensions.z*0.4); 
         
         this.TableLegs.push(leg);
         this.add(this.TableLegs[i]);

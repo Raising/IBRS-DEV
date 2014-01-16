@@ -3,7 +3,9 @@ var CurrentCamera ;
 function SetunUpMouseInteraction(currentRenderDomElement){
 	var mouseIsDown = 0;
 	var mouseDownPosition = new THREE.Vector3(0,0,0);
-
+		
+	currentRenderDomElement.addEventListener("mousewheel", MouseWheelHandler, false);// IE9, Chrome, Safari, Opera	
+	currentRenderDomElement.addEventListener("DOMMouseScroll", MouseWheelHandler, false);// Firefox
 	currentRenderDomElement.addEventListener('contextmenu', function (evt){evt.preventDefault();}, false);
 	currentRenderDomElement.addEventListener('mousedown', function (evt) {
 	    mouseIsDown=evt.which;
@@ -15,7 +17,7 @@ function SetunUpMouseInteraction(currentRenderDomElement){
 	            break;
 	        case 2://middle mouse
 	        	
-	            //alert('Middle mouse button pressed');
+	            //alert('Middle mouse button presed');
 	            break;
 	        case 3://right mouse
 	            break;
@@ -68,15 +70,19 @@ function findObjectByProyection(evt,scope){
     directionVector.y = -( clicky / CanvasStats.height ) * 2 + 1;
 
     var ray = projector.pickingRay(directionVector,CurrentCamera);
-	var intersects = ray.intersectObjects(escena.children, true);
+	var intersects = ray.intersectObjects(TargeteableElementsList, true);
 	if (intersects.length) {
-		var target = intersects[0].object; 
-			//target.scale.set(0.6,0.6,0.6);
+		var target = intersects[0].object.parent; 
+			target.updateHtml();
+		//target.scale.set(0.6,0.6,0.6);
 		CameraReposition(0,0,0,target)  ;
 	} 
 }
 
-
+function MouseWheelHandler(e) {
+	var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+	CameraReposition(delta*5,0,0)  ;
+}  
 
 
 function SetupOnClick(currentRenderDomElement) {
@@ -102,20 +108,7 @@ function SetupOnClick(currentRenderDomElement) {
 			    }, false);	
 }
 
-function SetupOnScroll(currentRenderDomElement){
-        var scrollStatus=0; 
-		var lastScrollPosition=0;
-        var ScrollDirection;
-		// IE9, Chrome, Safari, Opera
-		currentRenderDomElement.addEventListener("mousewheel", MouseWheelHandler, false);
-		// Firefox
-		currentRenderDomElement.addEventListener("DOMMouseScroll", MouseWheelHandler, false);
-		
-	function MouseWheelHandler(e) {
-	var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-	CameraReposition(delta*10,0,0)  ;
-	}   
-}
+
 //Camera setup
 var Camera_Distance = 150;
 var Camera_Horizonatl_Angle = 0;
@@ -125,7 +118,7 @@ var Camera_lookAt;
 function CameraReposition(distance_inc,hoizontalAngle_inc,verticalAngle_inc,targetObject){
 	Camera_lookAt = targetObject = targetObject !== undefined ? targetObject : Camera_lookAt;
 	CurrentCamera= cameraAtScene;
-	Camera_Distance += distance_inc;
+	Camera_Distance = Math.max(Camera_Distance+distance_inc,5);
 	Camera_Horizonatl_Angle += hoizontalAngle_inc;
 	Camera_Vertical_Angle += verticalAngle_inc;
 	Camera_Vertical_Angle = Math.max(0,Math.min(Math.PI,Camera_Vertical_Angle));
@@ -141,3 +134,4 @@ function CameraReposition(distance_inc,hoizontalAngle_inc,verticalAngle_inc,targ
 	CurrentCamera.lookAt(current_target_position);
 
 }
+
