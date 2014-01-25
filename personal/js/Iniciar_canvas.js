@@ -46,9 +46,16 @@ function iniciarEscena(){
                                 var asuangMini = new Miniature(3,2.5,'img/Asuang.jpg','img/CA.png');
                                 asuangMini.position.set(-16.25,18,1.25);
                                 asuangMini.rotation.set(0,3*Math.PI/4,0);
-                                asuangMini.ID = "asuang";
+                                asuangMini.name = "Asuang";
                                 CameraReposition(0,0,0,asuangMini);
                                 elementos.add(asuangMini);
+
+                                var asuMini = new Miniature(3,2.5,'img/Asuang.jpg','img/CA.png');
+                                asuMini.position.set(-40,0,25.25);
+                                asuMini.rotation.set(0,3*Math.PI/4,0);
+                                asuMini.name = "Asuang";
+                               
+                                elementos.add(asuMini);
         
                                 
                                 //luz

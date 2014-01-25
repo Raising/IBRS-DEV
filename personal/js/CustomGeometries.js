@@ -255,7 +255,25 @@ THREE.BaseGeometry = function ( radiusTop, radiusBottom, height, radialSegments,
 
 }
 
+
 THREE.BaseGeometry.prototype = Object.create( THREE.Geometry.prototype );
+// escenografia 8x8 simple
+
+THREE.RaisingModuleGeometry = function (weigth,height) {
+    THREE.Geometry.call( this );
+    this.weigth = weigth = weigth !== undefined ? weigth : 8;
+    this.height = height = height !== undefined ? height : 8;
+    this.depp = 8;
+    
+
+    }
+
+THREE.RaisingModuleGeometry.prototype = Object.create( THREE.Geometry.prototype );
+
+
+
+
+
 //
 //
 //Elementos compuestos
