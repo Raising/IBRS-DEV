@@ -3,6 +3,7 @@ var cameraAtScene;
 var render;
 var ultimoTiempo;
 var elementos;
+var edificios;
 var AnguloRotado = 0;
 var TargeteableElementsList = [];
 function iniciarEscena(){
@@ -37,12 +38,31 @@ function iniciarEscena(){
                                 
                                 
                                 //var territory = new scenery(120);
+								edificios = new THREE.Object3D();
+								edificios.ID = "edificios";
+								
+								var mesaprueba = new TableBoard(new THREE.Vector3(35,8,35),'img/tablero.jpg');
+                                edificios.add(mesaprueba);
+								var edificio1 = new Building('img/vcara1.jpg',"b");
+								var edificio2 = new Building('img/vcara2.jpg',"a");
+								edificio1.position.set(-0.95,0,-10.83);
+								edificio1.rotation.set(0,0.0309,0);
+								edificio2.position.set(2.54,0,11.05);
+								edificio2.rotation.set(0,2.4753,0);
+								edificios.add(edificio1);
+								edificios.add(edificio2);
+								
+								
                                 elementos = new THREE.Object3D();
                                 elementos.ID = "elementos";
+								
+								
+								
                                 //territory.calculateRepresentation(elementos);
                                 var mesa = new TableBoard(new THREE.Vector3(120,20,120),'img/terrain01.png');
                                 elementos.add(mesa);
-                        
+								
+								
                                 var asuangMini = new Miniature(3,2.5,'img/Asuang.jpg','img/CA.png');
                                 asuangMini.position.set(-16.25,18,1.25);
                                 asuangMini.rotation.set(0,3*Math.PI/4,0);
@@ -70,7 +90,7 @@ function iniciarEscena(){
                                 escena.add(light);
                                 
                                  // add subtle ambient lighting
-                         var ambientLight = new THREE.AmbientLight(0x111111);
+								var ambientLight = new THREE.AmbientLight(0x222222);
                                 escena.add(ambientLight);
  
                                 // add directional light source
@@ -87,7 +107,8 @@ function iniciarEscena(){
                                 new sceneryElement(3, new coordinate(40,5,20,0,Math.PI/2,0), new dimension(18,5,18)).calculateRepresentation(elementos);
                                 new sceneryElement(3, new coordinate(40,10,20,0,Math.PI/2,0), new dimension(10,5,10)).calculateRepresentation(elementos);
                                 ultimoTiempo=Date.now();
-                                escena.add(elementos);
+                                //escena.add(elementos);
+								escena.add(edificios);
                                 }
                         function renderEscena(){
                                 

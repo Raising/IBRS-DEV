@@ -259,16 +259,18 @@ THREE.BaseGeometry = function ( radiusTop, radiusBottom, height, radialSegments,
 THREE.BaseGeometry.prototype = Object.create( THREE.Geometry.prototype );
 // escenografia 8x8 simple
 
-THREE.RaisingModuleGeometry = function (weigth,height) {
+/*THREE.RaisingModuleGeometry = function (weigth,height) {
     THREE.Geometry.call( this );
     this.weigth = weigth = weigth !== undefined ? weigth : 8;
-    this.height = height = height !== undefined ? height : 8;
+    this.height = height = height !== undefined ? height : 7;
     this.depp = 8;
-    
-
+	this = new THREE.CubeGeometry(this.weigth,this.height,this.deep);
+	for (var i=0;i<this.faces.length;i++){
+		this.faces[i].materialIndex = i;
     }
+}
 
-THREE.RaisingModuleGeometry.prototype = Object.create( THREE.Geometry.prototype );
+THREE.RaisingModuleGeometry.prototype = Object.create( THREE.Geometry.prototype );*/
 
 
 
@@ -368,3 +370,30 @@ var TableBoard = function(dimensions,coverTexture){
         }
     }
 TableBoard.prototype = Object.create(BasicElement.prototype);
+
+var Building = function(frontalTexture,tipo){
+	BasicElement.call(this);
+	this.main_texture =  new THREE.ImageUtils.loadTexture(frontalTexture);
+	this.textures = [];
+	this.textures.push(this.main_texture);
+	for (var i = 1; i< 6;i++){
+			this.textures.push(new THREE.ImageUtils.loadTexture("img/edificioFace"+i+tipo+".jpg"));
+		}
+	var GeoEdificio = new THREE.CubeGeometry(8,7,8);
+	
+	for (var i=0;i<GeoEdificio.faces.length;i++){
+		GeoEdificio.faces[i].materialIndex = parseInt(i/2);
+    }
+	
+	var MeshEdificio = new THREE.Mesh(GeoEdificio,new THREE.MeshFaceMaterial([
+			new THREE.MeshLambertMaterial({ map: this.textures[0]}),
+			new THREE.MeshLambertMaterial({ map: this.textures[1]}),
+			new THREE.MeshLambertMaterial({ map: this.textures[2]}),
+			new THREE.MeshLambertMaterial({ map: this.textures[3]}),
+			new THREE.MeshLambertMaterial({ map: this.textures[4]}),
+			new THREE.MeshLambertMaterial({ map: this.textures[5]})
+	]));
+	MeshEdificio.position.set(0,3.5,0);
+	this.add(MeshEdificio);
+}
+Building.prototype = Object.create(BasicElement.prototype);
