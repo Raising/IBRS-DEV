@@ -82,7 +82,7 @@ IBRS.MODEL =  function (modelID) {
 		this.miniature.rotation.set(x,y,z);
 	};
 
-	
+
 
 	this.loadModelFromDataBase = function(modelID){
 		//carga mediante ayax
@@ -114,6 +114,10 @@ IBRS.TACTICALGROUP =  function () {
 
 IBRS.ARMY = function(){
 	this.tacticalGroupList = [];
+
+	this.addGroup = function(group){
+		this.tacticalGroupList.add(group);
+	}
 };
 
 
@@ -137,6 +141,8 @@ IBRS.TURN =  function(){
 		this.orderList.add(newOrder);
 	};
 
+	
+
 };
 
 IBRS.GAME = function(){
@@ -149,6 +155,11 @@ IBRS.GAME = function(){
 	this.loadGameFromDataBase = function(gameID){
 		//cargar mediante ayax
 	};
+
+	this.newTurn = function(){
+		this.turnList.add(new IBRS.TURN());
+
+	}
 
 	this.newGame = function(){
 		//
