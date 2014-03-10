@@ -19,7 +19,7 @@ THREE.LapidaGeometry = function (weigth,height,deep,radiusTopCornerProportion) {
                 //center point
                 var vertex = new THREE.Vector3();
                 vertex.x = 0;
-                vertex.y = weigthUpToCorner;
+                vertex.y = heightUpToCorner;
                 vertex.z = z*this.deep/2;
                 this.vertices.push( vertex );
                 uvs.push( new THREE.Vector2(  (vertex.x+(this.weigth/2))/this.weigth, vertex.y/this.height ) );
@@ -290,9 +290,9 @@ BasicElement.prototype = Object.create(THREE.Object3D.prototype);
 var TargeteableElement = function(){
     BasicElement.call(this);
 	TargeteableElementsList.push(this);
-	this.htmlRepresentation = new Object();
+	//this.htmlRepresentation = new Object();
 	this.name = "no name";
-	this.htmlRepresentation.position = new Object();
+	//this.htmlRepresentation.position = new Object();
 	this.status = "normal";
 	
 	
@@ -305,11 +305,11 @@ var TargeteableElement = function(){
 	};
 	this.onElementClick = function(){
 		this.updateHtml;
-	}
+	};
 	
 	jQuery('#inBoardElements').append(this.container);
 	
-}
+};
 //
 TargeteableElement.prototype = Object.create(BasicElement.prototype);
 	//constructor: BasicElement,
@@ -319,8 +319,9 @@ TargeteableElement.prototype = Object.create(BasicElement.prototype);
 
 THREE.EventDispatcher.prototype.apply( TargeteableElement.prototype );
 
-var Miniature = function(height,baseDiameter,miniatureTexture,baseTexture){
+var Miniature = function(height,baseDiameter,miniatureTexture,baseTexture,logicModel){
        TargeteableElement.call(this);
+       this.logicModel = logicModel;
        var baseHeight = 0.5
        var MiniatureTextureMap = new THREE.ImageUtils.loadTexture(miniatureTexture);
        var BaseTextureMap = new THREE.ImageUtils.loadTexture(baseTexture);
@@ -335,10 +336,15 @@ var Miniature = function(height,baseDiameter,miniatureTexture,baseTexture){
         this.TopPiece.position.set(0,baseHeight,0);
         
         this.add(this.BasePiece);
-       this.add(this.TopPiece);
-	   for (var i = 0; i< this.children.length;i++){
+        this.add(this.TopPiece);
+	   
+
+
+       for (var i = 0; i< this.children.length;i++){
 			this.children[i].onClick = this;
 		}
+
+     
 }
 Miniature.prototype = Object.create(TargeteableElement.prototype);
 
