@@ -5,9 +5,39 @@ IBRS.Graphics = function(){
     this.camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 0.1, 1000);
     this.render = new THREE.WebGLRenderer({premultipliedAlpha:false, alpha:true});
     this.render.setClearColor(new THREE.Color(0xff0000),0);
+    var canvasWidth = 1280;
+    var canvasHeight = 720;
+    this.render.setSize(canvasWidth, canvasHeight);
+
     this.referenceTime = 0;
     this.scenery = new IBRS.SCENERY();
     this.tageteableElementsList = [];//tienen uqe ser objetos 3d de THREE
+
+
+    this.camera_Distance = 150;
+    this.camera_Horizonatl_Angle = 0;
+    this.camera_Vertical_Angle = Math.PI/3;
+    this.camera_lookAt;
+
+    function CameraReposition(distance_inc,hoizontalAngle_inc,verticalAngle_inc,targetObject){
+        this.Camera_lookAt = targetObject = targetObject !== undefined ? targetObject : this.Camera_lookAt;
+        //CurrentCamera= cameraAtScene;
+        this.camera_Distance = Math.max(Camera_Distance+distance_inc,5);
+        this.camera_Horizonatl_Angle += hoizontalAngle_inc;
+        this.camera_Vertical_Angle += verticalAngle_inc;
+        this.camera_Vertical_Angle = Math.max(0,Math.min(Math.PI,Camera_Vertical_Angle));
+        var current_target_position = new THREE.Vector3();
+        current_target_position.setFromMatrixPosition( Camera_lookAt.matrixWorld );
+        CurrentCamera.position.set(
+            current_target_position.x + Camera_Distance*Math.cos(Camera_Horizonatl_Angle)*Math.sin(Camera_Vertical_Angle),
+            current_target_position.y + Camera_Distance*Math.cos(Camera_Vertical_Angle),
+            current_target_position.z + Camera_Distance*Math.sin(Camera_Horizonatl_Angle)*Math.sin(Camera_Vertical_Angle)
+        );
+        var current_target_position = new THREE.Vector3();
+        current_target_position.setFromMatrixPosition( Camera_lookAt.matrixWorld );
+        CurrentCamera.lookAt(current_target_position);
+
+    }
 
 
 
@@ -17,7 +47,7 @@ IBRS.Graphics = function(){
 
     this.renderEscene = function(){
         
-        render.render(escena, cameraAtScene);
+        this.render.render(this.escene, this.camera);
 
     }
     this.animateEscene = function(){
