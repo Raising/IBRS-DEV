@@ -107,8 +107,8 @@ function iniciarEscena(){
                                 new sceneryElement(3, new coordinate(40,5,20,0,Math.PI/2,0), new dimension(18,5,18)).calculateRepresentation(elementos);
                                 new sceneryElement(3, new coordinate(40,10,20,0,Math.PI/2,0), new dimension(10,5,10)).calculateRepresentation(elementos);
                                 ultimoTiempo=Date.now();
-                                //escena.add(elementos);
-								escena.add(edificios);
+                                escena.add(elementos);
+								//escena.add(edificios);
                                 }
                         function renderEscena(){
                                 
