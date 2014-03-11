@@ -1,8 +1,12 @@
 jQuery(function(){
-				webGLStart();
+				//webGLStart();
 
-				jQuery(render.domElement).attr("id","render").addClass(" canvas-look col-md-12 col-sm-12 col-xs-12");
-				jQuery("#canvas").append(jQuery(render.domElement));
+				var GraphicEnviroment = new IBRS.Graphics();
+				GraphicEnviroment.webGLStart();
+
+
+				jQuery(GraphicEnviroment.render.domElement).attr("id","render").addClass(" canvas-look col-md-12 col-sm-12 col-xs-12");
+				jQuery("#canvas").append(jQuery(GraphicEnviroment.render.domElement));
 			
 				//boton ampliar canvas	
 				jQuery("#fullscreen-canvas").click(function(){

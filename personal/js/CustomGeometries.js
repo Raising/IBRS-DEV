@@ -304,7 +304,7 @@ var TargeteableElement = function(){
 		
 	};
 	this.onElementClick = function(){
-		this.updateHtml;
+		this.updateHtml();
 	};
 	
 	jQuery('#inBoardElements').append(this.container);

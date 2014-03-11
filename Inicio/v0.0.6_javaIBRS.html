@@ -1,0 +1,267 @@
+<html>
+    <head>
+        <title>V 0.0.6, JavaIBRS</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		
+		<link href="../libs/css/main.css" rel="stylesheet">
+		
+		<link href="../libs/css/bootstrap.css" rel="stylesheet">
+		<link href="../libs/css/bootstrap-theme.css" rel="stylesheet">
+		
+		<script type="text/javascript" src="../libs/js/jquery-1.9.1.js"></script>
+		<script>jQuery.noConflict();</script>
+		<script type="text/javascript" src="../libs/js/bootstrap.js"></script>
+		<script type="text/javascript" src="../libs/js/mootools.js"></script>
+		<script type="text/javascript" src="../libs/js/three.js"></script>
+		<script src="../personal/js/scenery.js"></script>
+		<script src="../personal/js/scenery_element.js"></script>
+		<script src="../personal/js/scenery_geometry_utils.js"></script>
+		<script src="../personal/js/CustomGeometries.js"></script>
+		<script src="../personal/js/canvasInteraction.js"></script>
+		<script type="text/javascript" src="../personal/js/IBRSIntegrated.js"></script>
+		<script type="text/javascript" src="../personal/js/Iniciar_canvas_IBRS.js"></script>
+		<script type="text/javascript" src="../personal/js/functionality.js"></script>
+		
+		
+    </head>
+    <body>
+       	<div class="show-top-margin container ">
+
+       		<!--Cabecera, probablemente requiera cambiar de dimensiones para optimizar el uso del espacio-->
+			<div id="cabecera" class="row show-grid">
+				<div class="col-md-12 ">
+					<h3>Infinity Battle Report System   <small>By Raising Spirit</small></h3>
+					<h5>Herramienta de creación y visualización de informes de batalla</h5>
+				</div>
+			</div>
+			
+
+			<div id="cuerpo" class="row show-grid">
+				<!--Pestañas-->
+				<ul id="tabs" class="nav nav-tabs">
+					<li ><a href="#menu_search">Search</a></li>
+					<li ><a href="#menu_initial">Initial State</a></li>
+					<li ><a href="#menu_events">Event manager</a></li>
+					<li class="pull-right"><a href="#menu_user_login">User</a></li>
+
+				</ul> 		
+				<div id="menu_area" class="col-md-12 col-sm-12 col-xs-12" >
+				</div>
+				<div id="hidden_storage" class= "hidden">
+						<!--Register-->
+						<div id="menu_user_register" class="col-md-push-3 col-md-6 col-sm-12 col-xs-12 ">
+							<form>
+								<div class="input-group">
+								  <span class="input-group-addon">User</span>
+								  <input type="text" class="form-control" placeholder="Username">
+								</div>
+								<div class="input-group">
+								  <span class="input-group-addon">Pass</span>
+								  <input type="password" class="form-control" placeholder="Password">
+								</div>
+								<div class="input-group">
+								  <span class="input-group-addon">Pass</span>
+								  <input type="password" class="form-control" placeholder="rewrite your password">
+								</div>
+
+								<div class="input-group">
+								  <span class="input-group-addon">Email</span>
+								  <input type="text" class="form-control" placeholder="email">
+								</div>
+								<button id="button_login" type="button" class="btn btn-warning"> Send 
+ 	 							</button>
+ 	 							
+							</form>
+						</div>
+						<!--User login-->
+						<div id="menu_user_login" class="col-md-push-3 col-md-6 col-sm-12 col-xs-12 ">
+							<form>
+								<div class="input-group">
+								  <span class="input-group-addon">User</span>
+								  <input type="text" class="form-control" placeholder="Username">
+								</div>
+								<div class="input-group">
+								  <span class="input-group-addon">Pass</span>
+								  <input type="password" class="form-control" placeholder="Password">
+								</div>
+								<button id="button_login" type="button" class="btn btn-success"> Login 
+ 	 							</button>
+ 	 							<button id="button_register_menu" type="button" class="btn btn-warning"> Register
+ 	 							</button>
+ 	 							<a class="pull-right color-orange" href="#menu_search">Recover acount</a>
+							</form>
+						</div>
+						<!-- #INITIAL #ESTADO -->
+						<div id="menu_initial" class="col-md-6 col-sm-12 col-xs-12 ">Div dedicado las los menus que crean el estado inicial.
+						<div id="menu_initial_load" class="col-md-6 col-sm-6 col-xs-12">
+
+							<div class="input-group ">
+
+							  	
+							  	<button type="button" class="selector-btn btn btn-primary ">Load Scenery Enviroment</button>
+							  	<ul class="dropdown-menu" role="menu">
+							 		<li><a href="#">Escenario Edificioas grandes</a></li>
+							    	<li><a href="#">Mapa 001</a></li>
+							   		<li><a href="#">Mapa 002 raro</a></li>
+							    	<li class="divider"></li>
+							    	<li><a href="#">Crear nuevo escenario</a></li>
+							  	</ul>
+								<button type="button" class="btn btn-primary  " data-toggle="dropdown" >
+							    	<span class="caret"></span>
+							 	</button>
+							</div>
+
+							<div class="btn-group">
+							  	<button type="button" class="selector-btn btn btn-primary ">Positional Weapons</button>
+							  	<ul class="dropdown-menu" role="menu">
+							 		<li><a href="#positional_weapons">Positional Weapons</a></li>
+							    	<li><a href="#mision_related">Mision Related</a></li>
+							    	<li><a href="#markers">Markers</a></li>
+							    	<li class="divider"></li>
+							   		<li><a href="#pano">Panoceania</a></li>
+							    	<li><a href="#haqui">Haquislam</a></li>
+							    	<li><a href="#yu-chin">Yu-Chin</a></li>
+							    	<li><a href="#nomads">Nomads</a></li>
+							    	<li><a href="#CA">Combined Army</a></li>
+							   		<li><a href="#aleph">Aleph</a></li>
+							    	<li><a href="#ariadna">Ariadna</a></li>
+							    	<li><a href="#mercs">Mercs</a></li>
+							    	
+							   	</ul>
+								<button type="button" class="btn btn-primary  " data-toggle="dropdown" >
+							    	<span class="caret"></span>
+							 	</button>
+							</div>
+							<ul class=" list-group ">
+							  <li class="list-group-item">Repeater</li>
+							  <li class="list-group-item">E-Mauler</li>
+							  <li class="list-group-item">Mine</li>
+							  <li class="list-group-item">Camo-Mine</li>
+							  <li class="list-group-item">Monofilament Field</li>
+							</ul>
+
+						</div>
+						<div id="menu_initial_selector" class="col-md-6 col-sm-6 col-xs-12">
+						<div class="panel panel-default">
+ 
+  						
+							<table id="inBoardElements" class="table table-hover h6 ">
+								<tr>
+									<th>Kind</th>
+									<th>Position</th>
+									<th>Status</th>
+								</tr>	<tr>
+									<td>Asuang</td>
+									<td>10:0:33</td>
+									<td>normal</td>
+								</tr>	<tr>
+									<td>Skiavoro</td>
+									<td>45:12:55</td>
+									<td>Wounded</td>
+								</tr>
+							</table>
+						</div>	
+						</div>
+				</div>
+				<!-- #CANVAS -->
+				<div id="canvas" class="col-md-6 col-sm-12 col-xs-12 ">
+  					<div class="btn-toolbar" role="toolbar">
+  						<div class="btn-group">
+   							<button id="fullscreen-canvas" type="button" class="btn btn-default">
+  							<span class="glyphicon glyphicon-fullscreen"></span>
+  							</button>
+  							<button id="resize-canvas" type="button" class="btn btn-default " style="display: none;">
+  							<span class="glyphicon glyphicon-resize-small"></span>
+  							</button>
+   							<button type="button" class="btn btn-default">
+  							<span class="glyphicon glyphicon-forward"></span>
+  							</button>
+   							<button type="button" class="btn btn-default">
+  							<span class="glyphicon glyphicon-play"></span>
+  							</button>
+  							
+						 
+  						</div>
+  						<div class="btn-group">
+  							<button type="button" class="btn btn-primary">Boton</button>
+  							<ul class="dropdown-menu" role="menu">
+						    <li><a href="#">Acción #1</a></li>
+						    <li><a href="#">Acción #2</a></li>
+						    <li><a href="#">Acción #3</a></li>
+						    <li class="divider"></li>
+						    <li><a href="#">Acción #4</a></li>
+						  </ul>
+						  <button type="button" class="btn btn-primary "
+						          data-toggle="dropdown">
+						    <span class="caret"></span>
+						  </button>
+						  
+  						</div>
+  					</div>
+  					</div>
+  					<!-- #BUSQUEDA #SEARCH -->
+					<div id="menu_search"	class="col-md-12 col-sm-12 col-xs-12"><h5>Content Search Menu</h5>
+			
+						<div id="search_arguments" class="col-md-3 col-sm-6 col-xs-12">
+							
+							<div class="input-group-sm input-group ">
+	     					 	<span class="input-group-addon ">User :</span>
+	      						<input type="text" class="form-control">
+	      						<span class="input-group-addon"><input type="checkbox"></span>
+	    					</div>
+	    					<div class="input-group-sm input-group c">
+	     					 	<span class="input-group-addon">Group :</span>
+	      						<input type="text" class="form-control">
+	      						<span class="input-group-addon"><input type="checkbox"></span>
+	    					</div>
+	    					<div class="input-group-sm input-group ">
+	     					 	<span class="input-group-addon">Army :</span>
+	      						<input type="text" class="form-control">
+	      						<span class="input-group-addon"><input type="checkbox"></span>
+	    					</div>
+	    					
+	    					<div class="input-group-sm input-group ">
+	     					 	<span class="input-group-addon">Place :</span>
+	      						<input type="text" class="form-control">
+	      						<span class="input-group-addon"><input type="checkbox"></span>
+	    					</div>
+	    					<div class="btn-group-md">
+	   							<button id="MainSearch" type="button" class="btn btn-default">
+	  							Search</span>
+	  							</button>
+	  						</div>
+						</div>
+
+						<div id="search-results" class="col-md-9 col-sm-9 col-xs-12"><h5>Resultados de busqueda cargados por ajax</h5>
+							<table class="table table-hover table-striped opacity-striped-table">
+								<tr>
+									<th>Name</th>
+									<th>Date</th>
+									<th>User</th>
+									<th>Army1</th>
+									<th>Army2</th>
+								</tr>	<tr>
+									<td>Demolition</td>
+									<td>27/11/2013</td>
+									<td>Raising</td>
+									<td>EC</td>
+									<td>Panoceania</td>
+								</tr>	<tr>
+									<td>Un turno</td>
+									<td>3/12/2013</td>
+									<td>Urobros</td>
+									<td>Acontecimiento</td>
+									<td>Nomadas</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<!-- #EVENTOS -->
+					<div id="menu_events" class="col-md-6 col-sm-12 col-xs-12 ">Div dedicado a los menus que gestionan los eventos de partida</div>	
+  				</div>
+			</div>	
+		</div>
+    </body>
+</html>

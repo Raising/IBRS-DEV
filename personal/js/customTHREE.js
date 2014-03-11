@@ -14,22 +14,24 @@ IBRS.AngularCamera = function ( fov, aspect, near, far , target){
 
 	this.updateProjectionMatrix();
 
+	var camera = this;
+
 	this.reposition = function (distance_inc,hoizontalAngle_inc,verticalAngle_inc,targetObject){
-		this.target = targetObject = targetObject !== undefined ? targetObject : this.target;
-		this.distance = Math.max(this.distance+distance_inc,5);
-		this.horizontalAngle += hoizontalAngle_inc;
-		this.verticalAngle += verticalAngle_inc;
-		this.verticalAngle = Math.max(0,Math.min(Math.PI,this.verticalAngle));
+		camera.target = targetObject = targetObject !== undefined ? targetObject : camera.target;
+		camera.distance = Math.max(camera.distance+distance_inc,5);
+		camera.horizontalAngle += hoizontalAngle_inc;
+		camera.verticalAngle += verticalAngle_inc;
+		camera.verticalAngle = Math.max(0,Math.min(Math.PI,camera.verticalAngle));
 		var current_target_position = new THREE.Vector3();
-		current_target_position.setFromMatrixPosition( this.target.matrixWorld );
-		this.position.set(
-			current_target_position.x + this.distance*Math.cos(this.horizontalAngle)*Math.sin(this.verticalAngle),
-			current_target_position.y + this.distance*Math.cos(this.verticalAngle),
-			current_target_position.z + this.distance*Math.sin(this.horizontalAngle)*Math.sin(this.verticalAngle)
+		current_target_position.setFromMatrixPosition( camera.target.matrixWorld );
+		camera.position.set(
+			current_target_position.x + camera.distance*Math.cos(camera.horizontalAngle)*Math.sin(camera.verticalAngle),
+			current_target_position.y + camera.distance*Math.cos(camera.verticalAngle),
+			current_target_position.z + camera.distance*Math.sin(camera.horizontalAngle)*Math.sin(camera.verticalAngle)
 		);
 		var current_target_position = new THREE.Vector3();
-		current_target_position.setFromMatrixPosition( this.target.matrixWorld );
-		this.lookAt(current_target_position);
+		current_target_position.setFromMatrixPosition( camera.target.matrixWorld );
+		camera.lookAt(current_target_position);
 	}
 };
 IBRS.AngularCamera.prototype = Object.create( THREE.PerspectiveCamera.prototype );

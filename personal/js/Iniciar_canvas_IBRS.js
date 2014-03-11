@@ -1,203 +1,179 @@
 ///
 IBRS.Graphics = function(){
-
-    this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 0.1, 1000);
+    var graphics = this;
+    
     this.render = new THREE.WebGLRenderer({premultipliedAlpha:false, alpha:true});
     this.render.setClearColor(new THREE.Color(0xff0000),0);
     var canvasWidth = 1280;
     var canvasHeight = 720;
     this.render.setSize(canvasWidth, canvasHeight);
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 0.1, 1000);
+    this.scene.add(this.camera);
+    
+    var light = new THREE.PointLight(0xffffff);
+    light.position.set(40,10,40);
+    this.scene.add(light);
+
 
     this.referenceTime = 0;
-    this.scenery = new IBRS.SCENERY();
+    this.scenery = new IBRS.Scenery();
+    this.scene.add(this.scenery);
     this.tageteableElementsList = [];//tienen uqe ser objetos 3d de THREE
 
 
     this.camera_Distance = 150;
     this.camera_Horizonatl_Angle = 0;
     this.camera_Vertical_Angle = Math.PI/3;
-    this.camera_lookAt;
+    this.camera_target = this.scene;
 
-    function CameraReposition(distance_inc,hoizontalAngle_inc,verticalAngle_inc,targetObject){
-        this.Camera_lookAt = targetObject = targetObject !== undefined ? targetObject : this.Camera_lookAt;
-        //CurrentCamera= cameraAtScene;
-        this.camera_Distance = Math.max(Camera_Distance+distance_inc,5);
-        this.camera_Horizonatl_Angle += hoizontalAngle_inc;
-        this.camera_Vertical_Angle += verticalAngle_inc;
-        this.camera_Vertical_Angle = Math.max(0,Math.min(Math.PI,Camera_Vertical_Angle));
-        var current_target_position = new THREE.Vector3();
-        current_target_position.setFromMatrixPosition( Camera_lookAt.matrixWorld );
-        CurrentCamera.position.set(
-            current_target_position.x + Camera_Distance*Math.cos(Camera_Horizonatl_Angle)*Math.sin(Camera_Vertical_Angle),
-            current_target_position.y + Camera_Distance*Math.cos(Camera_Vertical_Angle),
-            current_target_position.z + Camera_Distance*Math.sin(Camera_Horizonatl_Angle)*Math.sin(Camera_Vertical_Angle)
-        );
-        var current_target_position = new THREE.Vector3();
-        current_target_position.setFromMatrixPosition( Camera_lookAt.matrixWorld );
-        CurrentCamera.lookAt(current_target_position);
-
-    }
 
 
 
     this.startScene = function(){
+        graphics.SetupUpMouseInteraction(graphics.render.domElement);
+        graphics.CameraReposition(0,0,0);
+    };
 
-    }
-
-    this.renderEscene = function(){
+    this.renderScene = function(){
         
-        this.render.render(this.escene, this.camera);
+        graphics.render.render(graphics.scene, graphics.camera);
+
+    };
+    this.animateScene= function(){
+       // var delta=(Date.now()- this.referenceTime )/1000;
+       // this.referenceTime =Date.now();
+        graphics.renderScene();
+
+        requestAnimationFrame(graphics.animateScene);
+    };
+    this.webGLStart= function () {
+        graphics.startScene();
+        graphics.animateScene();        
+    };
+
+    this.setupGame= function(newGame){
+
+
+    };
+    this.setTargeteableElements=function(newList){
+        graphics.tageteableElementsList = newList;
+    };
+
+
+/* CANVAS INTERACTION
+THIS METODS PURPOSE IS TO HANDLE THE USER INTERACTION OVER THE CANVAS
+*/
+    this.CameraReposition = function(distance_inc,hoizontalAngle_inc,verticalAngle_inc,targetObject){
+        graphics.camera_target = targetObject = targetObject !== undefined ? targetObject : graphics.camera_target;
+               
+
+        graphics.camera_Distance = Math.max(graphics.camera_Distance+distance_inc,10);
+        graphics.camera_Horizonatl_Angle += hoizontalAngle_inc;
+        graphics.camera_Vertical_Angle += verticalAngle_inc;
+        graphics.camera_Vertical_Angle = Math.max(0,Math.min(Math.PI,graphics.camera_Vertical_Angle));
+        var current_target_position = new THREE.Vector3();
+        current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
+        graphics.camera.position.set(
+            current_target_position.x + graphics.camera_Distance*Math.cos(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle),
+            current_target_position.y + graphics.camera_Distance*Math.cos(graphics.camera_Vertical_Angle),
+            current_target_position.z + graphics.camera_Distance*Math.sin(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle)
+        );
+        var current_target_position = new THREE.Vector3();
+        current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
+        graphics.camera.lookAt(current_target_position);
 
     }
-    this.animateEscene = function(){
-        var delta=(Date.now()- this.referenceTime )/1000;
-        this.referenceTime =Date.now();
-        this.renderEscene();
-
-        requestAnimationFrame(this.animateEsceneñ);
-    }
-    this.webGLStart = function () {
-        this.startScene();
-        this.animateEscene();        
-    }
-
-    this.setupGame = function(newGame){
 
 
-    }
 
-    this.setTargeteableElements = function(newList){
-        this.tageteableElementsList = newList;
-    }
+
+this.SetupUpMouseInteraction = function(currentRenderDomElement){
+    var mouseIsDown = 0;
+    var mouseDownPosition = new THREE.Vector3(0,0,0);
+        
+    currentRenderDomElement.addEventListener("mousewheel", graphics.MouseWheelHandler, false);// IE9, Chrome, Safari, Opera  
+    currentRenderDomElement.addEventListener("DOMMouseScroll", graphics.MouseWheelHandler, false);// Firefox
+    currentRenderDomElement.addEventListener('contextmenu', function (evt){evt.preventDefault();}, false);
+    currentRenderDomElement.addEventListener('mousedown', function (evt) {
+        mouseIsDown=evt.which;
+        mouseDownPosition.x = evt.pageX;
+        mouseDownPosition.y = evt.pageY;        
+        switch (evt.which) {
+            case 1://left mouse
+                
+                break;
+            case 2://middle mouse
+                
+                //alert('Middle mouse button presed');
+                break;
+            case 3://right mouse
+                break;
+            default://something wierd
+                alert('You have a strange mouse');
+        }
+    },false);
+
+    currentRenderDomElement.addEventListener('mousemove', function (evt) {
+        if (mouseIsDown==3){
+            //turn camera
+            graphics.CameraReposition(0,
+                0.03*(evt.pageX - mouseDownPosition.x),
+                0.03*(evt.pageY - mouseDownPosition.y)
+            );
+        mouseDownPosition.x = evt.pageX;
+        mouseDownPosition.y = evt.pageY;
+        }
+    },false);
+
+    currentRenderDomElement.addEventListener('mouseup', function (evt) {
+        if (mouseIsDown==1 && evt.pageX == mouseDownPosition.x && evt.pageY == mouseDownPosition.y)
+            { graphics.findObjectByProyection(evt,this);}
+
+        mouseIsDown=0;
+
+        
+        
+    },false);
+
+}
+
+
+this.getCanvasStats = function(scope){
+    var canvasStat = [] ;
+    canvasStat.Offset = jQuery(scope).offset();
+    canvasStat.width =jQuery(scope).width(); 
+    canvasStat.height =jQuery(scope).height();
+    canvasStat.paddingtop = 5;
+    canvasStat.paddingleft = 15;
+    return canvasStat; 
+}   
+
+this.findObjectByProyection = function(evt,scope){
+
+    var projector = new THREE.Projector();
+    var directionVector = new THREE.Vector3();
+    var CanvasStats = graphics.getCanvasStats(scope);
+
+    var clickx = evt.pageX - CanvasStats.Offset.left - CanvasStats.paddingleft;
+    var clicky = evt.pageY - CanvasStats.Offset.top - CanvasStats.paddingtop ;
+    directionVector.x = ( clickx / CanvasStats.width ) * 2 - 1;
+    directionVector.y = -( clicky / CanvasStats.height ) * 2 + 1;
+
+    var ray = projector.pickingRay(directionVector,graphics.camera);
+    var intersects = ray.intersectObjects(graphics.tageteableElementsList, true);
+    if (intersects.length) {
+        var target = intersects[0].object.parent; 
+            target.updateHtml();
+        //target.scale.set(0.6,0.6,0.6);
+        graphics.CameraReposition(0,0,0,target)  ;
+    } 
+}
+
+this.MouseWheelHandler = function(e) {
+    var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+    graphics.CameraReposition(delta*5,0,0)  ;
+} 
+
 
 };
-
-
-
-////
-var escena;
-var cameraAtScene;
-var render;
-
-var elementos;
-var edificios;
-var TargeteableElementsList = [];
-function iniciarEscena(){
-    //Render
-    
-    
-    render = new THREE.WebGLRenderer({premultipliedAlpha:false, alpha:true});
-    
-    
-
-	
-    var canvasWidth = 1280;
-    var canvasHeight = 720;
-    render.setSize(canvasWidth, canvasHeight);
-    
-
-    //Escena
-    escena = new THREE.Scene();
-
-
-
-    //Camara
-    cameraAtScene = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 0.1, 1000);
-    CameraReposition(0,0,0,escena);
-    
-    escena.add(cameraAtScene);
-
-    //establecimiento de eventos
-    SetunUpMouseInteraction(render.domElement);
-    //SetupOnClick(render.domElement);
-    
-    
-    //var territory = new scenery(120);
-	edificios = new THREE.Object3D();
-	edificios.ID = "edificios";
-	
-	var mesaprueba = new TableBoard(new THREE.Vector3(35,8,35),'img/tablero.jpg');
-    edificios.add(mesaprueba);
-	var edificio1 = new Building('img/vcara1.jpg',"b");
-	var edificio2 = new Building('img/vcara2.jpg',"a");
-	edificio1.position.set(-0.95,0,-10.83);
-	edificio1.rotation.set(0,0.0309,0);
-	edificio2.position.set(2.54,0,11.05);
-	edificio2.rotation.set(0,2.4753,0);
-	edificios.add(edificio1);
-	edificios.add(edificio2);
-	
-	
-    elementos = new THREE.Object3D();
-    elementos.ID = "elementos";
-	
-	
-	
-    //territory.calculateRepresentation(elementos);
-    var mesa = new TableBoard(new THREE.Vector3(120,20,120),'img/terrain01.png');
-    elementos.add(mesa);
-	
-	
-    var asuangMini = new Miniature(-1,2.5,'img/Asuang.jpg','img/CA.png',0);
-    asuangMini.position.set(-16.25,18,1.25);
-    asuangMini.rotation.set(0,3*Math.PI/4,0);
-    asuangMini.name = "Asuang";
-    CameraReposition(0,0,0,asuangMini);
-    elementos.add(asuangMini);
-
-    var asuMini = new Miniature(3,2.5,'img/Asuang.jpg','img/CA.png',0);
-    asuMini.position.set(-40,0,25.25);
-    asuMini.rotation.set(0,3*Math.PI/4,0);
-    asuMini.name = "Asuang";
-   
-    elementos.add(asuMini);
-
-    
-    //luz
-    var light = new THREE.PointLight(0xffffff);
-    light.position.set(40,10,40);
-    escena.add(light);
-    var light = new THREE.PointLight(0xffffff);
-    light.position.set(-40,10,-40);
-    escena.add(light);
-    var light = new THREE.PointLight(0x888888);
-    light.position.set(0,40,0);
-    escena.add(light);
-    
-     // add subtle ambient lighting
-	var ambientLight = new THREE.AmbientLight(0x222222);
-    escena.add(ambientLight);
-
-    // add directional light source
-    var directionalLight = new THREE.DirectionalLight(0xffffff);
-    directionalLight.position.set(1, 1,0).normalize();
-    //escena.add(directionalLight);
-    
-    new sceneryElement(3, new coordinate(-20,13.0,2.5,0,Math.PI/2,0), new dimension(5,5,10)).calculateRepresentation(elementos);
-    new sceneryElement(3, new coordinate(-20,6.5,0,0,Math.PI/2,0), new dimension(10,5,10)).calculateRepresentation(elementos);
-    new sceneryElement(3, new coordinate(-20,0,0,0,Math.PI/2,0), new dimension(20,5,10)).calculateRepresentation(elementos);
-    
-    
-    new sceneryElement(3, new coordinate(40,0,20,0,Math.PI/2,0), new dimension(25,5,25)).calculateRepresentation(elementos);
-    new sceneryElement(3, new coordinate(40,5,20,0,Math.PI/2,0), new dimension(18,5,18)).calculateRepresentation(elementos);
-    new sceneryElement(3, new coordinate(40,10,20,0,Math.PI/2,0), new dimension(10,5,10)).calculateRepresentation(elementos);
-    ultimoTiempo=Date.now();
-    escena.add(elementos);
-	//escena.add(edificios);
-}
-function renderEscena(){
-        
-        render.render(escena, cameraAtScene);
-
-}
-function animarEscena(){
-        var delta=(Date.now()-ultimoTiempo)/1000;
-        ultimoTiempo=Date.now();
-        renderEscena();
-        requestAnimationFrame(animarEscena);
-}
-function webGLStart() {
-        iniciarEscena();
-        animarEscena();        
-}

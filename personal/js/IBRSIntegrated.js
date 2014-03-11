@@ -1,17 +1,7 @@
 var IBRS = { VERSION: '1' };
 
-IBRS.Tuple3D = function(x,y,z){
-	this.x = x = x !== undefined ? x : 0;
-	this.y = y = y !== undefined ? y : 0;
-	this.z = z = z !== undefined ? z : 0;
-	this.set = function(x,y,z){
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
-}
 
-IBRS.DECLARATION =  function(descriptor,source,target,aro){
+IBRS.Declaration =  function(descriptor,source,target,aro){
 //descriptor: que acccion se define de una lista numeration, 	
 //Source, Marcador/miniatura que lo declara, 
 //target: lugar de destino, movimiento o miniatura/marcador destino. 
@@ -24,46 +14,63 @@ IBRS.DECLARATION =  function(descriptor,source,target,aro){
 
 };
 
-IBRS.ORDER =  function(){
+IBRS.Order =  function(){
 	this.firstDeclaration = [];
 	this.secondDeclaration = [];
 	this.firstAro = [];
 	this.secondAro = [];
 
-	this.addFirstDeclaration( declaration){
+	this.addFirstDeclaration= function( declaration){
 		this.firstDeclaration.add(declaration);
 	}
 
-	this.addSecondDeclaration( declaration){
+	this.addSecondDeclaration= function( declaration){
 		this.secondDeclaration.add(declaration);
 	}
 
-	this.addFirstAro( declaration){
+	this.addFirstAro= function( declaration){
 		this.firstAro.add(declaration);
 	}
 
-	this.addSecondAro( declaration){
+	this.addSecondAro= function( declaration){
 		this.SecondAro.add(declaration);
 	}
 };
 
-IBRS.SCENERY =  function (){
+IBRS.Scenery =  function (){
 	THREE.Object3D.call(this);
+
+	var mesa = new TableBoard(new THREE.Vector3(120,20,120),'img/terrain01.png');
+  
+    new sceneryElement(3, new coordinate(-20,13.0,2.5,0,Math.PI/2,0), new dimension(5,5,10)).calculateRepresentation(this);
+    new sceneryElement(3, new coordinate(-20,6.5,0,0,Math.PI/2,0), new dimension(10,5,10)).calculateRepresentation(this);
+    new sceneryElement(3, new coordinate(-20,0,0,0,Math.PI/2,0), new dimension(20,5,10)).calculateRepresentation(this);
+    
+    new sceneryElement(3, new coordinate(40,0,20,0,Math.PI/2,0), new dimension(25,5,25)).calculateRepresentation(this);
+    new sceneryElement(3, new coordinate(40,5,20,0,Math.PI/2,0), new dimension(18,5,18)).calculateRepresentation(this);
+    new sceneryElement(3, new coordinate(40,10,20,0,Math.PI/2,0), new dimension(10,5,10)).calculateRepresentation(this);
+   
+    this.add(mesa);
+
+
+
+
+
 	this.loadSceneryFromDataBase = function(sceneryID){
 		//cargar mediante ayax
 	};
 };
-IBRS.SCENERY.prototype = Object.create(THREE.Object3D.prototype);
+IBRS.Scenery.prototype = Object.create(THREE.Object3D.prototype);
 
 
-IBRS.MODEL =  function (modelID) {
-	
+IBRS.Model =  function (modelID) {
+	var model = this;
 	this.isMarker = FALSE;
 	this.id = modelID = modelID !== undefined ? modelID : 0;
 	this.modelTexture = 'img/empty.jpg';
 	this.baseTexture = 'img/empty.jpg'; // por decidir el formato de almacenamiento
-	this.position = new IBRS.Tuple3D();
-	this.rotation = new IBRS.Tuple3D();
+	this.position = new THREE.Vector3();
+	this.rotation = new THREE.Vector3();
 	this.heigth = 3;
 	this.width = 2.5;
 	this.regular = true; // true la miniatura es regular, false irregular
@@ -72,14 +79,14 @@ IBRS.MODEL =  function (modelID) {
 	this.miniature = new Miniature(this.heigth,this.width,'this.modelTexture','this.baseTexture',this);
 
 	this.setPosition = function(x,y,z){
-		this.position.set(z,y,z);
-		this.miniature.position.set(x,y,z);
+		model.position.set(z,y,z);
+		model.miniature.position.set(x,y,z);
 	};
 
 
 	this.setRotation = function(x,y,z){
-		this.rotation.set(z,y,z);
-		this.miniature.rotation.set(x,y,z);
+		model.rotation.set(z,y,z);
+		model.miniature.rotation.set(x,y,z);
 	};
 
 
@@ -89,21 +96,22 @@ IBRS.MODEL =  function (modelID) {
 	};
 };
 
-IBRS.TACTICALGROUP =  function () {
+IBRS.TacticalGroup =  function () {
+	var tacticalGroup = this;
 	this.modelList = []; // lista llena de objetos IBRS.MODEL
 	this.regularAmount = 0;
 	this.irregularAmount = 0;
 	this.furyAmount = 0;
 	
-	// resstart order counting
+	// restart order counting
 	this.actualizeOrders =  function(){
-		this.furyAmount = this.regularAmount = this.irregularAmount = 0;
+		tacticalGroup.furyAmount = tacticalGroup.regularAmount = tacticalGroup.irregularAmount = 0;
 		for (var i = 0; i<modelList.length();i++){
 			var countingModel = modelList[i];
 			if (countingModel.active){
-				if (countingModel.regular){			this.regularAmount +=1;}
-				else{								this.irregularAmount +=1;}
-				if (countingModel.fury){			this.furyAmount +=1;}
+				if (countingModel.regular){			tacticalGroup.regularAmount +=1;}
+				else{								tacticalGroup.irregularAmount +=1;}
+				if (countingModel.fury){			tacticalGroup.furyAmount +=1;}
 			}
 		}
 	};
@@ -112,20 +120,22 @@ IBRS.TACTICALGROUP =  function () {
 };
 
 
-IBRS.ARMY = function(){
+IBRS.Army = function(){
+	var army = this;
 	this.tacticalGroupList = [];
 
 	this.addGroup = function(group){
-		this.tacticalGroupList.add(group);
+		army.tacticalGroupList.add(group);
 	}
 };
 
 
-IBRS.PLAYER = function (){
+IBRS.Player = function (){
+	var player = this;
 	this.playerID = 0;
 	this.faction; // Faction is an ENUM
 	this.name = "no name";
-	this.army = new IBRS.ARMY ();
+	this.army = new IBRS.Army();
 
 	this.loadPlayerfromDataBase = function (playerID){
 		//cargar mediante ayax
@@ -134,30 +144,32 @@ IBRS.PLAYER = function (){
 
 
 //a turn is a set of orders that define the events of the game.
-IBRS.TURN =  function(){
+IBRS.Turn =  function(){
+	vat turn = this;
 	this.orderList=[];
 
 	this.addOrder = function (newOrder) {
-		this.orderList.add(newOrder);
+		turn.orderList.add(newOrder);
 	};
 
 	
 
 };
 
-IBRS.GAME = function(){
-	this.scenery = new IBRS.SCENERY();
+IBRS.Game = function(){
+	var game = this;
+	this.scenery = new IBRS.Scenery();
 	this.turnList = [];
 	this.playersList = [];
-	this.playersList.add(new IBRS.PLAYER);
-	this.playersList.add(new IBRS.PLAYER);
+	this.playersList.add(new IBRS.Player);
+	this.playersList.add(new IBRS.Player);
 
 	this.loadGameFromDataBase = function(gameID){
 		//cargar mediante ayax
 	};
 
 	this.newTurn = function(){
-		this.turnList.add(new IBRS.TURN());
+		game.turnList.add(new IBRS.Turn());
 
 	}
 
