@@ -6,10 +6,10 @@ jQuery(function(){
 				var GraphicEnviroment = new IBRS.Graphics();
 				GraphicEnviroment.webGLStart();
 				var currentGame = new IBRS.Game();
-				currentGame.loadGameFromDataBase("gameExample.json");
+				currentGame.loadGameFromDataBase("game01");
 				setTimeout(function(){
 					var miniaturesListhere = currentGame.getMiniatures();
-				GraphicEnviroment.addListToScene(miniaturesListhere);},6000);
+				GraphicEnviroment.addListToScene(miniaturesListhere);},4000);
 
 				
 				

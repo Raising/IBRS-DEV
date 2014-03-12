@@ -136,7 +136,7 @@ IBRS.Unit =  function (unitID) {
 
 	this.loadModelFromDataBase = function(modelID){
 		//carga mediante ayax
-		jQuery.getJSON(modelID,function(data){
+		jQuery.getJSON("DataBase/Model/"+modelID+".json",function(data){
 			//alert("succes");
 			unit.unitTexture = data.modelTexture;
 			unit.baseTexture = data.baseTexture;
@@ -253,7 +253,7 @@ IBRS.Game = function(){
 	this.loadGameFromDataBase = function(gameID){
 		//cargar mediante ayax
 	
-		jQuery.getJSON(gameID,function(data){
+		jQuery.getJSON("DataBase/Game/"+gameID+".json",function(data){
 			
 			game.name = data.name;
 			for (var i = 0;i<2;i++){

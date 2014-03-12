@@ -1,0 +1,8 @@
+{"modelID":"Tomcat",
+"modelTexture":"img/tomcat.jpg",
+"baseTexture":"img/CA.png",
+"height":3,
+"width":2.5,
+"regular":true,
+"fury":false
+}
