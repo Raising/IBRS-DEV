@@ -1,12 +1,18 @@
 jQuery(function(){
 				//webGLStart();
-
+				jQuery( document ).ajaxError(function() {
+					alert("fallo de ayax");
+				});
 				var GraphicEnviroment = new IBRS.Graphics();
 				GraphicEnviroment.webGLStart();
 				var currentGame = new IBRS.Game();
 				currentGame.loadGameFromDataBase("gameExample.json");
-				var miniaturesListhere = currentGame.getMiniatures();
-				GraphicEnviroment.addListToScene(miniaturesListhere);
+				setTimeout(function(){
+					var miniaturesListhere = currentGame.getMiniatures();
+				GraphicEnviroment.addListToScene(miniaturesListhere);},6000);
+
+				
+				
 
 				jQuery(GraphicEnviroment.render.domElement).attr("id","render").addClass(" canvas-look col-md-12 col-sm-12 col-xs-12");
 				jQuery("#canvas").append(jQuery(GraphicEnviroment.render.domElement));
