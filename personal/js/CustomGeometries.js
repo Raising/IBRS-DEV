@@ -289,7 +289,7 @@ BasicElement.prototype = Object.create(THREE.Object3D.prototype);
 
 var TargeteableElement = function(){
     BasicElement.call(this);
-	TargeteableElementsList.push(this);
+	IBRS.tageteableElementsList.push(this);
 	//this.htmlRepresentation = new Object();
 	this.name = "no name";
 	//this.htmlRepresentation.position = new Object();
@@ -321,6 +321,7 @@ THREE.EventDispatcher.prototype.apply( TargeteableElement.prototype );
 
 var Miniature = function(height,baseDiameter,miniatureTexture,baseTexture,logicModel){
        TargeteableElement.call(this);
+       var miniature = this;
        this.logicModel = logicModel;
        var baseHeight = 0.5
        var MiniatureTextureMap = new THREE.ImageUtils.loadTexture(miniatureTexture);
@@ -338,11 +339,35 @@ var Miniature = function(height,baseDiameter,miniatureTexture,baseTexture,logicM
         this.add(this.BasePiece);
         this.add(this.TopPiece);
 	   
-
-
        for (var i = 0; i< this.children.length;i++){
 			this.children[i].onClick = this;
 		}
+
+        this.refactor = function (height,baseDiameter,miniatureTexture,baseTexture){
+
+            miniature.children = [];
+
+            var MiniatureTextureMap = new THREE.ImageUtils.loadTexture(miniatureTexture);
+            var BaseTextureMap = new THREE.ImageUtils.loadTexture(baseTexture);
+            var GeoBase = new THREE.BaseGeometry(baseDiameter*0.45,baseDiameter/2,baseHeight,20,1);
+            var GeoLapida = new THREE.LapidaGeometry(baseDiameter*0.8,height,0.3);
+            miniature.TopPiece= new THREE.Mesh(GeoLapida,new THREE.MeshLambertMaterial( { map: MiniatureTextureMap} ));
+            miniature.BasePiece = new THREE.Mesh(GeoBase,
+            new THREE.MeshFaceMaterial([
+            new THREE.MeshLambertMaterial( { map: BaseTextureMap}),
+            new THREE.MeshBasicMaterial( { color:0x000000})]));
+            miniature.BasePiece.position.set(0,baseHeight/2,0);
+            miniature.TopPiece.position.set(0,baseHeight,0);
+        
+            miniature.add(miniature.BasePiece);
+            miniature.add(miniature.TopPiece);
+       
+       for (var i = 0; i< miniature.children.length;i++){
+            miniature.children[i].onClick = this;
+        }
+
+
+        };
 
      
 }

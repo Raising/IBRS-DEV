@@ -1,0 +1,8 @@
+{"modelID":"asuang",
+"modelTexture":"img/asuang.jpg",
+"baseTexture":"img/EC.png",
+"height":3,
+"width":2.5,
+"regular":true,
+"fury":false
+}

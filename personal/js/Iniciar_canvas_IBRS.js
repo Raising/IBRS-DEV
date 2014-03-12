@@ -1,4 +1,5 @@
 ///
+IBRS.tageteableElementsList = [];
 IBRS.Graphics = function(){
     var graphics = this;
     
@@ -27,6 +28,11 @@ IBRS.Graphics = function(){
     this.camera_Vertical_Angle = Math.PI/3;
     this.camera_target = this.scene;
 
+    this.addListToScene= function(list){
+        for (var i=0;i<list.length;i++){
+            graphics.scene.add(list[i]);
+        }
+    };
 
 
 
@@ -161,7 +167,7 @@ this.findObjectByProyection = function(evt,scope){
     directionVector.y = -( clicky / CanvasStats.height ) * 2 + 1;
 
     var ray = projector.pickingRay(directionVector,graphics.camera);
-    var intersects = ray.intersectObjects(graphics.tageteableElementsList, true);
+    var intersects = ray.intersectObjects(IBRS.tageteableElementsList, true);
     if (intersects.length) {
         var target = intersects[0].object.parent; 
             target.updateHtml();

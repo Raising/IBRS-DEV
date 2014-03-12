@@ -1,0 +1,27 @@
+{"name":"Partida Testeo de sistema",
+"playerList":
+   [
+	{"playerID":200,"name":"raising","army":
+		{"faction":"EC","tacticalGroupList":
+			[{"unitList":[
+				{"modelID":"asuang.json","position":{"x":10,"y":0,"z":50},"rotation":{"x":0,"y":0,"z":0}},
+				{"modelID":"asuang.json","position":{"x":10,"y":0,"z":0},"rotation":{"x":0,"y":0,"z":0}},
+				{"modelID":"asuang.json","position":{"x":10,"y":0,"z":-30},"rotation":{"x":0,"y":0,"z":0}},
+				{"modelID":"asuang.json","position":{"x":10,"y":0,"z":20},"rotation":{"x":0,"y":0,"z":0}}
+			]}]					
+		}		
+	},
+	{"playerID":201,"name":"bonca","army":
+		{"faction":"NOMAD","tacticalGroupList":
+			[{"unitList":[
+				{"modelID":"asuang.json","position":{"x":50,"y":0,"z":50},"rotation":{"x":0,"y":0,"z":0}},
+				{"modelID":"asuang.json","position":{"x":50,"y":0,"z":0},"rotation":{"x":0,"y":0,"z":0}},
+				{"modelID":"asuang.json","position":{"x":50,"y":0,"z":-30},"rotation":{"x":0,"y":0,"z":0}},
+				{"modelID":"asuang.json","position":{"x":50,"y":0,"z":20},"rotation":{"x":0,"y":0,"z":0}}
+			]}]					
+		}	
+	
+	}
+   ],
+   "sceneryID":2
+}
