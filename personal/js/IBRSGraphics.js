@@ -1,8 +1,6 @@
 ///
-IBRS.tageteableElementsList = [];
 IBRS.Graphics = function(){
     var graphics = this;
-    alert ("iniciar_canvas_IBRRS is deprecated, use iniciar_IBRSGraphics.js instead ");
     this.render = new THREE.WebGLRenderer({premultipliedAlpha:false, alpha:true});
     this.render.setClearColor(new THREE.Color(0xff0000),0);
     var canvasWidth = 1280;
@@ -18,8 +16,8 @@ IBRS.Graphics = function(){
 
 
     this.referenceTime = 0;
-    this.scenery = new IBRS.Scenery();
-    this.scene.add(this.scenery);
+    this.gameArea = new IBRS.GameArea();
+    this.scene.add(this.gameArea);
     this.tageteableElementsList = [];//tienen uqe ser objetos 3d de THREE
 
 
@@ -28,9 +26,12 @@ IBRS.Graphics = function(){
     this.camera_Vertical_Angle = Math.PI/3;
     this.camera_target = this.scene;
 
-    this.addListToScene= function(list){
+    this.addListToScene= function(list,targeteable){
         for (var i=0;i<list.length;i++){
             graphics.scene.add(list[i]);
+            if (targeteable){
+                graphics.tageteableElementsList.push(list[i]);
+            }
         }
     };
 
@@ -167,7 +168,7 @@ this.findObjectByProyection = function(evt,scope){
     directionVector.y = -( clicky / CanvasStats.height ) * 2 + 1;
 
     var ray = projector.pickingRay(directionVector,graphics.camera);
-    var intersects = ray.intersectObjects(IBRS.tageteableElementsList, true);
+    var intersects = ray.intersectObjects(graphics.tageteableElementsList, true);
     if (intersects.length) {
         var target = intersects[0].object.parent; 
             target.updateHtml();
@@ -183,3 +184,124 @@ this.MouseWheelHandler = function(e) {
 
 
 };
+
+
+
+IBRS.UnitGraphic = function(height,baseDiameter,miniatureTexture,baseTexture,logicModel){
+       TargeteableElement.call(this);
+       var unitGraphic = this;
+       this.logicModel = logicModel;
+       var baseHeight = 0.5;
+       var MiniatureTextureMap = new THREE.ImageUtils.loadTexture(miniatureTexture);
+       var BaseTextureMap = new THREE.ImageUtils.loadTexture(baseTexture);
+       var GeoBase = new THREE.BaseGeometry(baseDiameter*0.45,baseDiameter/2,baseHeight,20,1);
+       var GeoLapida = new THREE.LapidaGeometry(baseDiameter*0.8,height,0.3);
+       this.TopPiece= new THREE.Mesh(GeoLapida,new THREE.MeshLambertMaterial( { map: MiniatureTextureMap} ));
+       this.BasePiece = new THREE.Mesh(GeoBase,
+        new THREE.MeshFaceMaterial([
+            new THREE.MeshLambertMaterial( { map: BaseTextureMap}),
+            new THREE.MeshBasicMaterial( { color:0x000000})]));
+        this.BasePiece.position.set(0,baseHeight/2,0);
+        this.TopPiece.position.set(0,baseHeight,0);
+        
+        this.add(this.BasePiece);
+        this.add(this.TopPiece);
+       
+       for (var i = 0; i< this.children.length;i++){
+            this.children[i].onClick = this;
+        }
+
+        this.refactor = function (height,baseDiameter,miniatureTexture,baseTexture){
+
+            unitGraphic.children = [];
+
+            var MiniatureTextureMap = new THREE.ImageUtils.loadTexture(miniatureTexture);
+            var BaseTextureMap = new THREE.ImageUtils.loadTexture(baseTexture);
+            var GeoBase = new THREE.BaseGeometry(baseDiameter*0.45,baseDiameter/2,baseHeight,20,1);
+            var GeoLapida = new THREE.LapidaGeometry(baseDiameter*0.8,height,0.3);
+            unitGraphic.TopPiece= new THREE.Mesh(GeoLapida,new THREE.MeshLambertMaterial( { map: MiniatureTextureMap} ));
+            unitGraphic.BasePiece = new THREE.Mesh(GeoBase,
+            new THREE.MeshFaceMaterial([
+            new THREE.MeshLambertMaterial( { map: BaseTextureMap}),
+            new THREE.MeshBasicMaterial( { color:0x000000})]));
+            unitGraphic.BasePiece.position.set(0,baseHeight/2,0);
+            unitGraphic.TopPiece.position.set(0,baseHeight,0);
+        
+            unitGraphic.add(unitGraphic.BasePiece);
+            unitGraphic.add(unitGraphic.TopPiece);
+       
+       for (var i = 0; i< unitGraphic.children.length;i++){
+            unitGraphic.children[i].onClick = this;
+        }
+
+
+        };
+
+     
+}
+IBRS.UnitGraphic.prototype = Object.create(TargeteableElement.prototype);
+
+
+
+
+IBRS.TableGraphic = function(dimensions,coverTexture){
+
+    BasicElement.call(this);
+    var CoverTextureMap =  new THREE.ImageUtils.loadTexture(coverTexture);
+    var WoodTextureMap =  new THREE.ImageUtils.loadTexture("img/woodtexture.jpg");
+    var GeoTop = new THREE.CubeGeometry(dimensions.x,dimensions.y,dimensions.z);
+    for (var i = 0; i<GeoTop.faces.length;i++){ GeoTop.faces[i].materialIndex = 0;}
+    GeoTop.faces[4].materialIndex = GeoTop.faces[5].materialIndex = 1;
+    var GeoLeg = new THREE.CubeGeometry(dimensions.x*0.1,dimensions.y*2,dimensions.z*0.1);
+    
+    this.TableTop = new THREE.Mesh(GeoTop,
+        new THREE.MeshFaceMaterial([
+            new THREE.MeshLambertMaterial({ map: WoodTextureMap}),
+            new THREE.MeshLambertMaterial({ map: CoverTextureMap} )]));
+    
+    this.TableTop.position.set(0,-dimensions.y/2,0);
+    this.add(this.TableTop);
+    this.TableLegs=[];
+     for (var i = 0;i<4;i++){
+        var leg =new THREE.Mesh(GeoLeg,new THREE.MeshLambertMaterial( { map: WoodTextureMap}));
+        leg.position.set((1-(i%2)*2)*dimensions.x*0.4,-dimensions.y*2,(1-parseInt(i/2)*2)*dimensions.z*0.4); 
+        
+        this.TableLegs.push(leg);
+        this.add(this.TableLegs[i]);
+        }
+    
+
+
+};
+
+
+IBRS.TableGraphic.prototype = Object.create(BasicElement.prototype);
+
+IBRS.SceneryGraphic = function(sceneryModelID){
+    BasicElement.call(this);
+    this.main_texture =  new THREE.ImageUtils.loadTexture(frontalTexture);
+    this.textures = [];
+    this.textures.push(this.main_texture);
+    for (var i = 1; i< 6;i++){
+            this.textures.push(new THREE.ImageUtils.loadTexture("img/edificioFace"+i+tipo+".jpg"));
+        }
+    var GeoEdificio = new THREE.CubeGeometry(8,7,8);
+    
+    for (var i=0;i<GeoEdificio.faces.length;i++){
+        GeoEdificio.faces[i].materialIndex = parseInt(i/2);
+    }
+    
+    var MeshEdificio = new THREE.Mesh(GeoEdificio,new THREE.MeshFaceMaterial([
+            new THREE.MeshLambertMaterial({ map: this.textures[0]}),
+            new THREE.MeshLambertMaterial({ map: this.textures[1]}),
+            new THREE.MeshLambertMaterial({ map: this.textures[2]}),
+            new THREE.MeshLambertMaterial({ map: this.textures[3]}),
+            new THREE.MeshLambertMaterial({ map: this.textures[4]}),
+            new THREE.MeshLambertMaterial({ map: this.textures[5]})
+    ]));
+    MeshEdificio.position.set(0,3.5,0);
+    this.add(MeshEdificio);
+
+};
+
+IBRS.SceneryGraphic.prototype = Object.create(BasicElement.prototype);

@@ -9,7 +9,7 @@ jQuery(function(){
 				currentGame.loadGameFromDataBase("game01");
 				setTimeout(function(){
 					var miniaturesListhere = currentGame.getMiniatures();
-				GraphicEnviroment.addListToScene(miniaturesListhere);},4000);
+				GraphicEnviroment.addListToScene(miniaturesListhere,true);},4000);
 
 				
 				

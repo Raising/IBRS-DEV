@@ -1,5 +1,4 @@
 var IBRS = { VERSION: '1' };
-alert("IBRSIntegrated is deprecated, use IBRSLogic instead");
 //Enum declaraciones
 IBRS.DEC = {ENUM : 'tipo de ordenes'};
 IBRS.DEC.MOVE = 0;
@@ -79,10 +78,11 @@ IBRS.Order =  function(){
 	}
 };
 
-IBRS.Scenery =  function (){
+IBRS.GameArea =  function (){
 	THREE.Object3D.call(this);
 
-	var mesa = new TableBoard(new THREE.Vector3(120,20,120),'img/terrain01.png');
+	
+	var mesa = new IBRS.TableGraphic(new THREE.Vector3(120,20,120),'img/terrain01.png');
   
     new sceneryElement(3, new coordinate(-20,13.0,2.5,0,Math.PI/2,0), new dimension(5,5,10)).calculateRepresentation(this);
     new sceneryElement(3, new coordinate(-20,6.5,0,0,Math.PI/2,0), new dimension(10,5,10)).calculateRepresentation(this);
@@ -102,14 +102,14 @@ IBRS.Scenery =  function (){
 		//cargar mediante ayax
 	};
 };
-IBRS.Scenery.prototype = Object.create(THREE.Object3D.prototype);
+IBRS.GameArea.prototype = Object.create(THREE.Object3D.prototype);
 
 
-IBRS.Unit =  function (unitID) {
-	var unit = this;
+IBRS.UnitLogic =  function (unitID) {
+	var unitLogic = this;
 	this.isMarker = false;
 	this.id = unitID = unitID !== undefined ? unitID : 0;
-	this.unitTexture = 'img/empty.jpg';
+	this.bodyTexture = 'img/empty.jpg';
 	this.baseTexture = 'img/empty.jpg'; // por decidir el formato de almacenamiento
 	this.position = new THREE.Vector3();
 	this.rotation = new THREE.Vector3();
@@ -118,42 +118,42 @@ IBRS.Unit =  function (unitID) {
 	this.regular = true; // true la miniatura es regular, false irregular
 	this.fury = false; // true la  es impetuosa, false no
 	this.active = true; // si aporta o no su orden al grupo
-	this.miniature = new Miniature(unit.height,unit.width,unit.unitTexture,unit.baseTexture,unit);
-;
-
-	this.setPosition = function(x,y,z){
-		unit.position.set(z,y,z);
-		unit.miniature.position.set(x,y,z);
-	};
+	this.unitGraphic = new IBRS.UnitGraphic(this.height,this.width,this.bodyTexture,this.baseTexture,this);
 
 
-	this.setRotation = function(x,y,z){
-		unit.rotation.set(z,y,z);
-		unit.miniature.rotation.set(x,y,z);
-	};
+		this.setPosition = function(x,y,z){
+			unitLogic.position.set(z,y,z);
+			unitLogic.unitGraphic.position.set(x,y,z);
+		};
+
+
+		this.setRotation = function(x,y,z){
+			unitLogic.rotation.set(z,y,z);
+			unitLogic.unitGraphic.rotation.set(x,y,z);
+		};
 
 
 
 	this.loadModelFromDataBase = function(modelID){
 		//carga mediante ayax
-		jQuery.getJSON("DataBase/Model/"+modelID+".json",function(data){
+		jQuery.getJSON("DataBase/Model/"+modelID+".json",function(unitModel){
 			//alert("succes");
-			unit.unitTexture = data.modelTexture;
-			unit.baseTexture = data.baseTexture;
-			unit.height = data.height;
-			unit.width = data.width;
-			unit.regular = data.regular;
-			unit.fury = data.fury;
-			unit.miniature.refactor(unit.height,unit.width,unit.unitTexture,unit.baseTexture);
+			unitLogic.bodyTexture = unitModel.bodyTexture;
+			unitLogic.baseTexture = unitModel.baseTexture;
+			unitLogic.height = unitModel.height;
+			unitLogic.width = unitModel.width;
+			unitLogic.regular = unitModel.regular;
+			unitLogic.fury = unitModel.fury;
+			unitLogic.unitGraphic.refactor(unitModel.height,unitModel.width,unitModel.bodyTexture,unitModel.baseTexture);
 
 		});
 	};
 
 	this.insertFromData = function(data){
 		
-		unit.loadModelFromDataBase(data.modelID);
-		unit.setPosition(data.position.x,data.position.y,data.position.z);
-		unit.setRotation(data.rotation.x,data.rotation.y,data.rotation.z);	
+		unitLogic.loadModelFromDataBase(data.modelID);
+		unitLogic.setPosition(data.position.x,data.position.y,data.position.z);
+		unitLogic.setRotation(data.rotation.x,data.rotation.y,data.rotation.z);	
 	};
 };
 
@@ -179,7 +179,7 @@ IBRS.TacticalGroup =  function () {
 
 	this.insertFromData = function(data) {
 		for (var i=0;i<data.unitList.length;i++){
-			var newUnit = new IBRS.Unit(IBRS.getNextUnitID());
+			var newUnit = new IBRS.UnitLogic(IBRS.getNextUnitID());
 			newUnit.insertFromData(data.unitList[i]);
 			tacticalGroup.unitList.push(newUnit);
 		}
@@ -243,10 +243,11 @@ IBRS.Turn =  function(){
 
 };
 
-IBRS.Game = function(){
+IBRS.Game = function(gameID){
 	var game = this;
+	this.ID = 0 || gameID;
 	this.name ="no name";
-	this.scenery = new IBRS.Scenery();
+	this.gameArea = new IBRS.GameArea();
 	this.turnList = [];
 	this.playerList = [];
 
@@ -266,16 +267,16 @@ IBRS.Game = function(){
 	};
 
 	this.getMiniatures = function(){
-		var miniatureList = [];
+		var unitGraphicList = [];
 		for (var i = game.playerList.length - 1; i >= 0; i--) {
 			for (var j = game.playerList[i].army.tacticalGroupList.length - 1; j >= 0; j--) {
 				for (var k = game.playerList[i].army.tacticalGroupList[j].unitList.length - 1; k >= 0; k--) {
-				miniatureList.push(game.playerList[i].army.tacticalGroupList[j].unitList[k].miniature)
+				unitGraphicList.push(game.playerList[i].army.tacticalGroupList[j].unitList[k].unitGraphic)
 				}
 			}
 			
 		}
-		return miniatureList;
+		return unitGraphicList;
 	};
 
 	this.newTurn = function(){
@@ -285,6 +286,30 @@ IBRS.Game = function(){
 
 	this.newGame = function(){
 		//
+	};
+};
+
+IBRS.SceneryLogic = function(sceneryModelID){
+	var sceneryLogic = this;
+	this.ID = sceneryModelID = sceneryModelID !== undefined ? sceneryModelID : 0;
+	this.dimension = new THREE.Vector3();
+	this.position = new THREE.Vector3();
+	this.rotation = new THREE.Vector3();
+	this.scenery = new IBRS.SceneryGraphic(sceneryModelID);
+	
+	this.setPosition = function(x,y,z){
+		sceneryLogic.position.set(z,y,z);
+		sceneryLogic.scenery.position.set(x,y,z);
+	};
+
+	this.setRotation = function(x,y,z){
+		sceneryLogic.rotation.set(z,y,z);
+		sceneryLogic.scenery.rotation.set(x,y,z);
+	};
+
+	this.setDimension = function(x,y,z){
+		sceneryLogic.position.set(z,y,z);
+		sceneryLogic.scenery.position.set(x,y,z);
 	};
 
 
