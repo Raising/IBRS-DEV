@@ -79,25 +79,11 @@ IBRS.Order =  function(){
 };
 
 IBRS.GameArea =  function (){
-	THREE.Object3D.call(this);
-
 	
-	var mesa = new IBRS.TableGraphic(new THREE.Vector3(120,20,120),'img/terrain01.png');
-  
-    new sceneryElement(3, new coordinate(-20,13.0,2.5,0,Math.PI/2,0), new dimension(5,5,10)).calculateRepresentation(this);
-    new sceneryElement(3, new coordinate(-20,6.5,0,0,Math.PI/2,0), new dimension(10,5,10)).calculateRepresentation(this);
-    new sceneryElement(3, new coordinate(-20,0,0,0,Math.PI/2,0), new dimension(20,5,10)).calculateRepresentation(this);
-    
-    new sceneryElement(3, new coordinate(40,0,20,0,Math.PI/2,0), new dimension(25,5,25)).calculateRepresentation(this);
-    new sceneryElement(3, new coordinate(40,5,20,0,Math.PI/2,0), new dimension(18,5,18)).calculateRepresentation(this);
-    new sceneryElement(3, new coordinate(40,10,20,0,Math.PI/2,0), new dimension(10,5,10)).calculateRepresentation(this);
-   
-    this.add(mesa);
-
-
-
-
-
+	gameArea =  this;
+	this.sceneryElementList = []; // llenado con IBR.SceneryLogic
+	this.table = new IBRS.TableLogic();
+	
 	this.loadSceneryFromDataBase = function(sceneryID){
 		//cargar mediante ayax
 	};
@@ -184,6 +170,15 @@ IBRS.TacticalGroup =  function () {
 			tacticalGroup.unitList.push(newUnit);
 		}
 	};
+	
+	
+	this.getMiniatures = function(){
+		var miniatures = [];
+		for (var i = 0; i<unitList.tacticalGroupList.length;i++){
+			miniatures.push(army.unitList[i].unitGraphic);
+			}
+		return miniatures;
+	};
 
 
 };
@@ -205,6 +200,14 @@ IBRS.Army = function(){
 			army.addGroup(newTacticalGroup);
 		}
 	};
+	
+	this.getMiniatures = function(){
+		var miniatures = [];
+		for (var i = 0; i<army.tacticalGroupList.length;i++){
+			miniatures.push(army.tacticalGroupList[i].getMiniatures());
+			}
+		return miniatures;
+	};
 };
 
 
@@ -225,6 +228,10 @@ IBRS.Player = function (){
 		newArmy.insertFromData(data.army);
 		player.army = newArmy;
 		
+	};
+	
+	this.getMiniatures = function(){
+		return player.army.getMiniatures();
 	};
 
 };
@@ -265,7 +272,7 @@ IBRS.Game = function(gameID){
 		//	game.scenery.loadSceneryFromDataBase(data.sceneryID);			
 		});
 	};
-
+//hacer este metodo de forma que se integre en los objetos
 	this.getMiniatures = function(){
 		var unitGraphicList = [];
 		for (var i = game.playerList.length - 1; i >= 0; i--) {
@@ -295,7 +302,33 @@ IBRS.SceneryLogic = function(sceneryModelID){
 	this.dimension = new THREE.Vector3();
 	this.position = new THREE.Vector3();
 	this.rotation = new THREE.Vector3();
-	this.scenery = new IBRS.SceneryGraphic(sceneryModelID);
+	this.scenery = new IBRS.SceneryGraphic(new THREE.Vector3(10,10,10));
+	
+	this.setPosition = function(x,y,z){
+		sceneryLogic.position.set(z,y,z);
+		sceneryLogic.scenery.position.set(x,y,z);
+	};
+
+	this.setRotation = function(x,y,z){
+		sceneryLogic.rotation.set(z,y,z);
+		sceneryLogic.scenery.rotation.set(x,y,z);
+	};
+
+	this.setDimension = function(x,y,z){
+		sceneryLogic.position.set(z,y,z);
+		sceneryLogic.scenery.position.set(x,y,z);
+	};
+
+
+};
+
+IBRS.TableLogic = function(TableModelID){
+	var sceneryLogic = this;
+	this.ID = sceneryModelID = sceneryModelID !== undefined ? sceneryModelID : 0;
+	this.dimension = new THREE.Vector3();
+	this.position = new THREE.Vector3();
+	this.rotation = new THREE.Vector3();
+	this.scenery = new IBRS.SceneryGraphic(new THREE.Vector3(10,10,10));
 	
 	this.setPosition = function(x,y,z){
 		sceneryLogic.position.set(z,y,z);

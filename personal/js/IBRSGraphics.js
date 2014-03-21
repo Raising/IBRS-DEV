@@ -262,7 +262,7 @@ IBRS.TableGraphic = function(dimensions,coverTexture){
     this.TableTop.position.set(0,-dimensions.y/2,0);
     this.add(this.TableTop);
     this.TableLegs=[];
-     for (var i = 0;i<4;i++){
+    for (var i = 0;i<4;i++){
         var leg =new THREE.Mesh(GeoLeg,new THREE.MeshLambertMaterial( { map: WoodTextureMap}));
         leg.position.set((1-(i%2)*2)*dimensions.x*0.4,-dimensions.y*2,(1-parseInt(i/2)*2)*dimensions.z*0.4); 
         
@@ -277,31 +277,28 @@ IBRS.TableGraphic = function(dimensions,coverTexture){
 
 IBRS.TableGraphic.prototype = Object.create(BasicElement.prototype);
 
-IBRS.SceneryGraphic = function(sceneryModelID){
+IBRS.SceneryGraphic = function(dimension){
     BasicElement.call(this);
-    this.main_texture =  new THREE.ImageUtils.loadTexture(frontalTexture);
+    /*this.main_texture =  new THREE.ImageUtils.loadTexture(frontalTexture);
     this.textures = [];
     this.textures.push(this.main_texture);
     for (var i = 1; i< 6;i++){
             this.textures.push(new THREE.ImageUtils.loadTexture("img/edificioFace"+i+tipo+".jpg"));
-        }
-    var GeoEdificio = new THREE.CubeGeometry(8,7,8);
+        }*/
+    var GeoEdificio = new THREE.CubeGeometry(dimension.x,dimension.y,dimension.z);
     
     for (var i=0;i<GeoEdificio.faces.length;i++){
         GeoEdificio.faces[i].materialIndex = parseInt(i/2);
     }
     
-    var MeshEdificio = new THREE.Mesh(GeoEdificio,new THREE.MeshFaceMaterial([
-            new THREE.MeshLambertMaterial({ map: this.textures[0]}),
-            new THREE.MeshLambertMaterial({ map: this.textures[1]}),
-            new THREE.MeshLambertMaterial({ map: this.textures[2]}),
-            new THREE.MeshLambertMaterial({ map: this.textures[3]}),
-            new THREE.MeshLambertMaterial({ map: this.textures[4]}),
-            new THREE.MeshLambertMaterial({ map: this.textures[5]})
-    ]));
-    MeshEdificio.position.set(0,3.5,0);
+    var MeshEdificio = new THREE.Mesh(GeoEdificio,new THREE.MeshLambertMaterial({color:rgb(21, 78, 0)}));
+    MeshEdificio.position.set(0,dimension.y/2,0);
     this.add(MeshEdificio);
 
+	
+	this.refactor = function(sceneryModelID){
+		//implementar cambio de modelo al que se carge por ajax
+	}
 };
 
 IBRS.SceneryGraphic.prototype = Object.create(BasicElement.prototype);

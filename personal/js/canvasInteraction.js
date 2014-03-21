@@ -1,6 +1,6 @@
-var CurrentCamera ;
+var CurrentCamera;
 
-function SetunUpMouseInteraction(currentRenderDomElement){
+function SetunUpMouseInteraction(currentRenderDomElement) {
 	var mouseIsDown = 0;
 	var mouseDownPosition = new THREE.Vector3(0,0,0);
 		
