@@ -17,7 +17,7 @@ IBRS.Graphics = function(){
 
     this.referenceTime = 0;
     this.gameArea = new IBRS.GameArea();
-    this.scene.add(this.gameArea);
+    //this.scene.add(this.gameArea);
     this.tageteableElementsList = [];//tienen uqe ser objetos 3d de THREE
 
 
@@ -291,7 +291,7 @@ IBRS.SceneryGraphic = function(dimension){
         GeoEdificio.faces[i].materialIndex = parseInt(i/2);
     }
     
-    var MeshEdificio = new THREE.Mesh(GeoEdificio,new THREE.MeshLambertMaterial({color:rgb(21, 78, 0)}));
+    var MeshEdificio = new THREE.Mesh(GeoEdificio,new THREE.MeshLambertMaterial({color:0x156000}));
     MeshEdificio.position.set(0,dimension.y/2,0);
     this.add(MeshEdificio);
 

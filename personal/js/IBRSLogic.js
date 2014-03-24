@@ -302,7 +302,7 @@ IBRS.SceneryLogic = function(sceneryModelID){
 	this.dimension = new THREE.Vector3();
 	this.position = new THREE.Vector3();
 	this.rotation = new THREE.Vector3();
-	this.scenery = new IBRS.SceneryGraphic(new THREE.Vector3(10,10,10));
+	/*this.scenery = new IBRS.SceneryGraphic(new THREE.Vector3(10,10,10));
 	
 	this.setPosition = function(x,y,z){
 		sceneryLogic.position.set(z,y,z);
@@ -317,33 +317,33 @@ IBRS.SceneryLogic = function(sceneryModelID){
 	this.setDimension = function(x,y,z){
 		sceneryLogic.position.set(z,y,z);
 		sceneryLogic.scenery.position.set(x,y,z);
-	};
+	};*/
 
 
 };
 
 IBRS.TableLogic = function(TableModelID){
-	var sceneryLogic = this;
-	this.ID = sceneryModelID = sceneryModelID !== undefined ? sceneryModelID : 0;
+	var tableLogic = this;
+	this.ID = TableModelID = TableModelID !== undefined ? TableModelID : 0;
 	this.dimension = new THREE.Vector3();
 	this.position = new THREE.Vector3();
 	this.rotation = new THREE.Vector3();
-	this.scenery = new IBRS.SceneryGraphic(new THREE.Vector3(10,10,10));
+	/*this.table = new IBRS.SceneryGraphic(new THREE.Vector3(10,10,10));
 	
 	this.setPosition = function(x,y,z){
-		sceneryLogic.position.set(z,y,z);
-		sceneryLogic.scenery.position.set(x,y,z);
+		tableLogic.position.set(z,y,z);
+		tableLogic.table.position.set(x,y,z);
 	};
 
 	this.setRotation = function(x,y,z){
-		sceneryLogic.rotation.set(z,y,z);
-		sceneryLogic.scenery.rotation.set(x,y,z);
+		tableLogic.rotation.set(z,y,z);
+		tableLogic.table.rotation.set(x,y,z);
 	};
 
 	this.setDimension = function(x,y,z){
-		sceneryLogic.position.set(z,y,z);
-		sceneryLogic.scenery.position.set(x,y,z);
-	};
+		tableLogic.position.set(z,y,z);
+		tableLogic.table.position.set(x,y,z);
+	};*/
 
 
 };
