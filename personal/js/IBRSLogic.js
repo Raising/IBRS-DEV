@@ -83,7 +83,16 @@ IBRS.GameArea =  function (){
 	gameArea =  this;
 	this.sceneryElementList = []; // llenado con IBR.SceneryLogic
 	this.table = new IBRS.TableLogic();
+
 	
+	this.getElementList = function(){
+		var elementList = [];
+		for (var i = 0; i < gameArea.sceneryElementList.length; i++) {
+			elementList.push(gameArea.sceneryElementList[i].scenery);
+		};
+		elementList.push(gameArea.table.table);
+		return elementList;
+	};
 	this.loadSceneryFromDataBase = function(sceneryID){
 		//cargar mediante ayax
 	};
@@ -302,7 +311,7 @@ IBRS.SceneryLogic = function(sceneryModelID){
 	this.dimension = new THREE.Vector3();
 	this.position = new THREE.Vector3();
 	this.rotation = new THREE.Vector3();
-	/*this.scenery = new IBRS.SceneryGraphic(new THREE.Vector3(10,10,10));
+	this.scenery = new IBRS.SceneryGraphic(new THREE.Vector3(10,10,10));
 	
 	this.setPosition = function(x,y,z){
 		sceneryLogic.position.set(z,y,z);
@@ -317,7 +326,7 @@ IBRS.SceneryLogic = function(sceneryModelID){
 	this.setDimension = function(x,y,z){
 		sceneryLogic.position.set(z,y,z);
 		sceneryLogic.scenery.position.set(x,y,z);
-	};*/
+	};
 
 
 };
@@ -328,7 +337,7 @@ IBRS.TableLogic = function(TableModelID){
 	this.dimension = new THREE.Vector3();
 	this.position = new THREE.Vector3();
 	this.rotation = new THREE.Vector3();
-	/*this.table = new IBRS.SceneryGraphic(new THREE.Vector3(10,10,10));
+	this.table = new IBRS.SceneryGraphic(new THREE.Vector3(10,10,10));
 	
 	this.setPosition = function(x,y,z){
 		tableLogic.position.set(z,y,z);
@@ -343,7 +352,7 @@ IBRS.TableLogic = function(TableModelID){
 	this.setDimension = function(x,y,z){
 		tableLogic.position.set(z,y,z);
 		tableLogic.table.position.set(x,y,z);
-	};*/
+	};
 
 
 };

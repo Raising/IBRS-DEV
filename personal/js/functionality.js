@@ -3,13 +3,22 @@ jQuery(function(){
 				jQuery( document ).ajaxError(function() {
 					alert("fallo de ayax");
 				});
+
+
 				var GraphicEnviroment = new IBRS.Graphics();
 				GraphicEnviroment.webGLStart();
+				
 				var currentGame = new IBRS.Game();
 				currentGame.loadGameFromDataBase("game01");
+
+				var currentGameArea = new IBRS.GameArea();
+
 				setTimeout(function(){
 					var miniaturesListhere = currentGame.getMiniatures();
-				GraphicEnviroment.addListToScene(miniaturesListhere,true);},4000);
+					var sceneryElementsListhere = currentGameArea.getElementList();
+					GraphicEnviroment.addListToScene(miniaturesListhere,true);
+					GraphicEnviroment.addListToScene(sceneryElementsListhere,true);
+				},4000);
 
 				
 				

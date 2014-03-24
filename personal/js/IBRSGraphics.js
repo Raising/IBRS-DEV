@@ -16,9 +16,9 @@ IBRS.Graphics = function(){
 
 
     this.referenceTime = 0;
-    this.gameArea = new IBRS.GameArea();
     //this.scene.add(this.gameArea);
     this.tageteableElementsList = [];//tienen uqe ser objetos 3d de THREE
+
 
 
     this.camera_Distance = 150;
@@ -34,6 +34,7 @@ IBRS.Graphics = function(){
             }
         }
     };
+
 
 
 
