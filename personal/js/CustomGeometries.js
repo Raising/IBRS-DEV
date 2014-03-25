@@ -226,7 +226,7 @@ THREE.BaseGeometry = function ( radiusTop, radiusBottom, height, radialSegments,
 
         if ( openEnded === false && radiusBottom > 0 ) {
 
-                this.vertices.push( new THREE.Vector3( 0, - heightHalf, 0 ) );
+                this.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
 
                 for ( x = 0; x < radialSegments; x ++ ) {
 

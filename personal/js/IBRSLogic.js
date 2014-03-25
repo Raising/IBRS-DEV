@@ -82,6 +82,7 @@ IBRS.GameArea =  function (){
 	
 	gameArea =  this;
 	this.sceneryElementList = []; // llenado con IBR.SceneryLogic
+	this.name = "no name";
 	this.table = new IBRS.TableLogic();
 
 	
@@ -93,8 +94,17 @@ IBRS.GameArea =  function (){
 		elementList.push(gameArea.table.table);
 		return elementList;
 	};
-	this.loadSceneryFromDataBase = function(sceneryID){
-		//cargar mediante ayax
+	this.loadGameAreaFromDataBase = function(gameAreaID){
+		
+		jQuery.getJSON("DataBase/GameArea/"+gameAreaID+".json",function(data){
+			gameArea.name = data.name;
+			gameArea.table.insertFromData(data.table);
+			for (var i = data.sceneryList.length - 1; i >= 0; i--) {
+				var sceneryElement = new IBRS.SceneryLogic(data.sceneryList[i].sceneryModelID);
+				sceneryElement.insertFromData(data.sceneryList[i]);
+				gameArea.sceneryElementList.push(sceneryElement);
+			};
+		});
 	};
 };
 IBRS.GameArea.prototype = Object.create(THREE.Object3D.prototype);
@@ -278,7 +288,7 @@ IBRS.Game = function(gameID){
 				newPlayer.insertFromData(data.playerList[i]);
 				game.playerList.push(newPlayer);
 			}
-		//	game.scenery.loadSceneryFromDataBase(data.sceneryID);			
+		game.gameArea.loadGameAreaFromDataBase(data.gameAreaID);			
 		});
 	};
 //hacer este metodo de forma que se integre en los objetos
@@ -293,6 +303,17 @@ IBRS.Game = function(gameID){
 			
 		}
 		return unitGraphicList;
+	};
+
+
+	this.getSceneryElementList = function(){
+		var sceneryGraphicList = []
+		sceneryGraphicList.push(game.gameArea.table.tableGraphic);
+		for (var i = game.gameArea.sceneryElementList.length - 1; i >= 0; i--) {
+			sceneryGraphicList.push(game.gameArea.sceneryElementList[i].sceneryGraphic);
+		};
+		return sceneryGraphicList;
+
 	};
 
 	this.newTurn = function(){
@@ -311,22 +332,33 @@ IBRS.SceneryLogic = function(sceneryModelID){
 	this.dimension = new THREE.Vector3();
 	this.position = new THREE.Vector3();
 	this.rotation = new THREE.Vector3();
-	this.scenery = new IBRS.SceneryGraphic(new THREE.Vector3(10,10,10));
+	this.sceneryGraphic = new IBRS.SceneryGraphic(new THREE.Vector3(10,10,10));
 	
 	this.setPosition = function(x,y,z){
-		sceneryLogic.position.set(z,y,z);
-		sceneryLogic.scenery.position.set(x,y,z);
+		sceneryLogic.position.set(x,y,z);
+		sceneryLogic.sceneryGraphic.position.set(x,y,z);
 	};
 
 	this.setRotation = function(x,y,z){
-		sceneryLogic.rotation.set(z,y,z);
-		sceneryLogic.scenery.rotation.set(x,y,z);
+		sceneryLogic.rotation.set(x,y,z);
+		sceneryLogic.sceneryGraphic.rotation.set(x,y,z);
 	};
 
 	this.setDimension = function(x,y,z){
-		sceneryLogic.position.set(z,y,z);
-		sceneryLogic.scenery.position.set(x,y,z);
+		sceneryLogic.dimension.set(x,y,z);
+		//sceneryLogic.sceneryGraphic.dimension.set(x,y,z);
 	};
+
+	this.insertFromData = function(data){
+		sceneryLogic.dimension.set(data.dimension.x,data.dimension.y,data.dimension.z);
+		sceneryLogic.sceneryGraphic.refactor(sceneryLogic.ID,sceneryLogic.dimension);
+		sceneryLogic.setPosition(data.position.x,data.position.y,data.position.z);
+		sceneryLogic.setRotation(data.rotation.x,data.rotation.y,data.rotation.z);
+		
+				
+		//sceneryLogic.sceneryGraphic.dimension.set(x,y,z);
+	};
+
 
 
 };
@@ -337,22 +369,26 @@ IBRS.TableLogic = function(TableModelID){
 	this.dimension = new THREE.Vector3();
 	this.position = new THREE.Vector3();
 	this.rotation = new THREE.Vector3();
-	this.table = new IBRS.SceneryGraphic(new THREE.Vector3(10,10,10));
+	this.tableGraphic = new IBRS.TableGraphic(new THREE.Vector3(120,3,120),"img/terrain01.png");
 	
 	this.setPosition = function(x,y,z){
-		tableLogic.position.set(z,y,z);
-		tableLogic.table.position.set(x,y,z);
+		tableLogic.position.set(x,y,z);
+		tableLogic.tableGraphic.position.set(x,y,z);
 	};
 
 	this.setRotation = function(x,y,z){
-		tableLogic.rotation.set(z,y,z);
-		tableLogic.table.rotation.set(x,y,z);
+		tableLogic.rotation.set(x,y,z);
+		tableLogic.tableGraphic.rotation.set(x,y,z);
 	};
 
 	this.setDimension = function(x,y,z){
-		tableLogic.position.set(z,y,z);
-		tableLogic.table.position.set(x,y,z);
+		tableLogic.dimension.set(x,y,z);
+		//tableLogic.tableGraphic.refactor(tableLogic.ID,tableLogic.dimension);
 	};
 
+	this.insertFromData = function(data){
+		tableLogic.setDimension(data.dimension.x,data.dimension.y,data.dimension.z);
+		tableLogic.tableGraphic.refactor(tableLogic.dimension,data.coverTexture);
+	}
 
 };

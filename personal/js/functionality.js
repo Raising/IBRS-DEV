@@ -11,14 +11,16 @@ jQuery(function(){
 				var currentGame = new IBRS.Game();
 				currentGame.loadGameFromDataBase("game01");
 
-				var currentGameArea = new IBRS.GameArea();
+				
 
 				setTimeout(function(){
 					var miniaturesListhere = currentGame.getMiniatures();
-					var sceneryElementsListhere = currentGameArea.getElementList();
+					var sceneryElementsListhere = currentGame.getSceneryElementList();
+
 					GraphicEnviroment.addListToScene(miniaturesListhere,true);
-					GraphicEnviroment.addListToScene(sceneryElementsListhere,true);
-				},4000);
+					GraphicEnviroment.addListToScene(sceneryElementsListhere,false);
+
+				},3000);
 
 				
 				

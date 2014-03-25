@@ -14,7 +14,8 @@ IBRS.Graphics = function(){
     light.position.set(40,10,40);
     this.scene.add(light);
 
-
+    var globalLight = new THREE.AmbientLight(0x444444);
+    this.scene.add(globalLight);
     this.referenceTime = 0;
     //this.scene.add(this.gameArea);
     this.tageteableElementsList = [];//tienen uqe ser objetos 3d de THREE
@@ -79,7 +80,7 @@ THIS METODS PURPOSE IS TO HANDLE THE USER INTERACTION OVER THE CANVAS
         graphics.camera_Distance = Math.max(graphics.camera_Distance+distance_inc,10);
         graphics.camera_Horizonatl_Angle += hoizontalAngle_inc;
         graphics.camera_Vertical_Angle += verticalAngle_inc;
-        graphics.camera_Vertical_Angle = Math.max(0,Math.min(Math.PI,graphics.camera_Vertical_Angle));
+        graphics.camera_Vertical_Angle = Math.max(0,Math.min(Math.PI/2,graphics.camera_Vertical_Angle));
         var current_target_position = new THREE.Vector3();
         current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
         graphics.camera.position.set(
@@ -91,7 +92,8 @@ THIS METODS PURPOSE IS TO HANDLE THE USER INTERACTION OVER THE CANVAS
         current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
         graphics.camera.lookAt(current_target_position);
 
-    }
+    };
+
 
 
 
@@ -245,32 +247,51 @@ IBRS.UnitGraphic.prototype = Object.create(TargeteableElement.prototype);
 
 
 
-IBRS.TableGraphic = function(dimensions,coverTexture){
+IBRS.TableGraphic = function(dimension,coverTexture){
 
     BasicElement.call(this);
+    var tableGraphic = this;
     var CoverTextureMap =  new THREE.ImageUtils.loadTexture(coverTexture);
     var WoodTextureMap =  new THREE.ImageUtils.loadTexture("img/woodtexture.jpg");
-    var GeoTop = new THREE.CubeGeometry(dimensions.x,dimensions.y,dimensions.z);
-    for (var i = 0; i<GeoTop.faces.length;i++){ GeoTop.faces[i].materialIndex = 0;}
-    GeoTop.faces[4].materialIndex = GeoTop.faces[5].materialIndex = 1;
-    var GeoLeg = new THREE.CubeGeometry(dimensions.x*0.1,dimensions.y*2,dimensions.z*0.1);
+    var GeoTop = new THREE.CubeGeometry(dimension.x,dimension.y,dimension.z);
+        for (var i = 0; i<GeoTop.faces.length;i++){ GeoTop.faces[i].materialIndex = 0;}
+        GeoTop.faces[4].materialIndex = GeoTop.faces[5].materialIndex = 1;
+    var GeoLeg = new THREE.CubeGeometry(dimension.x*0.1,dimension.y*2,dimension.z*0.1);
     
     this.TableTop = new THREE.Mesh(GeoTop,
         new THREE.MeshFaceMaterial([
             new THREE.MeshLambertMaterial({ map: WoodTextureMap}),
             new THREE.MeshLambertMaterial({ map: CoverTextureMap} )]));
     
-    this.TableTop.position.set(0,-dimensions.y/2,0);
+    this.TableTop.position.set(0,-dimension.y/2,0);
     this.add(this.TableTop);
     this.TableLegs=[];
+
     for (var i = 0;i<4;i++){
         var leg =new THREE.Mesh(GeoLeg,new THREE.MeshLambertMaterial( { map: WoodTextureMap}));
-        leg.position.set((1-(i%2)*2)*dimensions.x*0.4,-dimensions.y*2,(1-parseInt(i/2)*2)*dimensions.z*0.4); 
+        leg.position.set((1-(i%2)*2)*dimension.x*0.4,-dimension.y*2,(1-parseInt(i/2)*2)*dimension.z*0.4); 
         
         this.TableLegs.push(leg);
         this.add(this.TableLegs[i]);
         }
+
+    this.refactor = function (dimension,coverTexture){
+
+        tableGraphic.children = [];
+        CoverTextureMap =  new THREE.ImageUtils.loadTexture("img/"+coverTexture);
+        GeoTop = new THREE.CubeGeometry(dimension.x,dimension.y,dimension.z);
+            for (var i = 0; i<GeoTop.faces.length;i++){ GeoTop.faces[i].materialIndex = 0;}
+            GeoTop.faces[4].materialIndex = GeoTop.faces[5].materialIndex = 1;
+        
+        tableGraphic.TableTop = new THREE.Mesh(GeoTop,
+            new THREE.MeshFaceMaterial([
+                new THREE.MeshLambertMaterial({ map: WoodTextureMap}),
+                new THREE.MeshLambertMaterial({ map: CoverTextureMap} )]));
     
+        tableGraphic.TableTop.position.set(0,-dimension.y/2,0);
+        tableGraphic.add(tableGraphic.TableTop);
+   };
+
 
 
 };
@@ -280,6 +301,8 @@ IBRS.TableGraphic.prototype = Object.create(BasicElement.prototype);
 
 IBRS.SceneryGraphic = function(dimension){
     BasicElement.call(this);
+    var sceneryGraphic = this;
+
     /*this.main_texture =  new THREE.ImageUtils.loadTexture(frontalTexture);
     this.textures = [];
     this.textures.push(this.main_texture);
@@ -288,17 +311,20 @@ IBRS.SceneryGraphic = function(dimension){
         }*/
     var GeoEdificio = new THREE.CubeGeometry(dimension.x,dimension.y,dimension.z);
     
-    for (var i=0;i<GeoEdificio.faces.length;i++){
-        GeoEdificio.faces[i].materialIndex = parseInt(i/2);
-    }
-    
     var MeshEdificio = new THREE.Mesh(GeoEdificio,new THREE.MeshLambertMaterial({color:0x156000}));
     MeshEdificio.position.set(0,dimension.y/2,0);
     this.add(MeshEdificio);
 
 	
-	this.refactor = function(sceneryModelID){
-		//implementar cambio de modelo al que se carge por ajax
+	this.refactor = function(sceneryModelID,dimension){
+      
+            sceneryGraphic.children = [];
+            GeoEdificio = new THREE.CubeGeometry(dimension.x,dimension.y,dimension.z);
+            MeshEdificio = new THREE.Mesh(GeoEdificio,new THREE.MeshLambertMaterial({color:0x156000}));
+            MeshEdificio.position.set(0,dimension.y/2,0);
+            sceneryGraphic.add(MeshEdificio);
+           
+	   	//implementar cambio de modelo al que se carge por ajax
 	}
 };
 
