@@ -1,82 +1,15 @@
 var IBRS = { VERSION: '1' };
 //Enum declaraciones
-IBRS.DEC = {ENUM : 'tipo de ordenes'};
-IBRS.DEC.MOVE = 0;
-IBRS.DEC.DODGE = 1;
-IBRS.DEC.JUMP = 2;
-IBRS.DEC.CLIMB = 3;
-IBRS.DEC.LAND = 4;
-IBRS.DEC.WAKEUP = 5;
-IBRS.DEC.DISCOVER = 6;
-IBRS.DEC.FACE = 7;
-IBRS.DEC.OPENCLOSE = 8;
-IBRS.DEC.DISMOUNT = 9;
-IBRS.DEC.MOUNT = 10;
-IBRS.DEC.SWIM =  11;
-IBRS.DEC.ALERT =  12;
-IBRS.DEC.SENSOR =  13;
-IBRS.DEC.CD =  14;
-IBRS.DEC.CC =  15;
-IBRS.DEC.SEPSITOR =  16;
-IBRS.DEC.HACK =  17;
-IBRS.DEC.OBSERVER =  18;
-IBRS.DEC.COMA =  19;
-IBRS.DEC.ENGINEER =  20;
-IBRS.DEC.DOCTOR =  21;
-IBRS.DEC.REGEN =  22;
-IBRS.DEC.RESET =  23;
-IBRS.DEC.MEDIKIT =  24;
-IBRS.DEC.AUTOMEDIKIT =  25;
-IBRS.DEC.CO =  26;
-IBRS.DEC.INTUITIVE =  27;
-IBRS.DEC.SPECULATIVE =  28;
-IBRS.DEC.SUPRESIONFIRE =  29;
-IBRS.DEC.CAUTIOUSMOVE =  30;
-IBRS.DEC.DA =  31;
-IBRS.DEC.HACKDA =  32;
 
-IBRS.unitAcount = 0;
 
-IBRS.getNextUnitID = function(){
-	IBRS.unitAcount +=1;
-	return IBRS.unitAcount;
+IBRS.IDAcount = 0;
+
+IBRS.getID = function(){
+	IBRS.IDAcount +=1;
+	return IBRS.IDAcount;
 };
 
-IBRS.Declaration = function(descriptor,source,target,aro){
-//descriptor: que acccion se define de una lista numeration, 	
-//Source, Marcador/miniatura que lo declara, 
-//target: lugar de destino, movimiento o miniatura/marcador destino. 
-//aro: es una ora o no.
-	this.descriptor = descriptor = descriptor !== undefined ? descriptor : "WAIT";
-    this.aro = aro = aro !== undefined ? aro : "FALSE";
-    this.source = source = source !== undefined ? source : new THREE.Vector3();
-	this.target = target = target !== undefined ? target : new THREE.Vector3();
-    
 
-};
-
-IBRS.Order =  function(){
-	this.firstDeclaration = [];
-	this.secondDeclaration = [];
-	this.firstAro = [];
-	this.secondAro = [];
-
-	this.addFirstDeclaration= function( declaration){
-		this.firstDeclaration.push(declaration);
-	}
-
-	this.addSecondDeclaration= function( declaration){
-		this.secondDeclaration.push(declaration);
-	}
-
-	this.addFirstAro= function( declaration){
-		this.firstAro.push(declaration);
-	}
-
-	this.addSecondAro= function( declaration){
-		this.SecondAro.push(declaration);
-	}
-};
 
 IBRS.GameArea =  function (){
 	
@@ -110,10 +43,11 @@ IBRS.GameArea =  function (){
 IBRS.GameArea.prototype = Object.create(THREE.Object3D.prototype);
 
 
-IBRS.UnitLogic =  function (unitID) {
+IBRS.UnitLogic =  function (tacticalGroup) {
 	var unitLogic = this;
+	this.tacticalGroup = tacticalGroup;
+	this.id = IBRS.getID();
 	this.isMarker = false;
-	this.id = unitID = unitID !== undefined ? unitID : 0;
 	this.bodyTexture = 'img/empty.jpg';
 	this.baseTexture = 'img/empty.jpg'; // por decidir el formato de almacenamiento
 	this.position = new THREE.Vector3();
@@ -149,6 +83,7 @@ IBRS.UnitLogic =  function (unitID) {
 			unitLogic.width = unitModel.width;
 			unitLogic.regular = unitModel.regular;
 			unitLogic.fury = unitModel.fury;
+			unitLogic.unitGraphic.name = modelID;
 			unitLogic.unitGraphic.refactor(unitModel.height,unitModel.width,unitModel.bodyTexture,unitModel.baseTexture);
 
 		});
@@ -162,13 +97,19 @@ IBRS.UnitLogic =  function (unitID) {
 	};
 };
 
-IBRS.TacticalGroup =  function () {
+IBRS.TacticalGroup =  function (army,number) {
 	var tacticalGroup = this;
+	this.id = IBRS.getID();
+	this.army = army;
 	this.unitList = []; // lista llena de objetos IBRS.Unit
 	this.regularAmount = 0;
 	this.irregularAmount = 0;
 	this.furyAmount = 0;
 	
+	this.container = jQuery('<table id="'+ this.id+'" class="table table-hover h6 "></table>')
+	jQuery('#inBoardElements').append(this.container);
+	this.container.append('<tr>	<th>'+this.army.player.name+'</th><th>Group</th><th>'+number+'</th></tr>');
+
 	// restart order counting
 	this.actualizeOrders =  function(){
 		tacticalGroup.furyAmount = tacticalGroup.regularAmount = tacticalGroup.irregularAmount = 0;
@@ -184,7 +125,7 @@ IBRS.TacticalGroup =  function () {
 
 	this.insertFromData = function(data) {
 		for (var i=0;i<data.unitList.length;i++){
-			var newUnit = new IBRS.UnitLogic(IBRS.getNextUnitID());
+			var newUnit = new IBRS.UnitLogic(tacticalGroup);
 			newUnit.insertFromData(data.unitList[i]);
 			tacticalGroup.unitList.push(newUnit);
 		}
@@ -203,8 +144,10 @@ IBRS.TacticalGroup =  function () {
 };
 
 
-IBRS.Army = function(){
+IBRS.Army = function(player){
 	var army = this;
+	this.player = player;
+	this.id = IBRS.getID();
 	this.tacticalGroupList = [];
 	this.faction = "no faction";
 	this.addGroup = function(group){
@@ -214,7 +157,7 @@ IBRS.Army = function(){
 	this.insertFromData = function (data) {
 		army.faction = data.faction;
 		for (var i=0;i<data.tacticalGroupList.length;i++){
-			var newTacticalGroup = new IBRS.TacticalGroup();
+			var newTacticalGroup = new IBRS.TacticalGroup(army,i+1);
 			newTacticalGroup.insertFromData(data.tacticalGroupList[i]);
 			army.addGroup(newTacticalGroup);
 		}
@@ -233,6 +176,7 @@ IBRS.Army = function(){
 IBRS.Player = function (){
 	var player = this;
 	this.playerID = 0;
+	this.id = IBRS.getID();
 	this.name = "no name";
 	this.army = new IBRS.Army();
 
@@ -243,7 +187,7 @@ IBRS.Player = function (){
 	this.insertFromData = function (data) {
 		player.name = data.name;
 		player.playerID = data.playerID;
-		var newArmy = new IBRS.Army();
+		var newArmy = new IBRS.Army(this);
 		newArmy.insertFromData(data.army);
 		player.army = newArmy;
 		
@@ -257,17 +201,7 @@ IBRS.Player = function (){
 
 
 //a turn is a set of orders that define the events of the game.
-IBRS.Turn =  function(){
-	var turn = this;
-	this.orderList=[];
 
-	this.addOrder = function (newOrder) {
-		turn.orderList.push(newOrder);
-	};
-
-	
-
-};
 
 IBRS.Game = function(gameID){
 	var game = this;

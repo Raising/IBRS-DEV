@@ -1,27 +1,28 @@
 {"name":"Partida Testeo de sistema",
 "playerList":
    [
-	{"playerID":200,"name":"raising","army":
+	{"playerID":200,"name":"Raising","army":
 		{"faction":"EC","tacticalGroupList":
 			[{"unitList":[
 				{"modelID":"Asuang","position":{"x":10,"y":0,"z":50},"rotation":{"x":0,"y":0,"z":0}},
 				{"modelID":"Asuang","position":{"x":10,"y":0,"z":0},"rotation":{"x":0,"y":0,"z":0}},
-				{"modelID":"Asuang","position":{"x":40,"y":15,"z":20},"rotation":{"x":0,"y":1.6,"z":0}},
+				{"modelID":"Asuang","position":{"x":40,"y":12,"z":20},"rotation":{"x":0,"y":1.6,"z":0}},
 				{"modelID":"Asuang","position":{"x":10,"y":0,"z":20},"rotation":{"x":0,"y":0,"z":0}}
 			]}]					
 		}		
 	},
-	{"playerID":201,"name":"bonca","army":
+	{"playerID":201,"name":"Bonca","army":
 		{"faction":"NOMAD","tacticalGroupList":
 			[{"unitList":[
 				{"modelID":"Tomcat","position":{"x":0,"y":0,"z":0},"rotation":{"x":0,"y":0,"z":0}},
 				{"modelID":"Tomcat","position":{"x":2,"y":0,"z":5},"rotation":{"x":0,"y":0,"z":0}},
-				{"modelID":"Geko","position":{"x":-5,"y":0,"z":7},"rotation":{"x":0,"y":0,"z":0}},
+				{"modelID":"Geko","position":{"x":-5,"y":12,"z":7},"rotation":{"x":0,"y":1.2,"z":0}},
 				{"modelID":"Geko","position":{"x":-10,"y":0,"z":0},"rotation":{"x":0,"y":0,"z":0}}
 			]}]					
 		}	
 	
 	}
    ],
+   "gameEventID":"GameEvent01",
    "gameAreaID":"GameArea01"
 }

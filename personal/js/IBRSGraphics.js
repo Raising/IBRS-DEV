@@ -77,19 +77,20 @@ THIS METODS PURPOSE IS TO HANDLE THE USER INTERACTION OVER THE CANVAS
         graphics.camera_target = targetObject = targetObject !== undefined ? targetObject : graphics.camera_target;
                
 
-        graphics.camera_Distance = Math.max(graphics.camera_Distance+distance_inc,10);
+        graphics.camera_Distance = Math.max(graphics.camera_Distance+distance_inc,0.2);
         graphics.camera_Horizonatl_Angle += hoizontalAngle_inc;
         graphics.camera_Vertical_Angle += verticalAngle_inc;
-        graphics.camera_Vertical_Angle = Math.max(0,Math.min(Math.PI/2,graphics.camera_Vertical_Angle));
+        graphics.camera_Vertical_Angle = Math.max(0,Math.min(Math.PI,graphics.camera_Vertical_Angle));
         var current_target_position = new THREE.Vector3();
         current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
         graphics.camera.position.set(
             current_target_position.x + graphics.camera_Distance*Math.cos(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle),
-            current_target_position.y + graphics.camera_Distance*Math.cos(graphics.camera_Vertical_Angle),
+            current_target_position.y+3 + graphics.camera_Distance*Math.cos(graphics.camera_Vertical_Angle),
             current_target_position.z + graphics.camera_Distance*Math.sin(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle)
         );
         var current_target_position = new THREE.Vector3();
         current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
+        current_target_position.y +=3;
         graphics.camera.lookAt(current_target_position);
 
     };
@@ -174,8 +175,7 @@ this.findObjectByProyection = function(evt,scope){
     var intersects = ray.intersectObjects(graphics.tageteableElementsList, true);
     if (intersects.length) {
         var target = intersects[0].object.parent; 
-            target.updateHtml();
-        //target.scale.set(0.6,0.6,0.6);
+        target.onElementClick();
         graphics.CameraReposition(0,0,0,target)  ;
     } 
 }
@@ -194,6 +194,9 @@ IBRS.UnitGraphic = function(height,baseDiameter,miniatureTexture,baseTexture,log
        TargeteableElement.call(this);
        var unitGraphic = this;
        this.logicModel = logicModel;
+       jQuery('#'+this.logicModel.tacticalGroup.id).append(this.container);
+    
+       this.height = height;
        var baseHeight = 0.5;
        var MiniatureTextureMap = new THREE.ImageUtils.loadTexture(miniatureTexture);
        var BaseTextureMap = new THREE.ImageUtils.loadTexture(baseTexture);
@@ -232,11 +235,14 @@ IBRS.UnitGraphic = function(height,baseDiameter,miniatureTexture,baseTexture,log
         
             unitGraphic.add(unitGraphic.BasePiece);
             unitGraphic.add(unitGraphic.TopPiece);
+            unitGraphic.selector.position.set(0,6,0);
+            unitGraphic.add(this.selector);
        
        for (var i = 0; i< unitGraphic.children.length;i++){
             unitGraphic.children[i].onClick = this;
         }
 
+        unitGraphic.updateHtml();
 
         };
 
@@ -311,7 +317,7 @@ IBRS.SceneryGraphic = function(dimension){
         }*/
     var GeoEdificio = new THREE.CubeGeometry(dimension.x,dimension.y,dimension.z);
     
-    var MeshEdificio = new THREE.Mesh(GeoEdificio,new THREE.MeshLambertMaterial({color:0x156000}));
+    var MeshEdificio = new THREE.Mesh(GeoEdificio,new THREE.MeshNormalMaterial({color:0x156000}));
     MeshEdificio.position.set(0,dimension.y/2,0);
     this.add(MeshEdificio);
 
@@ -320,7 +326,7 @@ IBRS.SceneryGraphic = function(dimension){
       
             sceneryGraphic.children = [];
             GeoEdificio = new THREE.CubeGeometry(dimension.x,dimension.y,dimension.z);
-            MeshEdificio = new THREE.Mesh(GeoEdificio,new THREE.MeshLambertMaterial({color:0x156000}));
+            MeshEdificio = new THREE.Mesh(GeoEdificio,new THREE.MeshNormalMaterial({color:0x156000}));
             MeshEdificio.position.set(0,dimension.y/2,0);
             sceneryGraphic.add(MeshEdificio);
            

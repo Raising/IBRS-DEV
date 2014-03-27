@@ -130,7 +130,7 @@ THREE.BaseGeometry = function ( radiusTop, radiusBottom, height, radialSegments,
 
                         var vertex = new THREE.Vector3();
                         vertex.x = radius * Math.sin( u * Math.PI * 2 );
-                        vertex.y = - Math.sin(v * Math.PI/2*v* Math.PI/2)* height + heightHalf;
+                        vertex.y = - Math.sin(v * Math.PI/2*v* Math.PI/2)* height + heightHalf-heightHalf*y;
                         vertex.z = radius * Math.cos( u * Math.PI * 2 );
 
                         this.vertices.push( vertex );
@@ -226,7 +226,7 @@ THREE.BaseGeometry = function ( radiusTop, radiusBottom, height, radialSegments,
 
         if ( openEnded === false && radiusBottom > 0 ) {
 
-                this.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
+                this.vertices.push( new THREE.Vector3( 0, -heightHalf, 0 ) );
 
                 for ( x = 0; x < radialSegments; x ++ ) {
 
@@ -289,25 +289,48 @@ BasicElement.prototype = Object.create(THREE.Object3D.prototype);
 
 var TargeteableElement = function(){
     BasicElement.call(this);
-	//IBRS.tageteableElementsList.push(this);
+    tageteableElement = this;
+    	//IBRS.tageteableElementsList.push(this);
 	//this.htmlRepresentation = new Object();
 	this.name = "no name";
 	//this.htmlRepresentation.position = new Object();
 	this.status = "normal";
-	
-	
+	this.height = 0;
+    var selectorGeometry = new THREE.CylinderGeometry( 1, 0, 2, 6 ); 
+    //opacity: 0.8,transparent: true
+    var selectorMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00,opacity: 0,transparent: true} ); 
+    this.selector = new THREE.Mesh( selectorGeometry, selectorMaterial );
+    this.selector.position.set(0,6,0);
+    this.add(this.selector);
+    //this.add(this.selector);
 	this.container = jQuery('<tr id="'+this.id+'"></tr>');
+    this.container.click(function(){   
+      //  selectorMaterial.opacity = 1;
+    //que hacer cuando se hace click en la tupla de cada miniatura
+    return false;});
+
+    this.container.mouseenter(function(){   
+        selectorMaterial.opacity = 1;
+    //que hacer cuando se hace click en la tupla de cada miniatura
+    return false;});
+
+    this.container.mouseleave(function(){   
+        selectorMaterial.opacity =0;
+    //que hacer cuando se hace click en la tupla de cada miniatura
+    return false;});
+    
+
 	this.updateHtml = function (){
-		this.container.empty().append('<td>'+this.name+
+        this.container.empty().append('<td>'+this.name+
 		'</td><td>'+parseInt(this.position.x*10)/10+':'+parseInt(this.position.y*10)/10+':'+parseInt(this.position.z*10)/10+
 		'</td><td>'+this.status+'</td>');
-		
 	};
+
 	this.onElementClick = function(){
 		this.updateHtml();
 	};
 	
-	jQuery('#inBoardElements').append(this.container);
+	
 	
 };
 //

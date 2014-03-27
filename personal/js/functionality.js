@@ -9,6 +9,7 @@ jQuery(function(){
 				GraphicEnviroment.webGLStart();
 				
 				var currentGame = new IBRS.Game();
+				// esa instrucccion debe ser llamada usando los menus del sistema
 				currentGame.loadGameFromDataBase("game01");
 
 				
@@ -20,7 +21,7 @@ jQuery(function(){
 					GraphicEnviroment.addListToScene(miniaturesListhere,true);
 					GraphicEnviroment.addListToScene(sceneryElementsListhere,false);
 
-				},3000);
+				},2000);
 
 				
 				
@@ -71,18 +72,7 @@ jQuery(function(){
 				});
 				
 				// Relacion html con los elementos en el canvas 
-				jQuery("#inTableElements> tr").click(function(){	
-					var thisMenu =jQuery(this);
-					thisMenu.parent().parent().children().removeClass("active");
-					thisMenu.parent().addClass("active");
-					var displaying_menu = thisMenu.attr("href");
-					jQuery("#menu_area").slideUp(function(){
-					jQuery("#menu_area > div").appendTo(jQuery("#hidden_storage"));
-					jQuery(displaying_menu).appendTo(jQuery("#menu_area"));
-					if (displaying_menu == "#menu_initial" || displaying_menu == "#menu_events" ){jQuery("#canvas").appendTo(jQuery("#menu_area"));}
-						}).slideDown();
-					return false;
-				});
+				
 
 
 
