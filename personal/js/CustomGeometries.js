@@ -296,11 +296,11 @@ var TargeteableElement = function(){
 	//this.htmlRepresentation.position = new Object();
 	this.status = "normal";
 	this.height = 0;
-    var selectorGeometry = new THREE.CylinderGeometry( 1, 0, 2, 6 ); 
+    var selectorGeometry = new THREE.CylinderGeometry(0.5,0.5,1,16); 
     //opacity: 0.8,transparent: true
-    var selectorMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00,opacity: 0,transparent: true} ); 
+    var selectorMaterial = new THREE.MeshBasicMaterial( {color: 0x66ff00,wireframe:false,opacity: 0,transparent: true} ); 
     this.selector = new THREE.Mesh( selectorGeometry, selectorMaterial );
-    this.selector.position.set(0,6,0);
+    
     this.add(this.selector);
     //this.add(this.selector);
 	this.container = jQuery('<tr id="'+this.id+'"></tr>');
@@ -310,7 +310,7 @@ var TargeteableElement = function(){
     return false;});
 
     this.container.mouseenter(function(){   
-        selectorMaterial.opacity = 1;
+        selectorMaterial.opacity = 0.5;
     //que hacer cuando se hace click en la tupla de cada miniatura
     return false;});
 

@@ -194,7 +194,7 @@ IBRS.UnitGraphic = function(height,baseDiameter,miniatureTexture,baseTexture,log
        TargeteableElement.call(this);
        var unitGraphic = this;
        this.logicModel = logicModel;
-       jQuery('#'+this.logicModel.tacticalGroup.id).append(this.container);
+       this.logicModel.tacticalGroup.container.append(this.container);
     
        this.height = height;
        var baseHeight = 0.5;
@@ -235,7 +235,8 @@ IBRS.UnitGraphic = function(height,baseDiameter,miniatureTexture,baseTexture,log
         
             unitGraphic.add(unitGraphic.BasePiece);
             unitGraphic.add(unitGraphic.TopPiece);
-            unitGraphic.selector.position.set(0,6,0);
+            unitGraphic.selector.scale.set(baseDiameter,height+baseHeight,baseDiameter);
+            unitGraphic.selector.position.set(0,(height+baseHeight)/2,0);
             unitGraphic.add(this.selector);
        
        for (var i = 0; i< unitGraphic.children.length;i++){

@@ -35,16 +35,22 @@ IBRS.DEC.HACKDA =  32;
 
 
 
-IBRS.Declaration = function(descriptor,source,target,aro){
+IBRS.Declaration = function(){
 //descriptor: que acccion se define de una lista numeration, 	
 //Source, Marcador/miniatura que lo declara, 
 //target: lugar de destino, movimiento o miniatura/marcador destino. 
 //aro: es una ora o no.
-	this.descriptor = descriptor = descriptor !== undefined ? descriptor : "WAIT";
-    this.aro = aro = aro !== undefined ? aro : "FALSE";
-    this.source = source = source !== undefined ? source : new THREE.Vector3();
-	this.target = target = target !== undefined ? target : new THREE.Vector3();
+	var declaration = this;
+	this.descriptor = 0;
+    this.source = 0;
+	this.target = 0;
     
+    this.insertFromData = function(data){
+    	declaration.descriptor = data.descriptor;
+    	declaration.source= data.source;
+    	declaration.target= data.target;
+    	declaration.location = data.location;
+    }
 
 };
 
@@ -73,13 +79,19 @@ IBRS.Order =  function(){
 
 IBRS.Turn =  function(){
 	var turn = this;
+	this.playerID = 0;
 	this.orderList=[];
 
 	this.addOrder = function (newOrder) {
 		turn.orderList.push(newOrder);
 	};
 
-	
+	this.insertFromData = function(data) {
+		for (var i = 0; i < Things.length; i++) {
+			Things[i]
+		};
+
+	};
 
 };
 
@@ -96,7 +108,7 @@ IBRS.GameEvents =  function(){
 			for (var i = 0;i<data.turnList;i++){
 				var newTurn = new IBRS.Turn();
 				newTurn.insertFromData(data.turnList[i]);
-				gameEvenets.turnList.push(newPlayer);
+				gameEvenets.turnList.push(newTurn);
 			}		
 		});
 	};

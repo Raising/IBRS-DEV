@@ -47,6 +47,7 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	var unitLogic = this;
 	this.tacticalGroup = tacticalGroup;
 	this.id = IBRS.getID();
+	this.unitNumber = 0;
 	this.isMarker = false;
 	this.bodyTexture = 'img/empty.jpg';
 	this.baseTexture = 'img/empty.jpg'; // por decidir el formato de almacenamiento
@@ -90,16 +91,17 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	};
 
 	this.insertFromData = function(data){
-		
+		unitLogic.unitNumber = data.unitNumber;
 		unitLogic.loadModelFromDataBase(data.modelID);
 		unitLogic.setPosition(data.position.x,data.position.y,data.position.z);
 		unitLogic.setRotation(data.rotation.x,data.rotation.y,data.rotation.z);	
 	};
 };
 
-IBRS.TacticalGroup =  function (army,number) {
+IBRS.TacticalGroup =  function (army) {
 	var tacticalGroup = this;
 	this.id = IBRS.getID();
+	this.groupNumber = 0;
 	this.army = army;
 	this.unitList = []; // lista llena de objetos IBRS.Unit
 	this.regularAmount = 0;
@@ -108,8 +110,10 @@ IBRS.TacticalGroup =  function (army,number) {
 	
 	this.container = jQuery('<table id="'+ this.id+'" class="table table-hover h6 "></table>')
 	jQuery('#inBoardElements').append(this.container);
-	this.container.append('<tr>	<th>'+this.army.player.name+'</th><th>Group</th><th>'+number+'</th></tr>');
-
+	
+	this.actualizeHtml = function(){
+		tacticalGroup.container.empty().append('<tr>	<th>'+this.army.player.name+'</th><th>Group</th><th>'+this.groupNumber+'</th></tr>');
+	};
 	// restart order counting
 	this.actualizeOrders =  function(){
 		tacticalGroup.furyAmount = tacticalGroup.regularAmount = tacticalGroup.irregularAmount = 0;
@@ -124,6 +128,9 @@ IBRS.TacticalGroup =  function (army,number) {
 	};
 
 	this.insertFromData = function(data) {
+		tacticalGroup.groupNumber = data.groupNumber;
+			
+		tacticalGroup.actualizeHtml();
 		for (var i=0;i<data.unitList.length;i++){
 			var newUnit = new IBRS.UnitLogic(tacticalGroup);
 			newUnit.insertFromData(data.unitList[i]);
@@ -157,7 +164,7 @@ IBRS.Army = function(player){
 	this.insertFromData = function (data) {
 		army.faction = data.faction;
 		for (var i=0;i<data.tacticalGroupList.length;i++){
-			var newTacticalGroup = new IBRS.TacticalGroup(army,i+1);
+			var newTacticalGroup = new IBRS.TacticalGroup(army);
 			newTacticalGroup.insertFromData(data.tacticalGroupList[i]);
 			army.addGroup(newTacticalGroup);
 		}
@@ -208,7 +215,7 @@ IBRS.Game = function(gameID){
 	this.ID = 0 || gameID;
 	this.name ="no name";
 	this.gameArea = new IBRS.GameArea();
-	this.turnList = [];
+	this.events = new IBRS.GameEvents();
 	this.playerList = [];
 
 	this.loadGameFromDataBase = function(gameID){
@@ -222,6 +229,7 @@ IBRS.Game = function(gameID){
 				newPlayer.insertFromData(data.playerList[i]);
 				game.playerList.push(newPlayer);
 			}
+		game.events.loadGameEventsFromDataBase(data.gameEventsID);
 		game.gameArea.loadGameAreaFromDataBase(data.gameAreaID);			
 		});
 	};
@@ -249,6 +257,28 @@ IBRS.Game = function(gameID){
 		return sceneryGraphicList;
 
 	};
+
+	this.getUnitLogicFromArmyPosition = function (unitArmyPosition){
+	
+		for (var i = game.playerList.length - 1; i >= 0; i--) {
+			if (game.playerList[i].playerID == unitArmyPosition.playerID){
+				for (var j = game.playerList.army.tacticalGroupList.length - 1; j >= 0; j--) {
+					if(game.playerList[i].army.tacticalGroupList[j].groupNumber == unitArmyPosition.groupNumber){
+						for (var k = game.playerList[i].army.tacticalGroupList[j].unitList.length - 1; k >= 0; k--) {
+							if (game.playerList[i].army.tacticalGroupList[j].unitList[k].unitNumber == unitArmyPosition.unitNumber){
+								return = game.playerList[i].army.tacticalGroupList[j].unitList[k];
+
+							}
+						};
+					}
+				};
+			}
+
+		};
+	alert("no unit found");
+	return 0;
+	};
+
 
 	this.newTurn = function(){
 		game.turnList.push(new IBRS.Turn());
