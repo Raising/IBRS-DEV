@@ -102,7 +102,8 @@ IBRS.Turn =  function(gameEvents){
 	};
 
 };
-
+ 
+ 
 IBRS.GameEvents =  function(game){
 	var gameEvents = this;
 	this.turnList=[];
@@ -112,7 +113,7 @@ IBRS.GameEvents =  function(game){
 	};
 	
 	this.loadGameEventsFromDataBase = function(gameEventsID){
-		jQuery.getJSON("DataBase/GameEvents/GameEvents02.json",function(data){
+		jQuery.getJSON("DataBase/GameEvents/"+gameEventsID+".json",function(data){
 
 			for (var i = 0;i<data.turnList;i++){
 				var newTurn = new IBRS.Turn(gameEvents);
