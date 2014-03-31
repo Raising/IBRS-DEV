@@ -1,0 +1,25 @@
+{
+	"turnList":[
+		{"playerID":200,
+			"orderList":[
+				{"groupNumber":1,"orderKind":0,
+					"firstDeclaration":[
+						{"descriptor":"IBRS.DEC.MOVE","source":{"playerID":200,"groupNumber":1,"unitNumber":1},"target":0,"location":{"angle":1.7,"distance":10}}
+						],
+					"firstAro":[
+						{"descriptor":"IBRS.DEC.CD","source":{"playerID":201,"groupNumber":1,"unitNumber":2},"target":{"playerID":200,"groupNumber":1,"unitNumber":1},"location":{"angle":4,"distance":46}}
+						],
+					"secondDeclaration":[
+						{"descriptor":"IBRS.DEC.CD","source":{"playerID":200,"groupNumber":1,"unitNumber":1},"target":{"playerID":201,"groupNumber":1,"unitNumber":2},"location":{"angle":2.33,"distance":46}}						
+						],
+					"secondAro":[],
+					"resolutions":[]
+				}
+			]
+		}
+		{"playerID":201,
+			"orderList":[
+			]
+		}
+	]
+}

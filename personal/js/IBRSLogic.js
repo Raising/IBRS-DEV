@@ -215,7 +215,7 @@ IBRS.Game = function(gameID){
 	this.ID = 0 || gameID;
 	this.name ="no name";
 	this.gameArea = new IBRS.GameArea();
-	this.events = new IBRS.GameEvents();
+	this.events = new IBRS.GameEvents(this);
 	this.playerList = [];
 
 	this.loadGameFromDataBase = function(gameID){
@@ -266,8 +266,7 @@ IBRS.Game = function(gameID){
 					if(game.playerList[i].army.tacticalGroupList[j].groupNumber == unitArmyPosition.groupNumber){
 						for (var k = game.playerList[i].army.tacticalGroupList[j].unitList.length - 1; k >= 0; k--) {
 							if (game.playerList[i].army.tacticalGroupList[j].unitList[k].unitNumber == unitArmyPosition.unitNumber){
-								return = game.playerList[i].army.tacticalGroupList[j].unitList[k];
-
+								return game.playerList[i].army.tacticalGroupList[j].unitList[k];
 							}
 						};
 					}
@@ -356,3 +355,4 @@ IBRS.TableLogic = function(TableModelID){
 	}
 
 };
+

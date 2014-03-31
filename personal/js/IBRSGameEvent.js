@@ -35,31 +35,38 @@ IBRS.DEC.HACKDA =  32;
 
 
 
-IBRS.Declaration = function(){
+IBRS.Declaration = function(order){
 //descriptor: que acccion se define de una lista numeration, 	
 //Source, Marcador/miniatura que lo declara, 
 //target: lugar de destino, movimiento o miniatura/marcador destino. 
 //aro: es una ora o no.
 	var declaration = this;
+	this.order = order;
 	this.descriptor = 0;
     this.source = 0;
 	this.target = 0;
-    
+	this.spaceLocation = 0;
+	this.locateUnit = function (data){
+		return declaration.order.turn.gameEvents.game.getUnitLogicFromArmyPosition(data);
+	}
+
     this.insertFromData = function(data){
     	declaration.descriptor = data.descriptor;
-    	declaration.source= data.source;
-    	declaration.target= data.target;
+    	declaration.source= declaration.locateUnit(data.source);
+    	declaration.target= declaration.locateUnit(data.target);
     	declaration.location = data.location;
     }
 
 };
 
-IBRS.Order =  function(){
+ 
+
+IBRS.Order =  function(turn){
 	this.firstDeclaration = [];
 	this.secondDeclaration = [];
 	this.firstAro = [];
 	this.secondAro = [];
-
+	this.turn = turn;
 	this.addFirstDeclaration= function( declaration){
 		this.firstDeclaration.push(declaration);
 	}
@@ -77,8 +84,9 @@ IBRS.Order =  function(){
 	}
 };
 
-IBRS.Turn =  function(){
+IBRS.Turn =  function(gameEvents){
 	var turn = this;
+	this.gameEvents= gameEvents;
 	this.playerID = 0;
 	this.orderList=[];
 
@@ -95,20 +103,21 @@ IBRS.Turn =  function(){
 
 };
 
-IBRS.GameEvents =  function(){
+IBRS.GameEvents =  function(game){
 	var gameEvents = this;
 	this.turnList=[];
-
+	this.game = game;
 	this.addTurn = function (newTurn) {
 		gameEvents.turnList.push(newTurn);
 	};
 	
 	this.loadGameEventsFromDataBase = function(gameEventsID){
-		jQuery.getJSON("DataBase/GameEvents/"+gameEventsID+".json",function(data){
+		jQuery.getJSON("DataBase/GameEvents/GameEvents02.json",function(data){
+
 			for (var i = 0;i<data.turnList;i++){
-				var newTurn = new IBRS.Turn();
+				var newTurn = new IBRS.Turn(gameEvents);
 				newTurn.insertFromData(data.turnList[i]);
-				gameEvenets.turnList.push(newTurn);
+				gameEvents.turnList.push(newTurn);
 			}		
 		});
 	};
