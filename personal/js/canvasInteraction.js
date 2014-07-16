@@ -41,11 +41,7 @@ function SetunUpMouseInteraction(currentRenderDomElement) {
 	currentRenderDomElement.addEventListener('mouseup', function (evt) {
 		if (mouseIsDown==1 && evt.pageX == mouseDownPosition.x && evt.pageY == mouseDownPosition.y)
 			{ findObjectByProyection(evt,this);}
-
 		mouseIsDown=0;
-
-	    
-	    
 	},false);
 
 }
@@ -122,6 +118,26 @@ function CameraReposition(distance_inc,hoizontalAngle_inc,verticalAngle_inc,targ
 	Camera_Horizonatl_Angle += hoizontalAngle_inc;
 	Camera_Vertical_Angle += verticalAngle_inc;
 	Camera_Vertical_Angle = Math.max(0,Math.min(Math.PI,Camera_Vertical_Angle));
+	var current_target_position = new THREE.Vector3();
+	current_target_position.setFromMatrixPosition( Camera_lookAt.matrixWorld );
+	CurrentCamera.position.set(
+		current_target_position.x + Camera_Distance*Math.cos(Camera_Horizonatl_Angle)*Math.sin(Camera_Vertical_Angle),
+		current_target_position.y + Camera_Distance*Math.cos(Camera_Vertical_Angle),
+		current_target_position.z + Camera_Distance*Math.sin(Camera_Horizonatl_Angle)*Math.sin(Camera_Vertical_Angle)
+	);
+	var current_target_position = new THREE.Vector3();
+	current_target_position.setFromMatrixPosition( Camera_lookAt.matrixWorld );
+	CurrentCamera.lookAt(current_target_position);
+
+}
+
+function CameraPosition(distance,hoizontalAngle,verticalAngle,targetObject){
+	Camera_lookAt = targetObject = targetObject !== undefined ? targetObject : Camera_lookAt;
+	CurrentCamera= cameraAtScene;
+	Camera_Distance = Math.max(distance,5);
+	//Camera_Horizonatl_Angle += hoizontalAngle_inc;
+	//Camera_Vertical_Angle += verticalAngle_inc;
+	//Camera_Vertical_Angle = Math.max(0,Math.min(Math.PI,Camera_Vertical_Angle));
 	var current_target_position = new THREE.Vector3();
 	current_target_position.setFromMatrixPosition( Camera_lookAt.matrixWorld );
 	CurrentCamera.position.set(

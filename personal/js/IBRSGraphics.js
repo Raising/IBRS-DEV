@@ -41,6 +41,7 @@ IBRS.Graphics = function(){
 
     this.startScene = function(){
         graphics.SetupUpMouseInteraction(graphics.render.domElement);
+        graphics.SetupUpLeapInteraction();
         graphics.CameraReposition(0,0,0);
     };
 
@@ -73,7 +74,7 @@ IBRS.Graphics = function(){
 /* CANVAS INTERACTION
 THIS METODS PURPOSE IS TO HANDLE THE USER INTERACTION OVER THE CANVAS
 */
-    this.CameraReposition = function(distance_inc,hoizontalAngle_inc,verticalAngle_inc,targetObject){
+this.CameraReposition = function(distance_inc,hoizontalAngle_inc,verticalAngle_inc,targetObject){
         graphics.camera_target = targetObject = targetObject !== undefined ? targetObject : graphics.camera_target;
                
 
@@ -85,7 +86,30 @@ THIS METODS PURPOSE IS TO HANDLE THE USER INTERACTION OVER THE CANVAS
         current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
         graphics.camera.position.set(
             current_target_position.x + graphics.camera_Distance*Math.cos(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle),
-            current_target_position.y+3 + graphics.camera_Distance*Math.cos(graphics.camera_Vertical_Angle),
+            current_target_position.y + 3 + graphics.camera_Distance*Math.cos(graphics.camera_Vertical_Angle),
+            current_target_position.z + graphics.camera_Distance*Math.sin(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle)
+        );
+        var current_target_position = new THREE.Vector3();
+        current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
+        current_target_position.y +=3;
+        graphics.camera.lookAt(current_target_position);
+
+    };
+
+this.CameraPosition = function(distance,hoizontalAngle,verticalAngle,targetObject){
+        graphics.camera_target = targetObject = targetObject !== undefined ? targetObject : graphics.camera_target;
+               
+
+        graphics.camera_Distance = Math.max(distance,0.2);
+        graphics.camera_Horizonatl_Angle = hoizontalAngle;
+        graphics.camera_Vertical_Angle = verticalAngle;
+        graphics.camera_Vertical_Angle = Math.max(0.1,Math.min(Math.PI,graphics.camera_Vertical_Angle));
+        
+        var current_target_position = new THREE.Vector3();
+        current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
+        graphics.camera.position.set(
+            current_target_position.x + graphics.camera_Distance*Math.cos(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle),
+            current_target_position.y + 3 + graphics.camera_Distance*Math.cos(graphics.camera_Vertical_Angle),
             current_target_position.z + graphics.camera_Distance*Math.sin(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle)
         );
         var current_target_position = new THREE.Vector3();
@@ -96,8 +120,36 @@ THIS METODS PURPOSE IS TO HANDLE THE USER INTERACTION OVER THE CANVAS
     };
 
 
+this.SetupUpLeapInteraction = function(){
+    var options = { enableGestures: false }
+    var lastPosition = [0,0,0];
+    
 
+    Leap.loop(options, function(frame) {
+        if(frame.hands.length == 1 ){
+            var hand =  frame.hands[0];
+            if (frame.id%2 == 0){
+                var actualPosition =  hand.fingers[0].dipPosition;
+                if (hand.confidence > 0.7 && hand.pinchStrength<0.90){
+                    lastPosition =  actualPosition;
+                }
+                else if (hand.confidence > 0.7 && hand.pinchStrength>0.90){
+                  var actDistance = Math.sqrt(actualPosition[0]*actualPosition[0]+actualPosition[1]*actualPosition[1]+actualPosition[2]*actualPosition[2]);
+                  var lastDistance = Math.sqrt(lastPosition[0]*lastPosition[0]+lastPosition[1]*lastPosition[1]+lastPosition[2]*lastPosition[2]);
+                  var actHorizontalAngle =  Math.atan2(actualPosition[2],actualPosition[0]);
+                  var actVerticalAngle =   Math.acos(actualPosition[1]/actDistance); 
+                  var lastHorizontalAngle =  Math.atan2(lastPosition[2],lastPosition[0]);
+                  var lastVerticalAngle =   Math.acos(lastPosition[1]/lastDistance);
+                  //alert(distance);
+                  graphics.CameraReposition(actDistance-lastDistance,lastHorizontalAngle-actHorizontalAngle,actVerticalAngle-lastVerticalAngle);
+                   lastPosition =  actualPosition;
+                }
+            }
+        }    
+          // Showcase some new V2 features
+    });
 
+}
 
 this.SetupUpMouseInteraction = function(currentRenderDomElement){
     var mouseIsDown = 0;
