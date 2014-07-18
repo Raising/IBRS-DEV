@@ -145,29 +145,28 @@ this.SetupUpLeapInteraction = function(){
                 if (hand.type == "left"){//mano de manipulacion de camara
                     
                     var actualPosition =  hand.fingers[0].dipPosition;
-                    if (hand.confidence > 0.5 && hand.pinchStrength<0.90 && hand.grabStrength < 0.9){
+                    if (hand.confidence > 0.5 && hand.pinchStrength<0.90){ //&& hand.grabStrength < 0.9){
                         lastPosition =  actualPosition;
-                    }
+                    }/*
                     else if (hand.confidence > 0.5 && hand.grabStrength >0.9){
                       var actDistance = Math.sqrt(actualPosition[0]*actualPosition[0]+actualPosition[1]*actualPosition[1]+actualPosition[2]*actualPosition[2]);
                       var lastDistance = Math.sqrt(lastPosition[0]*lastPosition[0]+lastPosition[1]*lastPosition[1]+lastPosition[2]*lastPosition[2]);
             
                       graphics.CameraReposition(actDistance-lastDistance,0,0);
                        lastPosition =  actualPosition;
-                    }
+                    }*/
                     else if (hand.confidence > 0.5 && hand.pinchStrength>0.90){
                 
-                      graphics.CameraReposition(0,(actualPosition[0]-lastPosition[0])/100,(lastPosition[1]-actualPosition[1])/100);
+                      graphics.CameraReposition((actualPosition[2]-lastPosition[2]),(lastPosition[0]actualPosition[0])/100,(lastPosition[1]-actualPosition[1])/100);
                        lastPosition =  actualPosition;
                     }
                 
                 }
-                else if(hand.type = "right"){//mano de puntero
+                else if(hand.type = "right"){//mano de puntero, se podria partir el espacio de interaccion y suponer que la mano derecha está solo en ese eje
                     var indicePos = hand.fingers[0].dipPosition;
                     var sinA =  Math.sin(graphics.camera_Horizonatl_Angle);
                     var cosA =  Math.cos(graphics.camera_Horizonatl_Angle);
-                 
-                    graphics.pointer.position.set((cosA*indicePos[2]+sinA*indicePos[0])*0.7 ,indicePos[1]*0.2-20,-(cosA*indicePos[0]-sinA*indicePos[2])*0.7);
+                    graphics.pointer.position.set((cosA*indicePos[2]+sinA*(indicePos[0]-80))*0.005*graphics.camera_Distance,indicePos[1]*0.2-20,-(cosA*(indicePos[0]-80)-sinA*indicePos[2])*0.005*graphics.camera_Distance);
                     
                 }
             }
