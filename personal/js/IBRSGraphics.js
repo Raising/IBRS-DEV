@@ -17,6 +17,18 @@ IBRS.Graphics = function(){
     var globalLight = new THREE.AmbientLight(0x444444);
     this.scene.add(globalLight);
     this.referenceTime = 0;
+
+    var spherePointer = new THREE.Mesh(new THREE.SphereGeometry( 1.5, 12, 12 ),new THREE.MeshBasicMaterial( {color: 0xff5500,wireframe:false,opacity: 0.9,transparent: true}));
+    var cylinderPointer = new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.2,300),new THREE.MeshBasicMaterial( {color: 0xff5500,wireframe:false,opacity: 0.9,transparent: true}));
+    this.pointer = new THREE.Object3D();
+    this.pointer.add(spherePointer);
+    this.pointer.add(cylinderPointer);
+    
+
+
+
+    this.scene.add(this.pointer);
+    
     //this.scene.add(this.gameArea);
     this.tageteableElementsList = [];//tienen uqe ser objetos 3d de THREE
 
@@ -126,23 +138,35 @@ this.SetupUpLeapInteraction = function(){
     
 
     Leap.loop(options, function(frame) {
-        if(frame.hands.length == 1 ){
-            var hand =  frame.hands[0];
-            if (frame.id%2 == 0){
-                var actualPosition =  hand.fingers[0].dipPosition;
-                if (hand.confidence > 0.7 && hand.pinchStrength<0.90){
-                    lastPosition =  actualPosition;
+        if (frame.id%2 == 0){
+            for (var i = frame.hands.length - 1; i >= 0; i--) {
+                var hand = frame.hands[i];
+       
+                if (hand.type == "left"){//mano de manipulacion de camara
+                    
+                    var actualPosition =  hand.fingers[0].dipPosition;
+                    if (hand.confidence > 0.5 && hand.pinchStrength<0.90 && hand.grabStrength < 0.8){
+                        lastPosition =  actualPosition;
+                    }
+                    else if (hand.confidence > 0.5 && hand.grabStrength >0.80){
+                      var actDistance = Math.sqrt(actualPosition[0]*actualPosition[0]+actualPosition[1]*actualPosition[1]+actualPosition[2]*actualPosition[2]);
+                      var lastDistance = Math.sqrt(lastPosition[0]*lastPosition[0]+lastPosition[1]*lastPosition[1]+lastPosition[2]*lastPosition[2]);
+            
+                      //alert(distance);
+                      graphics.CameraReposition(actDistance-lastDistance,0,0);
+                       lastPosition =  actualPosition;
+                    }
+                    else if (hand.confidence > 0.5 && hand.pinchStrength>0.90){
+                      //alert(distance);
+                      graphics.CameraReposition(0,(actualPosition[0]-lastPosition[0])/100,(lastPosition[1]-actualPosition[1])/100);
+                       lastPosition =  actualPosition;
+                    }
+                
                 }
-                else if (hand.confidence > 0.7 && hand.pinchStrength>0.90){
-                  var actDistance = Math.sqrt(actualPosition[0]*actualPosition[0]+actualPosition[1]*actualPosition[1]+actualPosition[2]*actualPosition[2]);
-                  var lastDistance = Math.sqrt(lastPosition[0]*lastPosition[0]+lastPosition[1]*lastPosition[1]+lastPosition[2]*lastPosition[2]);
-                  var actHorizontalAngle =  Math.atan2(actualPosition[2],actualPosition[0]);
-                  var actVerticalAngle =   Math.acos(actualPosition[1]/actDistance); 
-                  var lastHorizontalAngle =  Math.atan2(lastPosition[2],lastPosition[0]);
-                  var lastVerticalAngle =   Math.acos(lastPosition[1]/lastDistance);
-                  //alert(distance);
-                  graphics.CameraReposition(actDistance-lastDistance,lastHorizontalAngle-actHorizontalAngle,actVerticalAngle-lastVerticalAngle);
-                   lastPosition =  actualPosition;
+                else if(hand.type == "right"){//mano de puntero
+                    var indicePos = hand.fingers[0].dipPosition;
+                    graphics.pointer.position.set(indicePos[0]*0.5 ,indicePos[1]*0.2-20,indicePos[2]*0.5);
+                    
                 }
             }
         }    
@@ -234,7 +258,7 @@ this.findObjectByProyection = function(evt,scope){
 
 this.MouseWheelHandler = function(e) {
     var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-    graphics.CameraReposition(delta*5,0,0)  ;
+    graphics.CameraReposition(delta*(-5),0,0)  ;
 } 
 
 
