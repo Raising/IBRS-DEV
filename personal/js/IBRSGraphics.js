@@ -145,27 +145,29 @@ this.SetupUpLeapInteraction = function(){
                 if (hand.type == "left"){//mano de manipulacion de camara
                     
                     var actualPosition =  hand.fingers[0].dipPosition;
-                    if (hand.confidence > 0.5 && hand.pinchStrength<0.90 && hand.grabStrength < 0.8){
+                    if (hand.confidence > 0.5 && hand.pinchStrength<0.90 && hand.grabStrength < 0.9){
                         lastPosition =  actualPosition;
                     }
-                    else if (hand.confidence > 0.5 && hand.grabStrength >0.80){
+                    else if (hand.confidence > 0.5 && hand.grabStrength >0.9){
                       var actDistance = Math.sqrt(actualPosition[0]*actualPosition[0]+actualPosition[1]*actualPosition[1]+actualPosition[2]*actualPosition[2]);
                       var lastDistance = Math.sqrt(lastPosition[0]*lastPosition[0]+lastPosition[1]*lastPosition[1]+lastPosition[2]*lastPosition[2]);
             
-                      //alert(distance);
                       graphics.CameraReposition(actDistance-lastDistance,0,0);
                        lastPosition =  actualPosition;
                     }
                     else if (hand.confidence > 0.5 && hand.pinchStrength>0.90){
-                      //alert(distance);
+                
                       graphics.CameraReposition(0,(actualPosition[0]-lastPosition[0])/100,(lastPosition[1]-actualPosition[1])/100);
                        lastPosition =  actualPosition;
                     }
                 
                 }
-                else if(hand.type == "right"){//mano de puntero
+                else if(hand.type = "right"){//mano de puntero
                     var indicePos = hand.fingers[0].dipPosition;
-                    graphics.pointer.position.set(indicePos[0]*0.5 ,indicePos[1]*0.2-20,indicePos[2]*0.5);
+                    var sinA =  Math.sin(graphics.camera_Horizonatl_Angle);
+                    var cosA =  Math.cos(graphics.camera_Horizonatl_Angle);
+                 
+                    graphics.pointer.position.set((cosA*indicePos[2]+sinA*indicePos[0])*0.7 ,indicePos[1]*0.2-20,-(cosA*indicePos[0]-sinA*indicePos[2])*0.7);
                     
                 }
             }
