@@ -2,7 +2,7 @@
 	"turnList":[
 		{"playerID":200,
 			"orderList":[
-				{"groupNumber":1,"orderKind":0,
+				{"groupNumber":1,"orderType":0,
 					"firstDeclaration":[
 						{"descriptor":"IBRS.DEC.MOVE","source":{"playerID":200,"groupNumber":1,"unitNumber":1},"target":0,"location":{"angle":1.7,"distance":10}}
 						],
@@ -16,9 +16,10 @@
 					"resolutions":[]
 				}
 			]
-		}
+		},
 		{"playerID":201,
 			"orderList":[
+				
 			]
 		}
 	]

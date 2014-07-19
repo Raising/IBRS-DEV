@@ -51,6 +51,7 @@ IBRS.Declaration = function(order){
 	}
 
     this.insertFromData = function(data){
+    	console.log( data.descriptor);
     	declaration.descriptor = data.descriptor;
     	declaration.source= declaration.locateUnit(data.source);
     	declaration.target= declaration.locateUnit(data.target);
@@ -62,26 +63,62 @@ IBRS.Declaration = function(order){
  
 
 IBRS.Order =  function(turn){
+	var order = this;
 	this.firstDeclaration = [];
 	this.secondDeclaration = [];
 	this.firstAro = [];
 	this.secondAro = [];
 	this.turn = turn;
+	this.groupNumber = -1;
+	this.orderType = -1; //0 = regular, 1 = irregular, 2 = impetuosa.
 	this.addFirstDeclaration= function( declaration){
-		this.firstDeclaration.push(declaration);
-	}
+		order.firstDeclaration.push(declaration);
+	};
 
 	this.addSecondDeclaration= function( declaration){
-		this.secondDeclaration.push(declaration);
-	}
+		order.secondDeclaration.push(declaration);
+	};
 
 	this.addFirstAro= function( declaration){
-		this.firstAro.push(declaration);
-	}
+		order.firstAro.push(declaration);
+	};
 
 	this.addSecondAro= function( declaration){
-		this.SecondAro.push(declaration);
-	}
+		order.SecondAro.push(declaration);
+	};
+
+	this.insertFromData = function(data){
+		console.log(data.orderType);
+		order.groupNumber = data.groupNumber;
+		order.orderType = data.orderType;
+		
+		for (var i = 0; i < data.firstDeclaration.length; i++) {
+			var newDeclaration = new IBRS.Declaration(order);
+			newDeclaration.insertFromData(data.firstDeclaration[i]);
+			order.addFirstDeclaration(newDeclaration);
+		}
+
+		for (var i = 0; i < data.secondDeclaration.length; i++) {
+			var newDeclaration = new IBRS.Declaration(order);
+			newDeclaration.insertFromData(data.secondDeclaration[i]);
+			order.addSecondDeclaration(newDeclaration);
+		}
+
+		for (var i = 0; i < data.firstAro.length; i++) {
+			var newDeclaration = new IBRS.Declaration(order);
+			newDeclaration.insertFromData(data.firstAro[i]);
+			order.addFirstAro(newDeclaration);
+		}
+		
+		for (var i = 0; i < data.secondAro.length; i++) {
+			var newDeclaration = new IBRS.Declaration(order);
+			newDeclaration.insertFromData(data.secondAro[i]);
+			order.addSecondAro(newDeclaration);
+		}
+
+	};
+
+
 };
 
 IBRS.Turn =  function(gameEvents){
@@ -95,8 +132,12 @@ IBRS.Turn =  function(gameEvents){
 	};
 
 	this.insertFromData = function(data) {
-		for (var i = 0; i < Things.length; i++) {
-			Things[i]
+		console.log("insterTunr");
+		turn.playerID = data.playerID;
+		for (var i = 0; i < data.orderList.length; i++) {
+			var newOrder = new IBRS.Order(turn);
+			newOrder.insertFromData(data.orderList[i]);
+			turn.addOrder(newOrder);
 		};
 
 	};
@@ -113,12 +154,16 @@ IBRS.GameEvents =  function(game){
 	};
 	
 	this.loadGameEventsFromDataBase = function(gameEventsID){
+		
+		
+		
 		jQuery.getJSON("DataBase/GameEvents/"+gameEventsID+".json",function(data){
-
-			for (var i = 0;i<data.turnList;i++){
+			console.log(gameEventsID+".json leido");
+			for (var i = 0;i<data.turnList.length;i++){
+				console.log("turnList["+i+"]");
 				var newTurn = new IBRS.Turn(gameEvents);
 				newTurn.insertFromData(data.turnList[i]);
-				gameEvents.turnList.push(newTurn);
+				gameEvents.addTurn(newTurn);
 			}		
 		});
 	};

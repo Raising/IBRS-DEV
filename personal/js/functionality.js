@@ -1,7 +1,7 @@
 jQuery(function(){
 				//webGLStart();
 				jQuery( document ).ajaxError(function() {
-					alert("fallo de ayax");
+					console.log("fallo de ayax");
 				});
 
 

@@ -47,7 +47,7 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	var unitLogic = this;
 	this.tacticalGroup = tacticalGroup;
 	this.id = IBRS.getID();
-	this.unitNumber = 0;
+	this.unitNumber = -1;
 	this.isMarker = false;
 	this.bodyTexture = 'img/empty.jpg';
 	this.baseTexture = 'img/empty.jpg'; // por decidir el formato de almacenamiento
@@ -259,22 +259,24 @@ IBRS.Game = function(gameID){
 	};
 
 	this.getUnitLogicFromArmyPosition = function (unitArmyPosition){
-	
+	if(unitArmyPosition==0)
+		{return 0;}
 		for (var i = game.playerList.length - 1; i >= 0; i--) {
+
 			if (game.playerList[i].playerID == unitArmyPosition.playerID){
-				for (var j = game.playerList.army.tacticalGroupList.length - 1; j >= 0; j--) {
+				for (var j = game.playerList[i].army.tacticalGroupList.length - 1; j >= 0; j--) {
 					if(game.playerList[i].army.tacticalGroupList[j].groupNumber == unitArmyPosition.groupNumber){
 						for (var k = game.playerList[i].army.tacticalGroupList[j].unitList.length - 1; k >= 0; k--) {
 							if (game.playerList[i].army.tacticalGroupList[j].unitList[k].unitNumber == unitArmyPosition.unitNumber){
+								console.log("entidad encontrada"+unitArmyPosition.groupNumber+"  "+unitArmyPosition.unitNumber+" tipo="+game.playerList[i].army.tacticalGroupList[j].unitList[k].id);
 								return game.playerList[i].army.tacticalGroupList[j].unitList[k];
 							}
 						};
 					}
 				};
 			}
-
 		};
-	alert("no unit found");
+	console.error("unit no encontrada, si no existe la unidad o no compete en el tipo de declaración ha de poner 0 en el campo target/source");
 	return 0;
 	};
 
