@@ -131,6 +131,19 @@ this.CameraPosition = function(distance,hoizontalAngle,verticalAngle,targetObjec
 
     };
 
+this.GetClosestTargeteableElement = function(position){
+    var closest = graphics.tageteableElementsList[0];
+    var bestDistance = 800;
+    for (var i = graphics.tageteableElementsList.length - 1; i >= 0; i--) {
+        var actualPosition = graphics.tageteableElementsList[i].position;
+        var distance = Math.sqrt((actualPosition.x-position.x)*(actualPosition.x-position.x)+(actualPosition.y-position.y)*(actualPosition.y-position.y)+(actualPosition.z-position.z)*(actualPosition.z-position.z));
+        if (distance < bestDistance){
+            bestDistance = distance;
+            closest = graphics.tageteableElementsList[i];
+        }
+    }
+    return closest;
+};
 
 this.SetupUpLeapInteraction = function(){
     var options = { enableGestures: false }
@@ -138,6 +151,7 @@ this.SetupUpLeapInteraction = function(){
     
 
     Leap.loop(options, function(frame) {
+        var lastTimeSelection = -100;
         if (frame.id%2 == 0){
             for (var i = frame.hands.length - 1; i >= 0; i--) {
                 var hand = frame.hands[i];
@@ -145,29 +159,29 @@ this.SetupUpLeapInteraction = function(){
                 if (hand.type == "left"){//mano de manipulacion de camara
                     
                     var actualPosition =  hand.fingers[0].dipPosition;
-                    if (hand.confidence > 0.5 && hand.pinchStrength<0.90){ //&& hand.grabStrength < 0.9){
+                    if (hand.confidence > 0.5 && hand.pinchStrength<1){ //&& hand.grabStrength < 0.9){
                         lastPosition =  actualPosition;
-                    }/*
-                    else if (hand.confidence > 0.5 && hand.grabStrength >0.9){
-                      var actDistance = Math.sqrt(actualPosition[0]*actualPosition[0]+actualPosition[1]*actualPosition[1]+actualPosition[2]*actualPosition[2]);
-                      var lastDistance = Math.sqrt(lastPosition[0]*lastPosition[0]+lastPosition[1]*lastPosition[1]+lastPosition[2]*lastPosition[2]);
-            
-                      graphics.CameraReposition(actDistance-lastDistance,0,0);
-                       lastPosition =  actualPosition;
-                    }*/
-                    else if (hand.confidence > 0.5 && hand.pinchStrength>0.90){
-                
-                      graphics.CameraReposition((actualPosition[2]-lastPosition[2]),(lastPosition[0]actualPosition[0])/100,(lastPosition[1]-actualPosition[1])/100);
-                       lastPosition =  actualPosition;
+                    }
+                    else if (hand.confidence > 0.5 && hand.pinchStrength==1){
+                      graphics.CameraReposition((actualPosition[2]-lastPosition[2]),(lastPosition[0]-actualPosition[0])/100,(lastPosition[1]-actualPosition[1])/100);
+                      lastPosition =  actualPosition;
                     }
                 
                 }
                 else if(hand.type = "right"){//mano de puntero, se podria partir el espacio de interaccion y suponer que la mano derecha está solo en ese eje
-                    var indicePos = hand.fingers[0].dipPosition;
-                    var sinA =  Math.sin(graphics.camera_Horizonatl_Angle);
-                    var cosA =  Math.cos(graphics.camera_Horizonatl_Angle);
-                    graphics.pointer.position.set((cosA*indicePos[2]+sinA*(indicePos[0]-80))*0.005*graphics.camera_Distance,indicePos[1]*0.2-20,-(cosA*(indicePos[0]-80)-sinA*indicePos[2])*0.005*graphics.camera_Distance);
+                   
+                        var indicePos = hand.fingers[0].dipPosition;
+                        var sinA =  Math.sin(graphics.camera_Horizonatl_Angle);
+                        var cosA =  Math.cos(graphics.camera_Horizonatl_Angle);
+                        graphics.pointer.position.set((cosA*indicePos[2]+sinA*(indicePos[0]-80))*0.005*graphics.camera_Distance,indicePos[1]*0.2-20,-(cosA*(indicePos[0]-80)-sinA*indicePos[2])*0.005*graphics.camera_Distance);
                     
+                    if (hand.confidence > 0.5 && hand.pinchStrength==1 && lastTimeSelection < (frame.id-20)){
+                               var elementSelected = graphics.GetClosestTargeteableElement(graphics.pointer.position);
+                        elementSelected.onElementClick();
+                        console.log("eleigiendo elemento")
+                        graphics.CameraReposition(0,0,0,elementSelected);
+                        lastTimeSelection = frame.id;
+                    }
                 }
             }
         }    
