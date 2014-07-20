@@ -51,9 +51,10 @@ IBRS.Declaration = function(order){
 	}
 
     this.insertFromData = function(data){
-    	console.log( data.descriptor);
+    	
+
     	declaration.descriptor = data.descriptor;
-    	declaration.source= declaration.locateUnit(data.source);
+    	declaration.source= declaration.locateUnit	(data.source);
     	declaration.target= declaration.locateUnit(data.target);
     	declaration.location = data.location;
     }
@@ -88,7 +89,7 @@ IBRS.Order =  function(turn){
 	};
 
 	this.insertFromData = function(data){
-		console.log(data.orderType);
+	
 		order.groupNumber = data.groupNumber;
 		order.orderType = data.orderType;
 		
@@ -132,7 +133,7 @@ IBRS.Turn =  function(gameEvents){
 	};
 
 	this.insertFromData = function(data) {
-		console.log("insterTunr");
+		
 		turn.playerID = data.playerID;
 		for (var i = 0; i < data.orderList.length; i++) {
 			var newOrder = new IBRS.Order(turn);
@@ -158,13 +159,14 @@ IBRS.GameEvents =  function(game){
 		
 		
 		jQuery.getJSON("DataBase/GameEvents/"+gameEventsID+".json",function(data){
-			console.log(gameEventsID+".json leido");
+			console.info("Ajax Cargando DataBase/GameEvents/"+gameEventsID+".json");
 			for (var i = 0;i<data.turnList.length;i++){
-				console.log("turnList["+i+"]");
+				
 				var newTurn = new IBRS.Turn(gameEvents);
 				newTurn.insertFromData(data.turnList[i]);
 				gameEvents.addTurn(newTurn);
-			}		
+			}
+					
 		});
 	};
 };

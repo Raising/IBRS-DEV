@@ -9,7 +9,10 @@ IBRS.Graphics = function(){
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 0.1, 1000);
     this.scene.add(this.camera);
-    
+    this.reproductor = new IBRS.Reproductor(this);
+
+
+    //luces
     var light = new THREE.PointLight(0xffffff);
     light.position.set(40,10,40);
     this.scene.add(light);
@@ -18,20 +21,18 @@ IBRS.Graphics = function(){
     this.scene.add(globalLight);
     this.referenceTime = 0;
 
-    var spherePointer = new THREE.Mesh(new THREE.SphereGeometry( 1.5, 12, 12 ),new THREE.MeshBasicMaterial( {color: 0xff5500,wireframe:false,opacity: 0.9,transparent: true}));
-    var cylinderPointer = new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.2,300),new THREE.MeshBasicMaterial( {color: 0xff5500,wireframe:false,opacity: 0.9,transparent: true}));
+
+    //Puntero LEAP MOTION
+    //cambiar la opacidad para activar el puntero del leap motion
+    var spherePointer = new THREE.Mesh(new THREE.SphereGeometry( 1.5, 12, 12 ),new THREE.MeshBasicMaterial( {color: 0xff5500,wireframe:false,opacity: 0,transparent: true}));
+    var cylinderPointer = new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.2,300),new THREE.MeshBasicMaterial( {color: 0xff5500,wireframe:false,opacity: 0,transparent: true}));
     this.pointer = new THREE.Object3D();
     this.pointer.add(spherePointer);
     this.pointer.add(cylinderPointer);
-    
-
-
-
     this.scene.add(this.pointer);
     
-    //this.scene.add(this.gameArea);
-    this.tageteableElementsList = [];//tienen uqe ser objetos 3d de THREE
 
+    this.tageteableElementsList = [];//tienen uqe ser objetos 3d de THREE
 
 
     this.camera_Distance = 150;
@@ -47,24 +48,19 @@ IBRS.Graphics = function(){
             }
         }
     };
-
-
-
-
     this.startScene = function(){
         graphics.SetupUpMouseInteraction(graphics.render.domElement);
         graphics.SetupUpLeapInteraction();
         graphics.CameraReposition(0,0,0);
     };
-
     this.renderScene = function(){
         
         graphics.render.render(graphics.scene, graphics.camera);
-
     };
     this.animateScene= function(){
-       // var delta=(Date.now()- this.referenceTime )/1000;
-       // this.referenceTime =Date.now();
+        var delta=(Date.now()- this.referenceTime )/1000;
+        this.referenceTime =Date.now();
+        graphics.reproductor.nextFrame(delta);
         graphics.renderScene();
 
         requestAnimationFrame(graphics.animateScene);
@@ -74,207 +70,197 @@ IBRS.Graphics = function(){
         graphics.animateScene();        
     };
 
-    this.setupGame= function(newGame){
-
-
+    this.insertGameData= function(newGame){
+        graphics.addListToScene(newGame.getMiniatures(),true);
+        graphics.addListToScene(newGame.getSceneryElementList(),false);
+        graphics.reproductor.insertEvents(newGame.events);
     };
+
     this.setTargeteableElements=function(newList){
         graphics.tageteableElementsList = newList;
     };
 
 
-/* CANVAS INTERACTION
-THIS METODS PURPOSE IS TO HANDLE THE USER INTERACTION OVER THE CANVAS
-*/
-this.CameraReposition = function(distance_inc,hoizontalAngle_inc,verticalAngle_inc,targetObject){
-        graphics.camera_target = targetObject = targetObject !== undefined ? targetObject : graphics.camera_target;
-               
-
-        graphics.camera_Distance = Math.max(graphics.camera_Distance+distance_inc,0.2);
-        graphics.camera_Horizonatl_Angle += hoizontalAngle_inc;
-        graphics.camera_Vertical_Angle += verticalAngle_inc;
-        graphics.camera_Vertical_Angle = Math.max(0,Math.min(Math.PI,graphics.camera_Vertical_Angle));
-        var current_target_position = new THREE.Vector3();
-        current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
-        graphics.camera.position.set(
-            current_target_position.x + graphics.camera_Distance*Math.cos(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle),
-            current_target_position.y + 3 + graphics.camera_Distance*Math.cos(graphics.camera_Vertical_Angle),
-            current_target_position.z + graphics.camera_Distance*Math.sin(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle)
-        );
-        var current_target_position = new THREE.Vector3();
-        current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
-        current_target_position.y +=3;
-        graphics.camera.lookAt(current_target_position);
-
-    };
-
-this.CameraPosition = function(distance,hoizontalAngle,verticalAngle,targetObject){
-        graphics.camera_target = targetObject = targetObject !== undefined ? targetObject : graphics.camera_target;
-               
-
-        graphics.camera_Distance = Math.max(distance,0.2);
-        graphics.camera_Horizonatl_Angle = hoizontalAngle;
-        graphics.camera_Vertical_Angle = verticalAngle;
-        graphics.camera_Vertical_Angle = Math.max(0.1,Math.min(Math.PI,graphics.camera_Vertical_Angle));
-        
-        var current_target_position = new THREE.Vector3();
-        current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
-        graphics.camera.position.set(
-            current_target_position.x + graphics.camera_Distance*Math.cos(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle),
-            current_target_position.y + 3 + graphics.camera_Distance*Math.cos(graphics.camera_Vertical_Angle),
-            current_target_position.z + graphics.camera_Distance*Math.sin(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle)
-        );
-        var current_target_position = new THREE.Vector3();
-        current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
-        current_target_position.y +=3;
-        graphics.camera.lookAt(current_target_position);
-
-    };
-
-this.GetClosestTargeteableElement = function(position){
-    var closest = graphics.tageteableElementsList[0];
-    var bestDistance = 800;
-    for (var i = graphics.tageteableElementsList.length - 1; i >= 0; i--) {
-        var actualPosition = graphics.tageteableElementsList[i].position;
-        var distance = Math.sqrt((actualPosition.x-position.x)*(actualPosition.x-position.x)+(actualPosition.y-position.y)*(actualPosition.y-position.y)+(actualPosition.z-position.z)*(actualPosition.z-position.z));
-        if (distance < bestDistance){
-            bestDistance = distance;
-            closest = graphics.tageteableElementsList[i];
-        }
-    }
-    return closest;
-};
-
-this.SetupUpLeapInteraction = function(){
-    var options = { enableGestures: false }
-    var lastPosition = [0,0,0];
-    
-
-    Leap.loop(options, function(frame) {
-        var lastTimeSelection = -100;
-        if (frame.id%2 == 0){
-            for (var i = frame.hands.length - 1; i >= 0; i--) {
-                var hand = frame.hands[i];
-       
-                if (hand.type == "left"){//mano de manipulacion de camara
-                    
-                    var actualPosition =  hand.fingers[0].dipPosition;
-                    if (hand.confidence > 0.5 && hand.pinchStrength<1){ //&& hand.grabStrength < 0.9){
-                        lastPosition =  actualPosition;
-                    }
-                    else if (hand.confidence > 0.5 && hand.pinchStrength==1){
-                      graphics.CameraReposition((actualPosition[2]-lastPosition[2]),(lastPosition[0]-actualPosition[0])/100,(lastPosition[1]-actualPosition[1])/100);
-                      lastPosition =  actualPosition;
-                    }
-                
-                }
-                else if(hand.type = "right"){//mano de puntero, se podria partir el espacio de interaccion y suponer que la mano derecha está solo en ese eje
+    /* CANVAS INTERACTION
+    THIS METODS PURPOSE IS TO HANDLE THE USER INTERACTION OVER THE CANVAS
+    */
+    this.CameraReposition = function(distance_inc,hoizontalAngle_inc,verticalAngle_inc,targetObject){
+            graphics.camera_target = targetObject = targetObject !== undefined ? targetObject : graphics.camera_target;
                    
-                        var indicePos = hand.fingers[0].dipPosition;
-                        var sinA =  Math.sin(graphics.camera_Horizonatl_Angle);
-                        var cosA =  Math.cos(graphics.camera_Horizonatl_Angle);
-                        graphics.pointer.position.set((cosA*indicePos[2]+sinA*(indicePos[0]-80))*0.005*graphics.camera_Distance,indicePos[1]*0.2-20,-(cosA*(indicePos[0]-80)-sinA*indicePos[2])*0.005*graphics.camera_Distance);
+
+            graphics.camera_Distance = Math.max(graphics.camera_Distance+distance_inc,0.2);
+            graphics.camera_Horizonatl_Angle += hoizontalAngle_inc;
+            graphics.camera_Vertical_Angle += verticalAngle_inc;
+            graphics.camera_Vertical_Angle = Math.max(0,Math.min(Math.PI,graphics.camera_Vertical_Angle));
+            var current_target_position = new THREE.Vector3();
+            current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
+            graphics.camera.position.set(
+                current_target_position.x + graphics.camera_Distance*Math.cos(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle),
+                current_target_position.y + 3 + graphics.camera_Distance*Math.cos(graphics.camera_Vertical_Angle),
+                current_target_position.z + graphics.camera_Distance*Math.sin(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle)
+            );
+            var current_target_position = new THREE.Vector3();
+            current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
+            current_target_position.y +=3;
+            graphics.camera.lookAt(current_target_position);
+    }
+    this.CameraPosition = function(distance,hoizontalAngle,verticalAngle,targetObject){
+            graphics.camera_target = targetObject = targetObject !== undefined ? targetObject : graphics.camera_target;
+                   
+
+            graphics.camera_Distance = Math.max(distance,0.2);
+            graphics.camera_Horizonatl_Angle = hoizontalAngle;
+            graphics.camera_Vertical_Angle = verticalAngle;
+            graphics.camera_Vertical_Angle = Math.max(0.1,Math.min(Math.PI,graphics.camera_Vertical_Angle));
+            
+            var current_target_position = new THREE.Vector3();
+            current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
+            graphics.camera.position.set(
+                current_target_position.x + graphics.camera_Distance*Math.cos(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle),
+                current_target_position.y + 3 + graphics.camera_Distance*Math.cos(graphics.camera_Vertical_Angle),
+                current_target_position.z + graphics.camera_Distance*Math.sin(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle)
+            );
+            var current_target_position = new THREE.Vector3();
+            current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
+            current_target_position.y +=3;
+            graphics.camera.lookAt(current_target_position);
+    }
+    this.GetClosestTargeteableElement = function(position){
+        var closest = graphics.tageteableElementsList[0];
+        var bestDistance = 800;
+        for (var i = graphics.tageteableElementsList.length - 1; i >= 0; i--) {
+            var actualPosition = graphics.tageteableElementsList[i].position;
+            var distance = Math.sqrt((actualPosition.x-position.x)*(actualPosition.x-position.x)+(actualPosition.y-position.y)*(actualPosition.y-position.y)+(actualPosition.z-position.z)*(actualPosition.z-position.z));
+            if (distance < bestDistance){
+                bestDistance = distance;
+                closest = graphics.tageteableElementsList[i];
+            }
+        }
+        return closest;
+    }
+    this.SetupUpLeapInteraction = function(){
+        var options = { enableGestures: false }
+        var lastPosition = [0,0,0];
+        
+
+        Leap.loop(options, function(frame) {
+            var lastTimeSelection = -100;
+            if (frame.id%2 == 0){
+                for (var i = frame.hands.length - 1; i >= 0; i--) {
+                    var hand = frame.hands[i];
+           
+                    if (hand.type == "left"){//mano de manipulacion de camara
+                        
+                        var actualPosition =  hand.fingers[0].dipPosition;
+                        if (hand.confidence > 0.5 && hand.pinchStrength<1){ //&& hand.grabStrength < 0.9){
+                            lastPosition =  actualPosition;
+                        }
+                        else if (hand.confidence > 0.5 && hand.pinchStrength==1){
+                          graphics.CameraReposition((actualPosition[2]-lastPosition[2]),(lastPosition[0]-actualPosition[0])/100,(lastPosition[1]-actualPosition[1])/100);
+                          lastPosition =  actualPosition;
+                        }
                     
-                    if (hand.confidence > 0.5 && hand.pinchStrength==1 && lastTimeSelection < (frame.id-20)){
-                               var elementSelected = graphics.GetClosestTargeteableElement(graphics.pointer.position);
-                        elementSelected.onElementClick();
-                        console.log("eleigiendo elemento")
-                        graphics.CameraReposition(0,0,0,elementSelected);
-                        lastTimeSelection = frame.id;
+                    }
+                    else if(hand.type = "right"){//mano de puntero, se podria partir el espacio de interaccion y suponer que la mano derecha está solo en ese eje
+                       
+                            var indicePos = hand.fingers[0].dipPosition;
+                            var sinA =  Math.sin(graphics.camera_Horizonatl_Angle);
+                            var cosA =  Math.cos(graphics.camera_Horizonatl_Angle);
+                            graphics.pointer.position.set((cosA*indicePos[2]+sinA*(indicePos[0]-80))*0.005*graphics.camera_Distance,indicePos[1]*0.2-20,-(cosA*(indicePos[0]-80)-sinA*indicePos[2])*0.005*graphics.camera_Distance);
+                        
+                        if (hand.confidence > 0.5 && hand.pinchStrength==1 && lastTimeSelection < (frame.id-20)){
+                                   var elementSelected = graphics.GetClosestTargeteableElement(graphics.pointer.position);
+                            elementSelected.onElementClick();
+                            console.log("eleigiendo elemento")
+                            graphics.CameraReposition(0,0,0,elementSelected);
+                            lastTimeSelection = frame.id;
+                        }
                     }
                 }
+            }    
+              // Showcase some new V2 features
+        });
+    }
+    this.SetupUpMouseInteraction = function(currentRenderDomElement){
+        var mouseIsDown = 0;
+        var mouseDownPosition = new THREE.Vector3(0,0,0);
+            
+        currentRenderDomElement.addEventListener("mousewheel", graphics.MouseWheelHandler, false);// IE9, Chrome, Safari, Opera  
+        currentRenderDomElement.addEventListener("DOMMouseScroll", graphics.MouseWheelHandler, false);// Firefox
+        currentRenderDomElement.addEventListener('contextmenu', function (evt){evt.preventDefault();}, false);
+        currentRenderDomElement.addEventListener('mousedown', function (evt) {
+            mouseIsDown=evt.which;
+            mouseDownPosition.x = evt.pageX;
+            mouseDownPosition.y = evt.pageY;        
+            switch (evt.which) {
+                case 1://left mouse
+                    
+                    break;
+                case 2://middle mouse
+                    
+                    //alert('Middle mouse button presed');
+                    break;
+                case 3://right mouse
+                    break;
+                default://something wierd
+                    alert('You have a strange mouse');
             }
-        }    
-          // Showcase some new V2 features
-    });
+        },false);
 
-}
+        currentRenderDomElement.addEventListener('mousemove', function (evt) {
+            if (mouseIsDown==3){
+                //turn camera
+                graphics.CameraReposition(0,
+                    0.03*(evt.pageX - mouseDownPosition.x),
+                    0.03*(evt.pageY - mouseDownPosition.y)
+                );
+            mouseDownPosition.x = evt.pageX;
+            mouseDownPosition.y = evt.pageY;
+            }
+        },false);
 
-this.SetupUpMouseInteraction = function(currentRenderDomElement){
-    var mouseIsDown = 0;
-    var mouseDownPosition = new THREE.Vector3(0,0,0);
-        
-    currentRenderDomElement.addEventListener("mousewheel", graphics.MouseWheelHandler, false);// IE9, Chrome, Safari, Opera  
-    currentRenderDomElement.addEventListener("DOMMouseScroll", graphics.MouseWheelHandler, false);// Firefox
-    currentRenderDomElement.addEventListener('contextmenu', function (evt){evt.preventDefault();}, false);
-    currentRenderDomElement.addEventListener('mousedown', function (evt) {
-        mouseIsDown=evt.which;
-        mouseDownPosition.x = evt.pageX;
-        mouseDownPosition.y = evt.pageY;        
-        switch (evt.which) {
-            case 1://left mouse
-                
-                break;
-            case 2://middle mouse
-                
-                //alert('Middle mouse button presed');
-                break;
-            case 3://right mouse
-                break;
-            default://something wierd
-                alert('You have a strange mouse');
-        }
-    },false);
+        currentRenderDomElement.addEventListener('mouseup', function (evt) {
+            if (mouseIsDown==1 && evt.pageX == mouseDownPosition.x && evt.pageY == mouseDownPosition.y)
+                { graphics.findObjectByProyection(evt,this);}
 
-    currentRenderDomElement.addEventListener('mousemove', function (evt) {
-        if (mouseIsDown==3){
-            //turn camera
-            graphics.CameraReposition(0,
-                0.03*(evt.pageX - mouseDownPosition.x),
-                0.03*(evt.pageY - mouseDownPosition.y)
-            );
-        mouseDownPosition.x = evt.pageX;
-        mouseDownPosition.y = evt.pageY;
-        }
-    },false);
+            mouseIsDown=0;
 
-    currentRenderDomElement.addEventListener('mouseup', function (evt) {
-        if (mouseIsDown==1 && evt.pageX == mouseDownPosition.x && evt.pageY == mouseDownPosition.y)
-            { graphics.findObjectByProyection(evt,this);}
+            
+            
+        },false);
+    }
+    this.getCanvasStats = function(scope){
+        var canvasStat = [] ;
+        canvasStat.Offset = jQuery(scope).offset();
+        canvasStat.width =jQuery(scope).width(); 
+        canvasStat.height =jQuery(scope).height();
+        canvasStat.paddingtop = 5;
+        canvasStat.paddingleft = 15;
+        return canvasStat; 
+    }   
+    this.findObjectByProyection = function(evt,scope){
 
-        mouseIsDown=0;
+        var projector = new THREE.Projector();
+        var directionVector = new THREE.Vector3();
+        var CanvasStats = graphics.getCanvasStats(scope);
 
-        
-        
-    },false);
+        var clickx = evt.pageX - CanvasStats.Offset.left - CanvasStats.paddingleft;
+        var clicky = evt.pageY - CanvasStats.Offset.top - CanvasStats.paddingtop ;
+        directionVector.x = ( clickx / CanvasStats.width ) * 2 - 1;
+        directionVector.y = -( clicky / CanvasStats.height ) * 2 + 1;
 
-}
-
-
-this.getCanvasStats = function(scope){
-    var canvasStat = [] ;
-    canvasStat.Offset = jQuery(scope).offset();
-    canvasStat.width =jQuery(scope).width(); 
-    canvasStat.height =jQuery(scope).height();
-    canvasStat.paddingtop = 5;
-    canvasStat.paddingleft = 15;
-    return canvasStat; 
-}   
-
-this.findObjectByProyection = function(evt,scope){
-
-    var projector = new THREE.Projector();
-    var directionVector = new THREE.Vector3();
-    var CanvasStats = graphics.getCanvasStats(scope);
-
-    var clickx = evt.pageX - CanvasStats.Offset.left - CanvasStats.paddingleft;
-    var clicky = evt.pageY - CanvasStats.Offset.top - CanvasStats.paddingtop ;
-    directionVector.x = ( clickx / CanvasStats.width ) * 2 - 1;
-    directionVector.y = -( clicky / CanvasStats.height ) * 2 + 1;
-
-    var ray = projector.pickingRay(directionVector,graphics.camera);
-    var intersects = ray.intersectObjects(graphics.tageteableElementsList, true);
-    if (intersects.length) {
-        var target = intersects[0].object.parent; 
-        target.onElementClick();
-        graphics.CameraReposition(0,0,0,target)  ;
+        var ray = projector.pickingRay(directionVector,graphics.camera);
+        var intersects = ray.intersectObjects(graphics.tageteableElementsList, true);
+        if (intersects.length) {
+            var target = intersects[0].object.parent; 
+            target.onElementClick();
+            graphics.CameraReposition(0,0,0,target)  ;
+        } 
+    }
+    this.MouseWheelHandler = function(e) {
+        var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+        graphics.CameraReposition(delta*(-5),0,0)  ;
     } 
-}
-
-this.MouseWheelHandler = function(e) {
-    var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-    graphics.CameraReposition(delta*(-5),0,0)  ;
-} 
 
 
 };

@@ -30,6 +30,7 @@ IBRS.GameArea =  function (){
 	this.loadGameAreaFromDataBase = function(gameAreaID){
 		
 		jQuery.getJSON("DataBase/GameArea/"+gameAreaID+".json",function(data){
+			console.info("Ajax cargando DataBase/GameArea/"+gameAreaID+".json");
 			gameArea.name = data.name;
 			gameArea.table.insertFromData(data.table);
 			for (var i = data.sceneryList.length - 1; i >= 0; i--) {
@@ -77,7 +78,7 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	this.loadModelFromDataBase = function(modelID){
 		//carga mediante ayax
 		jQuery.getJSON("DataBase/Model/"+modelID+".json",function(unitModel){
-			//alert("succes");
+			console.info("Ajax cargando DataBase/Model/"+modelID+".json");
 			unitLogic.bodyTexture = unitModel.bodyTexture;
 			unitLogic.baseTexture = unitModel.baseTexture;
 			unitLogic.height = unitModel.height;
@@ -222,15 +223,15 @@ IBRS.Game = function(gameID){
 		//cargar mediante ayax
 	
 		jQuery.getJSON("DataBase/Game/"+gameID+".json",function(data){
-			
+			console.info("Ajax Cargando DataBase/Game/"+gameID+".json");	
 			game.name = data.name;
 			for (var i = 0;i<2;i++){
 				var newPlayer = new IBRS.Player();
 				newPlayer.insertFromData(data.playerList[i]);
 				game.playerList.push(newPlayer);
 			}
-		game.events.loadGameEventsFromDataBase(data.gameEventsID);
-		game.gameArea.loadGameAreaFromDataBase(data.gameAreaID);			
+			game.events.loadGameEventsFromDataBase(data.gameEventsID);
+			game.gameArea.loadGameAreaFromDataBase(data.gameAreaID);
 		});
 	};
 //hacer este metodo de forma que se integre en los objetos
@@ -261,15 +262,16 @@ IBRS.Game = function(gameID){
 	this.getUnitLogicFromArmyPosition = function (unitArmyPosition){
 	if(unitArmyPosition==0)
 		{return 0;}
-		for (var i = game.playerList.length - 1; i >= 0; i--) {
-
-			if (game.playerList[i].playerID == unitArmyPosition.playerID){
-				for (var j = game.playerList[i].army.tacticalGroupList.length - 1; j >= 0; j--) {
-					if(game.playerList[i].army.tacticalGroupList[j].groupNumber == unitArmyPosition.groupNumber){
-						for (var k = game.playerList[i].army.tacticalGroupList[j].unitList.length - 1; k >= 0; k--) {
-							if (game.playerList[i].army.tacticalGroupList[j].unitList[k].unitNumber == unitArmyPosition.unitNumber){
-								console.log("entidad encontrada"+unitArmyPosition.groupNumber+"  "+unitArmyPosition.unitNumber+" tipo="+game.playerList[i].army.tacticalGroupList[j].unitList[k].id);
-								return game.playerList[i].army.tacticalGroupList[j].unitList[k];
+		for (var i = game.playerList.length - 1; i >= 0; i--) { 
+			var selectPlayer = game.playerList[i];
+			if (selectPlayer.playerID == unitArmyPosition.playerID){
+				for (var j = selectPlayer.army.tacticalGroupList.length - 1; j >= 0; j--) {
+					var selectGroup = selectPlayer.army.tacticalGroupList[j];
+					if(selectGroup.groupNumber == unitArmyPosition.groupNumber){
+						for (var k = selectGroup.unitList.length - 1; k >= 0; k--) {
+							var selectUnit = selectGroup.unitList[k];
+							if (selectUnit.unitNumber == unitArmyPosition.unitNumber){
+									return selectUnit;
 							}
 						};
 					}

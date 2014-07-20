@@ -1,7 +1,7 @@
 jQuery(function(){
 				//webGLStart();
 				jQuery( document ).ajaxError(function() {
-					console.log("fallo de ayax");
+					console.error("fallo de ayax");
 				});
 
 
@@ -15,15 +15,11 @@ jQuery(function(){
 				
 
 				setTimeout(function(){
-					var miniaturesListhere = currentGame.getMiniatures();
-					var sceneryElementsListhere = currentGame.getSceneryElementList();
-
-					GraphicEnviroment.addListToScene(miniaturesListhere,true);
-					GraphicEnviroment.addListToScene(sceneryElementsListhere,false);
-
+						GraphicEnviroment.insertGameData(currentGame);
+					
 				},2000);
 
-				
+			//	GraphicEnviroment.playGame(currentGame.events);
 				
 
 				jQuery(GraphicEnviroment.render.domElement).attr("id","render").addClass(" canvas-look col-md-12 col-sm-12 col-xs-12");
