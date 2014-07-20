@@ -16,7 +16,6 @@ jQuery(function(){
 
 				setTimeout(function(){
 						GraphicEnviroment.insertGameData(currentGame);
-					
 				},2000);
 
 			//	GraphicEnviroment.playGame(currentGame.events);
@@ -24,7 +23,16 @@ jQuery(function(){
 
 				jQuery(GraphicEnviroment.render.domElement).attr("id","render").addClass(" canvas-look col-md-12 col-sm-12 col-xs-12");
 				jQuery("#canvas").append(jQuery(GraphicEnviroment.render.domElement));
-			
+				
+				//boton comenzar reproduccion "play"
+				jQuery("#playGame").click(function(){
+					GraphicEnviroment.playGame();
+					return false;
+				});	
+				jQuery("#pauseGame").click(function(){
+					GraphicEnviroment.pauseGame();
+					return false;
+				});			
 				//boton ampliar canvas	
 				jQuery("#fullscreen-canvas").click(function(){
 					jQuery(this).hide();		
@@ -34,6 +42,7 @@ jQuery(function(){
 					jQuery("#menu_area").children().slideUp( function(){jQuery("#canvas").queue(function(){jQuery( this ).removeClass("col-md-6").addClass("col-md-12").dequeue();}).slideDown("slow");});
 					return false;
 				});
+
 				//boton reducir canvas
 				jQuery("#resize-canvas").click(function(){	
 					jQuery(this).hide();		
