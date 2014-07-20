@@ -4,13 +4,21 @@
 			"orderList":[
 				{"groupNumber":1,"orderType":0,
 					"firstDeclaration":[
-						{"descriptor":"IBRS.DEC.MOVE","source":{"playerID":200,"groupNumber":1,"unitNumber":1},"target":0,"location":{"angle":1.7,"distance":10}}
+						{"descriptor":"IBRS.DEC.MOVE","source":{"playerID":200,"groupNumber":1,"unitNumber":1},
+							"actions":[{"type":1,"startTime":0,"endTime":0.5,"startPosition":{"x":10,"y":0,"z":50},"endPosition":{"x":15,"y":0,"z":48}},
+										{"type":1,"startTime":0.5,"endTime":1,"startPosition":{"x":15,"y":0,"z":48},"endPosition":{"x":12,"y":0,"z":50}}
+										]
+						}
 						],
 					"firstAro":[
-						{"descriptor":"IBRS.DEC.CD","source":{"playerID":201,"groupNumber":1,"unitNumber":2},"target":{"playerID":200,"groupNumber":1,"unitNumber":1},"location":{"angle":4,"distance":46}}
+						{"descriptor":"IBRS.DEC.CD","source":{"playerID":201,"groupNumber":1,"unitNumber":2},
+							"actions":[]
+						}
 						],
 					"secondDeclaration":[
-						{"descriptor":"IBRS.DEC.CD","source":{"playerID":200,"groupNumber":1,"unitNumber":1},"target":{"playerID":201,"groupNumber":1,"unitNumber":2},"location":{"angle":2.33,"distance":46}}						
+						{"descriptor":"IBRS.DEC.CD","source":{"playerID":200,"groupNumber":1,"unitNumber":1},
+							"actions":[]
+						}						
 						],
 					"secondAro":[],
 					"resolutions":[]

@@ -8,7 +8,8 @@ IBRS.Reproductor = function(graphicEnviroment){
 
 	this.insertEvents = function(data){
 		//TODO Aqui la magia
-		
+		var timePerOrder = 20000;//20 segundos
+		//poner la declaración y deepus las acciones
 	}
 
 
