@@ -44,19 +44,16 @@ IBRS.Declaration = function(order){
 	this.order = order;
 	this.descriptor = 0;
     this.source = 0;
-	this.target = 0;
-	this.spaceLocation = 0;
+	this.actions = [];
+	
 	this.locateUnit = function (data){
 		return declaration.order.turn.gameEvents.game.getUnitLogicFromArmyPosition(data);
 	}
 
     this.insertFromData = function(data){
-    	
-
     	declaration.descriptor = data.descriptor;
-    	declaration.source= declaration.locateUnit	(data.source);
-    	declaration.target= declaration.locateUnit(data.target);
-    	declaration.location = data.location;
+    	declaration.source= declaration.locateUnit(data.source);
+    	declaration.actions= data.actions;
     }
 
 };
@@ -69,6 +66,7 @@ IBRS.Order =  function(turn){
 	this.secondDeclaration = [];
 	this.firstAro = [];
 	this.secondAro = [];
+	this.results = [];// TODO
 	this.turn = turn;
 	this.groupNumber = -1;
 	this.orderType = -1; //0 = regular, 1 = irregular, 2 = impetuosa.
@@ -159,14 +157,14 @@ IBRS.GameEvents =  function(game){
 		
 		
 		jQuery.getJSON("DataBase/GameEvents/"+gameEventsID+".json",function(data){
-			console.info("Ajax Cargando DataBase/GameEvents/"+gameEventsID+".json");
+			if(IBRS.depurarAyax){console.info("Ajax Cargando DataBase/GameEvents/"+gameEventsID+".json");}
 			for (var i = 0;i<data.turnList.length;i++){
 				
 				var newTurn = new IBRS.Turn(gameEvents);
 				newTurn.insertFromData(data.turnList[i]);
 				gameEvents.addTurn(newTurn);
 			}
-					
+
 		});
 	};
 };

@@ -5,8 +5,8 @@
 				{"groupNumber":1,"orderType":0,
 					"firstDeclaration":[
 						{"descriptor":"IBRS.DEC.MOVE","source":{"playerID":200,"groupNumber":1,"unitNumber":1},
-							"actions":[{"type":1,"startTime":0,"endTime":0.5,"startPosition":{"x":10,"y":0,"z":50},"endPosition":{"x":15,"y":0,"z":48}},
-										{"type":1,"startTime":0.5,"endTime":1,"startPosition":{"x":15,"y":0,"z":48},"endPosition":{"x":12,"y":0,"z":50}}
+							"actions":[{"type":1,"startTime":0,"endTime":0.5,"startPosition":{"x":10,"y":0,"z":50},"endPosition":{"x":7,"y":0,"z":53}},
+										{"type":1,"startTime":0.5,"endTime":1,"startPosition":{"x":7,"y":0,"z":53},"endPosition":{"x":0,"y":0,"z":40}}
 										]
 						}
 						],

@@ -58,11 +58,10 @@ IBRS.Graphics = function(){
         graphics.render.render(graphics.scene, graphics.camera);
     };
     this.animateScene= function(){
-        var delta=(Date.now()- this.referenceTime )/1000;
-        this.referenceTime =Date.now();
-        graphics.reproductor.nextFrame(delta);
+        //var delta=(Date.now()- this.referenceTime )/1000;
+        // this.referenceTime =Date.now();
+        graphics.reproductor.update();
         graphics.renderScene();
-
         requestAnimationFrame(graphics.animateScene);
     };
     this.webGLStart= function () {
@@ -79,6 +78,15 @@ IBRS.Graphics = function(){
     this.setTargeteableElements=function(newList){
         graphics.tageteableElementsList = newList;
     };
+
+    this.playGame = function(){
+        graphics.reproductor.start();
+    };
+    this.pauseGame = function(){
+        graphics.reproductor.pause();
+    };
+
+
 
 
     /* CANVAS INTERACTION

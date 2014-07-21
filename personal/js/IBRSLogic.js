@@ -1,7 +1,7 @@
 var IBRS = { VERSION: '1' };
 //Enum declaraciones
 
-
+IBRS.depurarAyax = false;
 IBRS.IDAcount = 0;
 
 IBRS.getID = function(){
@@ -30,7 +30,7 @@ IBRS.GameArea =  function (){
 	this.loadGameAreaFromDataBase = function(gameAreaID){
 		
 		jQuery.getJSON("DataBase/GameArea/"+gameAreaID+".json",function(data){
-			console.info("Ajax cargando DataBase/GameArea/"+gameAreaID+".json");
+			if(IBRS.depurarAyax){console.info("Ajax cargando DataBase/GameArea/"+gameAreaID+".json");}
 			gameArea.name = data.name;
 			gameArea.table.insertFromData(data.table);
 			for (var i = data.sceneryList.length - 1; i >= 0; i--) {
@@ -78,7 +78,7 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	this.loadModelFromDataBase = function(modelID){
 		//carga mediante ayax
 		jQuery.getJSON("DataBase/Model/"+modelID+".json",function(unitModel){
-			console.info("Ajax cargando DataBase/Model/"+modelID+".json");
+			if(IBRS.depurarAyax){console.info("Ajax cargando DataBase/Model/"+modelID+".json");}
 			unitLogic.bodyTexture = unitModel.bodyTexture;
 			unitLogic.baseTexture = unitModel.baseTexture;
 			unitLogic.height = unitModel.height;
@@ -223,7 +223,7 @@ IBRS.Game = function(gameID){
 		//cargar mediante ayax
 	
 		jQuery.getJSON("DataBase/Game/"+gameID+".json",function(data){
-			console.info("Ajax Cargando DataBase/Game/"+gameID+".json");	
+			if(IBRS.depurarAyax){console.info("Ajax Cargando DataBase/Game/"+gameID+".json");}	
 			game.name = data.name;
 			for (var i = 0;i<2;i++){
 				var newPlayer = new IBRS.Player();
