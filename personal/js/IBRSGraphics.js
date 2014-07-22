@@ -21,6 +21,8 @@ IBRS.Graphics = function(){
     this.referenceTime = 0;
 
 
+   
+
     //Puntero LEAP MOTION
     //cambiar la opacidad para activar el puntero del leap motion
     var spherePointer = new THREE.Mesh(new THREE.SphereGeometry( 1.5, 12, 12 ),new THREE.MeshBasicMaterial( {color: 0xff5500,wireframe:false,opacity: 0,transparent: true}));

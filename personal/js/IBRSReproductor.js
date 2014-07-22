@@ -4,6 +4,12 @@ IBRS.Reproductor = function(graphicEnviroment){
 	this.effectsContainer = new IBRS.EffectsContainer(this);
 	this.graphicEnviroment.scene.add(this.effectsContainer);
 
+
+	
+
+
+
+
 	this.animationList = [];	//lista de elementos tipo animacion
 	this.referenceTime = 0;
 	this.pausedTime = 0;
@@ -32,6 +38,14 @@ IBRS.Reproductor = function(graphicEnviroment){
 					reproductor.instertActionsFromDeclaration(selectDeclaration,timeFilled);
 				};
 				if (selectOrder.firstAro.length>0){
+					timeFilled += reproductor.timePerAction;
+				}
+
+				for (var k =0; k< selectOrder.secondDeclaration.length ; k++) {
+					var selectDeclaration = selectOrder.secondDeclaration[k];
+					reproductor.instertActionsFromDeclaration(selectDeclaration,timeFilled);
+				};
+				if (selectOrder.secondDeclaration.length>0){
 					timeFilled += reproductor.timePerAction;
 				}
 			};	
@@ -119,20 +133,35 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 
 		if (animation.finished == false && animation.started==true){
 			var percentileComplete = Math.max(0,Math.min(1,(time - animation.startTime)/animation.duration));
+			var directionVector = new THREE.Vector3();
+			directionVector.subVectors(animation.endValue,animation.startValue);
 			switch(animation.type){
 				case 0:
 					console.error("animation not defined in use");
 					break;
 				case 1://movimiento
-					var tempX = animation.startValue.x+percentileComplete*(animation.endValue.x-animation.startValue.x);
-					var tempY = animation.startValue.y+percentileComplete*(animation.endValue.y-animation.startValue.y);
-					var tempZ = animation.startValue.z+percentileComplete*(animation.endValue.z-animation.startValue.z);
+					var tempX = animation.startValue.x+percentileComplete*directionVector.x;
+					var tempY = animation.startValue.y+percentileComplete*directionVector.y;
+					var tempZ = animation.startValue.z+percentileComplete*directionVector.z;
 					animation.target.setPosition(tempX,tempY,tempZ);
 					break;
-				case 2: //CD
-					animation.efx.startPoint.copy(animation.startValue);
-					animation.efx.endPoint.copy(animation.endValue);
+				case 2: //CD, cuando se crea el disparo se  determina el pequeño desplazamiento aleatorio del disparo
+					var random = (animation.startValue.x+animation.startValue.y+animation.startValue.z)%1;
+					var init = (Math.max(0,(percentileComplete-(random)))*5)%1;
+					var last = Math.min(1,init+0.03);
+					
+					var floatingPosition = new THREE.Vector3();
+					floatingPosition.copy(directionVector);
+					floatingPosition.multiplyScalar(init);
+					floatingPosition.add(animation.startValue);
+					animation.efx.startPoint.set(floatingPosition.x,floatingPosition.y,floatingPosition.z);
 
+					floatingPosition.copy(directionVector);
+					floatingPosition.multiplyScalar(last);
+					floatingPosition.add(animation.startValue);
+					animation.efx.endPoint.set(floatingPosition.x,floatingPosition.y,floatingPosition.z);
+					animation.efx.geometry.verticesNeedUpdate = true;
+					
 					break;
 				default:
 					console.error("animacion no reconocida, codigo de animación invalido");
@@ -174,11 +203,12 @@ IBRS.EffectsContainer = function(reproductor){
       				}
       			}
 
-      			else{
+      			else{      				
       				if (!actualEfx.inScene){
       					effectsContainer.add(actualEfx);
       					actualEfx.inScene = true;
       				}
+      				
       			}
       		};
     }
@@ -193,20 +223,25 @@ IBRS.Effect = function(efxType,origin,startTime,endTime){
 	this.source = origin;
 	this.startTime = startTime;
 	this.endTime = endTime;
-	this.efxColor = 0x0000ff;
+	this.efxColor = 0x000000;
 	this.inScene = false;
-
+	
 	switch(efxType){
 			case 1: //linea de disparo
+    	
+
+
     			this.startPoint = new THREE.Vector3(0,0,0);
-    			this.endPoint =  new THREE.Vector3(0,0,0);
+				this.endPoint = new THREE.Vector3(0,0,0);
+				this.material = new THREE.LineBasicMaterial({color:this.efxColor , linewidth: 5	});
     			this.geometry = new THREE.Geometry();
     			this.geometry.vertices.push(this.startPoint);
     			this.geometry.vertices.push(this.endPoint);
-    			this.material = new THREE.LineBasicMaterial({color: this.efxColor, linewidth: 2 });
-    			this.line = THREE.Line(this.geometry,this.material);
+    			this.geometry.dynamic = true;
+				this.geometry.verticesNeedUpdate = true;
+    			this.line = new THREE.Line(this.geometry, this.material);
     			this.add(this.line);
-    			break;
+				break;
     		case 2: // armas de plantilla
     			console.error("EFX "+efxType+" no definido aun");
     			break;
