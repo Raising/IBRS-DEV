@@ -10,8 +10,7 @@ IBRS.Graphics = function(){
     this.camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 0.1, 1000);
     this.scene.add(this.camera);
     this.reproductor = new IBRS.Reproductor(this);
-
-
+    
     //luces
     var light = new THREE.PointLight(0xffffff);
     light.position.set(40,10,40);
@@ -30,7 +29,7 @@ IBRS.Graphics = function(){
     this.pointer.add(spherePointer);
     this.pointer.add(cylinderPointer);
     this.scene.add(this.pointer);
-    
+        
 
     this.tageteableElementsList = [];//tienen uqe ser objetos 3d de THREE
 

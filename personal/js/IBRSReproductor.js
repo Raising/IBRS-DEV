@@ -1,6 +1,9 @@
 IBRS.Reproductor = function(graphicEnviroment){
 	var reproductor = this;
 	this.graphicEnviroment = graphicEnviroment;
+	this.effectsContainer = new IBRS.EffectsContainer(this);
+	this.graphicEnviroment.scene.add(this.effectsContainer);
+
 	this.animationList = [];	//lista de elementos tipo animacion
 	this.referenceTime = 0;
 	this.pausedTime = 0;
@@ -24,6 +27,13 @@ IBRS.Reproductor = function(graphicEnviroment){
 				if (selectOrder.firstDeclaration.length>0){
 					timeFilled += reproductor.timePerAction;
 				}
+				for (var k =0; k< selectOrder.firstAro.length ; k++) {
+					var selectDeclaration = selectOrder.firstAro[k];
+					reproductor.instertActionsFromDeclaration(selectDeclaration,timeFilled);
+				};
+				if (selectOrder.firstAro.length>0){
+					timeFilled += reproductor.timePerAction;
+				}
 			};	
 		};
 	}
@@ -32,7 +42,7 @@ IBRS.Reproductor = function(graphicEnviroment){
 		var target = declaration.source;
 		for (var i = 0; i< declaration.actions.length;i++){
 			var action = declaration.actions[i];
-			var tempAnimation = new IBRS.Animation(target,action.type,
+			var tempAnimation = new IBRS.Animation(reproductor,target,action.type,
 													timeOrigin+reproductor.timePerAction*action.startTime,
 													timeOrigin+reproductor.timePerAction*action.endTime,	
 													action.startPosition,
@@ -46,9 +56,9 @@ IBRS.Reproductor = function(graphicEnviroment){
 	this.update= function(){
 		
 		if (reproductor.playing){
-			//console.log("Playing");
+
 			var actualTime = Date.now() - reproductor.referenceTime;
-			//console.log(actualTime);
+			reproductor.effectsContainer.update(actualTime);
 			for (var i = 0;i<reproductor.animationList.length; i++) {
 				var actualAnimation = reproductor.animationList[i];
 				actualAnimation.update(actualTime);
@@ -77,8 +87,9 @@ IBRS.Reproductor = function(graphicEnviroment){
 };
 
 
-IBRS.Animation = function(target,type,startTime,endTime,startValue,endValue){
+IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,endValue){
 	var animation = this;
+	this.reproductor = reproductor;
 	this.target = target;
 	this.type = type; // 0 = not defined, 1 = movement
 	this.startTime = startTime;
@@ -88,6 +99,11 @@ IBRS.Animation = function(target,type,startTime,endTime,startValue,endValue){
 	this.endValue = endValue;
 	this.started = false;
 	this.finished = false;
+
+	//chapuza
+	if (type ==2){
+		this.efx = reproductor.effectsContainer.createEffect(1,this.target,this.startTime,this.endTime);
+	}
 
 	this.update = function(time){
 		if (animation.endTime > time && animation.finished == true){
@@ -113,6 +129,11 @@ IBRS.Animation = function(target,type,startTime,endTime,startValue,endValue){
 					var tempZ = animation.startValue.z+percentileComplete*(animation.endValue.z-animation.startValue.z);
 					animation.target.setPosition(tempX,tempY,tempZ);
 					break;
+				case 2: //CD
+					animation.efx.startPoint.copy(animation.startValue);
+					animation.efx.endPoint.copy(animation.endValue);
+
+					break;
 				default:
 					console.error("animacion no reconocida, codigo de animación invalido");
 					break;
@@ -124,3 +145,82 @@ IBRS.Animation = function(target,type,startTime,endTime,startValue,endValue){
 	};
 
 };
+
+
+IBRS.EffectsContainer = function(reproductor){
+    BasicElement.call(this);
+    var effectsContainer = this;
+    this.reproductor = reproductor;
+
+    this.efxList = [];
+
+
+    this.createEffect = function(efxType,origin,startTime,endTime){
+    	var tempEfx = new IBRS.Effect(efxType,origin,startTime,endTime);
+    	effectsContainer.efxList.push(tempEfx);
+    	return tempEfx;
+
+    }
+
+	
+	
+	this.update = function(time){
+      		for (var i = effectsContainer.efxList.length - 1; i >= 0; i--) {
+      			var actualEfx = effectsContainer.efxList[i];
+      			if (time < actualEfx.startTime || time > actualEfx.endTime){
+      				if (actualEfx.inScene){
+      					effectsContainer.remove(actualEfx);
+      					actualEfx.inScene = false;
+      				}
+      			}
+
+      			else{
+      				if (!actualEfx.inScene){
+      					effectsContainer.add(actualEfx);
+      					actualEfx.inScene = true;
+      				}
+      			}
+      		};
+    }
+};
+
+IBRS.EffectsContainer.prototype = Object.create(BasicElement.prototype);
+
+IBRS.Effect = function(efxType,origin,startTime,endTime){
+	 BasicElement.call(this);
+	var effect = this;
+	this.efxType = efxType;
+	this.source = origin;
+	this.startTime = startTime;
+	this.endTime = endTime;
+	this.efxColor = 0x0000ff;
+	this.inScene = false;
+
+	switch(efxType){
+			case 1: //linea de disparo
+    			this.startPoint = new THREE.Vector3(0,0,0);
+    			this.endPoint =  new THREE.Vector3(0,0,0);
+    			this.geometry = new THREE.Geometry();
+    			this.geometry.vertices.push(this.startPoint);
+    			this.geometry.vertices.push(this.endPoint);
+    			this.material = new THREE.LineBasicMaterial({color: this.efxColor, linewidth: 2 });
+    			this.line = THREE.Line(this.geometry,this.material);
+    			this.add(this.line);
+    			break;
+    		case 2: // armas de plantilla
+    			console.error("EFX "+efxType+" no definido aun");
+    			break;
+    		case 3: // iconos
+    			console.error("EFX "+efxType+" no definido aun");
+    			break;
+    		case 4: //areas como sensor o hacking
+    			console.error("EFX "+efxType+" no definido aun");
+    			break;
+    		default:
+    			console.error("tipo de efecto no definido");
+    			break;
+    }
+
+
+};
+IBRS.Effect.prototype = Object.create(BasicElement.prototype);

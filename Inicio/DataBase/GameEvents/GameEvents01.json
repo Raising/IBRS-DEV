@@ -11,8 +11,9 @@
 						}
 						],
 					"firstAro":[
-						{"descriptor":"IBRS.DEC.CD","source":{"playerID":201,"groupNumber":1,"unitNumber":2},
-							"actions":[]
+						{"descriptor":"IBRS.DEC.CD","source":{"playerID":201,"groupNumber":1,"unitNumber":3},
+							"actions":[{"type":2,"startTime":0,"endTime":1,"startPosition":{"x":-5,"y":12,"z":7},"endPosition":{"x":7,"y":0,"z":53}}
+										]
 						}
 						],
 					"secondDeclaration":[
