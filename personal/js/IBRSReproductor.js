@@ -26,6 +26,7 @@ IBRS.Reproductor = function(graphicEnviroment){
 			for (var j = selectTurn.orderList.length - 1; j >= 0; j--) {
 				var selectOrder = selectTurn.orderList[j];
 				
+
 				for (var k =0; k< selectOrder.firstDeclaration.length ; k++) {
 					var selectDeclaration = selectOrder.firstDeclaration[k];
 					reproductor.instertActionsFromDeclaration(selectDeclaration,timeFilled);
@@ -54,6 +55,11 @@ IBRS.Reproductor = function(graphicEnviroment){
 
 	this.instertActionsFromDeclaration = function(declaration,timeOrigin){
 		var target = declaration.source;
+		var iconDeclaration = new IBRS.Animation(reproductor,target,0,
+													timeOrigin,
+													timeOrigin+reproductor.timePerAction,	
+													declaration.descriptor,0);
+		reproductor.animationList.push(iconDeclaration);
 		for (var i = 0; i< declaration.actions.length;i++){
 			var action = declaration.actions[i];
 			var tempAnimation = new IBRS.Animation(reproductor,target,action.type,
@@ -114,10 +120,20 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 	this.started = false;
 	this.finished = false;
 
-	//chapuza
-	if (type ==2){
-		this.efx = reproductor.effectsContainer.createEffect(1,this.target,this.startTime,this.endTime);
+	//creacio nde EFX si compete
+	switch(type){
+		case 0:
+			var descriptor = 0;//startValue; //anti intuitivo, lo se;
+			this.efx = reproductor.effectsContainer.createEffect(0,descriptor,this.startTime,this.endTime);
+			break;
+		case 2:
+			this.efx = reproductor.effectsContainer.createEffect(1,this.target,this.startTime,this.endTime);
+			break;
+		default:
+
+			break;
 	}
+	
 
 	this.update = function(time){
 		if (animation.endTime > time && animation.finished == true){
@@ -136,8 +152,11 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 			var directionVector = new THREE.Vector3();
 			directionVector.subVectors(animation.endValue,animation.startValue);
 			switch(animation.type){
-				case 0:
-					console.error("animation not defined in use");
+				case 0: //icono
+					animation.efx.position.x = animation.target.position.x;
+					animation.efx.position.z = animation.target.position.z;
+					animation.efx.position.y = animation.target.position.y+ Math.max(1,1/(percentileComplete*2+0.1))*8;
+					console.log (animation.target.position.x+"  "+animation.target.position.y+"  "+animation.target.position.z);
 					break;
 				case 1://movimiento
 					var tempX = animation.startValue.x+percentileComplete*directionVector.x;
@@ -216,17 +235,54 @@ IBRS.EffectsContainer = function(reproductor){
 
 IBRS.EffectsContainer.prototype = Object.create(BasicElement.prototype);
 
-IBRS.Effect = function(efxType,origin,startTime,endTime){
+IBRS.Effect = function(efxType,aux,startTime,endTime){
 	 BasicElement.call(this);
 	var effect = this;
 	this.efxType = efxType;
-	this.source = origin;
+	this.aux = aux;
 	this.startTime = startTime;
 	this.endTime = endTime;
 	this.efxColor = 0x000000;
 	this.inScene = false;
 	
+
+    this.getSprite = function(code){
+    	var mapS;
+    	switch(code){
+    		case 0: //mover
+    		mapS = THREE.ImageUtils.loadTexture("img/Orden_regular.png");
+    			break;
+    		case 1: //cd
+    			
+    			break;
+    		case 2: //descubrir
+    			
+    			break;
+    		case 3: //camo
+    			
+    			break;
+    		default:
+
+    			break;
+    	}
+    	var materialS = new THREE.SpriteMaterial( { map: mapS , color: 0xffffff } );
+    	var sprite = new THREE.Sprite( materialS );
+    	sprite.scale.set(2.5,2.5, 1.0 );
+
+    	return sprite;
+    };
+
+
+
+
+
 	switch(efxType){
+			case 0: // Icono
+				this.icon = effect.getSprite(this.aux); 
+				this.add(this.icon);
+
+
+				break;		
 			case 1: //linea de disparo
     	
 
@@ -259,3 +315,5 @@ IBRS.Effect = function(efxType,origin,startTime,endTime){
 
 };
 IBRS.Effect.prototype = Object.create(BasicElement.prototype);
+
+

@@ -63,13 +63,13 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 
 
 		this.setPosition = function(x,y,z){
-			unitLogic.position.set(z,y,z);
+			unitLogic.position.set(x,y,z);
 			unitLogic.unitGraphic.position.set(x,y,z);
 		};
 
 
 		this.setRotation = function(x,y,z){
-			unitLogic.rotation.set(z,y,z);
+			unitLogic.rotation.set(x,y,z);
 			unitLogic.unitGraphic.rotation.set(x,y,z);
 		};
 
@@ -91,12 +91,15 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 		});
 	};
 
+
 	this.insertFromData = function(data){
 		unitLogic.unitNumber = data.unitNumber;
 		unitLogic.loadModelFromDataBase(data.modelID);
 		unitLogic.setPosition(data.position.x,data.position.y,data.position.z);
 		unitLogic.setRotation(data.rotation.x,data.rotation.y,data.rotation.z);	
 	};
+
+	
 };
 
 IBRS.TacticalGroup =  function (army) {
