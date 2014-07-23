@@ -10,7 +10,7 @@ jQuery(function(){
 				
 				var currentGame = new IBRS.Game();
 				// esa instrucccion debe ser llamada usando los menus del sistema
-				currentGame.loadGameFromDataBase("game01");
+				currentGame.loadGameFromDataBase("game02");
 
 				
 

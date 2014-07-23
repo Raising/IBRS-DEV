@@ -1,0 +1,28 @@
+{"name":"Partida Testeo de sistema",
+"playerList":
+   [
+	{"playerID":200,"name":"Raising","army":
+		{"faction":"NOMAD","tacticalGroupList":
+			[{"groupNumber":1,
+				"unitList":[
+				{"unitNumber":1,"modelID":"Asuang","position":{"x":-32.5,"y":0,"z":-21	},"rotation":{"x":0,"y":1.56,"z":0}},
+				{"unitNumber":2,"modelID":"Asuang","position":{"x":-36,"y":0,"z":6},"rotation":{"x":0,"y":1.56,"z":0}},
+				{"unitNumber":3,"modelID":"Asuang","position":{"x":-36,"y":0,"z":20},"rotation":{"x":0,"y":1.56,"z":0}}
+			]}]					
+		}		
+	},
+	{"playerID":201,"name":"Bonca","army":
+		{"faction":"PANO","tacticalGroupList":
+			[{"groupNumber":1,
+				"unitList":[
+				{"unitNumber":1,"modelID":"Tomcat","position":{"x":23.75,"y":0,"z":12},"rotation":{"x":0,"y":1.56,"z":0}},
+				{"unitNumber":2,"modelID":"Tomcat","position":{"x":31,"y":0,"z":-9},"rotation":{"x":0,"y":1.56,"z":0}},
+				{"unitNumber":3,"modelID":"Tomcat","position":{"x":31,"y":0,"z":-17},"rotation":{"x":0,"y":1.56,"z":0}}		
+			]}]					
+		}	
+	
+	}
+   ],
+   "gameEventsID":"GameEvents01",
+   "gameAreaID":"GameArea02"
+}

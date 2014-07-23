@@ -123,7 +123,7 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 	//creacio nde EFX si compete
 	switch(type){
 		case 0:
-			var descriptor = 0;//startValue; //anti intuitivo, lo se;
+			var descriptor = startValue; //anti intuitivo, lo se;
 			this.efx = reproductor.effectsContainer.createEffect(0,descriptor,this.startTime,this.endTime);
 			break;
 		case 2:
@@ -165,8 +165,8 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 					animation.target.setPosition(tempX,tempY,tempZ);
 					break;
 				case 2: //CD, cuando se crea el disparo se  determina el pequeño desplazamiento aleatorio del disparo
-					var random = (animation.startValue.x+animation.startValue.y+animation.startValue.z)%1;
-					var init = (Math.max(0,(percentileComplete-(random)))*5)%1;
+					//var random = (animation.startValue.x+animation.startValue.y+animation.startValue.z)%1;
+					var init = (Math.max(0,(percentileComplete)*5)%1);
 					var last = Math.min(1,init+0.03);
 					
 					var floatingPosition = new THREE.Vector3();
@@ -249,11 +249,11 @@ IBRS.Effect = function(efxType,aux,startTime,endTime){
     this.getSprite = function(code){
     	var mapS;
     	switch(code){
-    		case 0: //mover
-    		mapS = THREE.ImageUtils.loadTexture("img/Orden_regular.png");
+    		case IBRS.DEC.MOVE: //mover
+    			mapS = THREE.ImageUtils.loadTexture("img/MOVE.png");
     			break;
-    		case 1: //cd
-    			
+    		case IBRS.DEC.CD: //cd
+    			mapS = THREE.ImageUtils.loadTexture("img/CD.png");
     			break;
     		case 2: //descubrir
     			
