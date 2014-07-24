@@ -2,12 +2,19 @@
 IBRS.Graphics = function(){
     var graphics = this;
     this.render = new THREE.WebGLRenderer({premultipliedAlpha:false, alpha:true});
+    this.render.autoClear = false;
     this.render.setClearColor(new THREE.Color(0xff0000),0);
-    var canvasWidth = 1280;
-    var canvasHeight = 720;
-    this.render.setSize(canvasWidth, canvasHeight);
+    this.canvasWidth = 1280;
+    this.canvasHeight = 720;
+    this.render.setSize(this.canvasWidth, this.canvasHeight);
+
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 0.1, 1000);
+    //this.scene.fog = new THREE.Fog( 0x000000, 1500, 2100 );
+    this.camera = new THREE.PerspectiveCamera(45, this.canvasWidth / this.canvasHeight, 0.1, 1000);
+    this.cameraOrtho = new THREE.OrthographicCamera(-this.canvasWidth/2,this.canvasWidth/2,this.canvasHeight/2,-this.canvasHeight/2,1,10);
+    this.cameraOrtho.position.z = 10;
+    this.sceneOrtho  = new THREE.Scene();
+
     this.scene.add(this.camera);
     this.reproductor = new IBRS.Reproductor(this);
     
@@ -55,8 +62,13 @@ IBRS.Graphics = function(){
         graphics.CameraReposition(0,0,0);
     };
     this.renderScene = function(){
-        
-        graphics.render.render(graphics.scene, graphics.camera);
+      
+        graphics.render.clear();
+        graphics.render.render(graphics.scene, graphics.camera );
+        graphics.render.clearDepth();
+        graphics.render.render(graphics.sceneOrtho, graphics.cameraOrtho );
+
+
     };
     this.animateScene= function(){
         //var delta=(Date.now()- this.referenceTime )/1000;
