@@ -17,8 +17,8 @@ IBRS.Reproductor = function(graphicEnviroment){
 	this.pausedTime = 0;
 
 	this.playing = false;
-	this.timePerAction = 5000;//5 segundos
-
+	this.timePerAction = 4000;//5 segundos
+	this.declarationInterval = 1.1;
 	this.insertEvents = function(data){
 		//TODO Aqui la magia
 		var timeFilled = 0;
@@ -32,37 +32,54 @@ IBRS.Reproductor = function(graphicEnviroment){
 				var selectOrder = selectTurn.orderList[j];
 				var startOrderTime= timeFilled;
 				if (selectOrder.orderType == 0){numRegularOrders++;}
-				
+					timeFilled += reproductor.timePerAction/2;
 
+				timeFilled = reproductor.instertDeclarationsFromSubGroup( selectOrder.firstDeclaration,timeFilled);
+				timeFilled = reproductor.instertDeclarationsFromSubGroup( selectOrder.firstAro,timeFilled);
+				timeFilled = reproductor.instertDeclarationsFromSubGroup( selectOrder.secondDeclaration,timeFilled);
+				timeFilled = reproductor.instertDeclarationsFromSubGroup( selectOrder.secondAro,timeFilled);
+				/*
 				for (var k =0; k< selectOrder.firstDeclaration.length ; k++) {
 					var selectDeclaration = selectOrder.firstDeclaration[k];
-					reproductor.instertActionsFromDeclaration(selectDeclaration,timeFilled);
+					reproductor.instertActionsFromDeclaration(selectDeclaration,timeFilled,reproductor.timePerAction);
 				};
 				if (selectOrder.firstDeclaration.length>0){
-					timeFilled += reproductor.timePerAction;
+					timeFilled += reproductor.timePerAction*reproductor.declarationInterval;
 				}
 				for (var k =0; k< selectOrder.firstAro.length ; k++) {
 					var selectDeclaration = selectOrder.firstAro[k];
-					reproductor.instertActionsFromDeclaration(selectDeclaration,timeFilled);
+					reproductor.instertActionsFromDeclaration(selectDeclaration,timeFilled,reproductor.timePerAction);
 				};
 				if (selectOrder.firstAro.length>0){
-					timeFilled += reproductor.timePerAction;
+					timeFilled += reproductor.timePerAction*reproductor.declarationInterval;
 				}
 
 				for (var k =0; k< selectOrder.secondDeclaration.length ; k++) {
 					var selectDeclaration = selectOrder.secondDeclaration[k];
-					reproductor.instertActionsFromDeclaration(selectDeclaration,timeFilled);
+					reproductor.instertActionsFromDeclaration(selectDeclaration,timeFilled,reproductor.timePerAction);
 				};
 				if (selectOrder.secondDeclaration.length>0){
-					timeFilled += reproductor.timePerAction;
-				}
-				reproductor.insterOrderSpent(selectOrder,startOrderTime,timeFilled);
+					timeFilled += reproductor.timePerAction*reproductor.declarationInterval;
+				}*/
+				reproductor.insterOrderSpent(selectOrder,startOrderTime,timeFilled,reproductor.timePerAction);
+
+			
 			};
 			var endTurnTime = timeFilled;
 			reproductor.actualiceOrderSpent(numRegularOrders,startTurnTime,endTurnTime);	
 		};
 
 	}
+	this.instertDeclarationsFromSubGroup = function(list,time){
+		for (var k =0; k< list.length ; k++) {
+			var selectDeclaration = list[k];
+			reproductor.instertActionsFromDeclaration(selectDeclaration,time,reproductor.timePerAction);
+		};
+		if (list.length>0){
+			time += reproductor.timePerAction*reproductor.declarationInterval;
+		}
+		return time;
+	};
 
 
 	
@@ -83,20 +100,20 @@ IBRS.Reproductor = function(graphicEnviroment){
 
 	};
 
-	this.instertActionsFromDeclaration = function(declaration,timeOrigin){
+	this.instertActionsFromDeclaration = function(declaration,timeOrigin,timePerAction){
 		var target = declaration.source;
 
 		var iconDeclaration = new IBRS.Animation(reproductor,target,0,
 													timeOrigin,
-													timeOrigin+reproductor.timePerAction,	
+													timeOrigin+timePerAction,	
 													declaration.descriptor,0);
 		reproductor.animationList.push(iconDeclaration);
 
 		for (var i = 0; i< declaration.actions.length;i++){
 			var action = declaration.actions[i];
 			var tempAnimation = new IBRS.Animation(reproductor,target,action.type,
-													timeOrigin+reproductor.timePerAction*action.startTime,
-													timeOrigin+reproductor.timePerAction*action.endTime,	
+													timeOrigin+timePerAction*action.startTime,
+													timeOrigin+timePerAction*action.endTime,	
 													action.startPosition,
 													action.endPosition);
 			reproductor.animationList.push(tempAnimation);
@@ -222,8 +239,13 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 					
 					break;
 				case 69: //token de ordenes
-					animation.token.materialT.opacity = 0.8 - percentileComplete/2 ;
-
+					if (percentileComplete > 0.95){
+					animation.token.materialT.opacity =  1- (percentileComplete-0.95)*10 ;
+					animation.token.scaleSprite(percentileComplete,1,1);
+					
+					}
+					else{animation.token.scaleSprite(Math.sin(percentileComplete*12),1,1);
+					}
 					break;
 				default:
 					console.error("animacion no reconocida, codigo de animación invalido");
@@ -351,10 +373,13 @@ IBRS.Token = function(orderType,startTime,endTime){
     }
     this.materialT = new THREE.SpriteMaterial( { map: this.map , color: this.tokenColor,transparent: true,opacity:1 } );
     
-    var sprite = new THREE.Sprite(this.materialT);
-    sprite.scale.set(50,50,1.0);
-    this.add(sprite);
+    this.sprite = new THREE.Sprite(this.materialT);
+    this.sprite.scale.set(50,50,1.0);
+    this.add(this.sprite);
 
+    this.scaleSprite = function (x,y,z){
+    	token.sprite.scale.set(50*x,50*y,z);
+    };
 };
 IBRS.Token.prototype = Object.create(BasicElement.prototype);
 

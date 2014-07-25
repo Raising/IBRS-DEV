@@ -96,7 +96,13 @@ IBRS.Graphics = function(){
         graphics.reproductor.start();
     };
     this.pauseGame = function(){
-        graphics.reproductor.pause();
+        if (graphics.reproductor.playing){
+            graphics.reproductor.pause();
+        }
+        else{
+            graphics.reproductor.continue();
+            }
+
     };
 
 
