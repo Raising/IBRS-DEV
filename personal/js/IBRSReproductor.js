@@ -17,8 +17,8 @@ IBRS.Reproductor = function(graphicEnviroment){
 	this.pausedTime = 0;
 
 	this.playing = false;
-	this.timePerAction = 4000;//5 segundos
-	this.declarationInterval = 1.1;
+	this.timePerAction = 4000;//4 segundos
+	this.declarationInterval = 1.2;
 	this.insertEvents = function(data){
 		//TODO Aqui la magia
 		var timeFilled = 0;
@@ -32,35 +32,18 @@ IBRS.Reproductor = function(graphicEnviroment){
 				var selectOrder = selectTurn.orderList[j];
 				var startOrderTime= timeFilled;
 				if (selectOrder.orderType == 0){numRegularOrders++;}
-					timeFilled += reproductor.timePerAction/2;
+				timeFilled += reproductor.timePerAction/2;
 
 				timeFilled = reproductor.instertDeclarationsFromSubGroup( selectOrder.firstDeclaration,timeFilled);
 				timeFilled = reproductor.instertDeclarationsFromSubGroup( selectOrder.firstAro,timeFilled);
 				timeFilled = reproductor.instertDeclarationsFromSubGroup( selectOrder.secondDeclaration,timeFilled);
 				timeFilled = reproductor.instertDeclarationsFromSubGroup( selectOrder.secondAro,timeFilled);
-				/*
-				for (var k =0; k< selectOrder.firstDeclaration.length ; k++) {
-					var selectDeclaration = selectOrder.firstDeclaration[k];
-					reproductor.instertActionsFromDeclaration(selectDeclaration,timeFilled,reproductor.timePerAction);
-				};
-				if (selectOrder.firstDeclaration.length>0){
-					timeFilled += reproductor.timePerAction*reproductor.declarationInterval;
-				}
-				for (var k =0; k< selectOrder.firstAro.length ; k++) {
-					var selectDeclaration = selectOrder.firstAro[k];
-					reproductor.instertActionsFromDeclaration(selectDeclaration,timeFilled,reproductor.timePerAction);
-				};
-				if (selectOrder.firstAro.length>0){
-					timeFilled += reproductor.timePerAction*reproductor.declarationInterval;
-				}
+				
+				/// RESOLUCIONES
 
-				for (var k =0; k< selectOrder.secondDeclaration.length ; k++) {
-					var selectDeclaration = selectOrder.secondDeclaration[k];
-					reproductor.instertActionsFromDeclaration(selectDeclaration,timeFilled,reproductor.timePerAction);
-				};
-				if (selectOrder.secondDeclaration.length>0){
-					timeFilled += reproductor.timePerAction*reproductor.declarationInterval;
-				}*/
+
+
+				/// Token Ordenes
 				reproductor.insterOrderSpent(selectOrder,startOrderTime,timeFilled,reproductor.timePerAction);
 
 			
