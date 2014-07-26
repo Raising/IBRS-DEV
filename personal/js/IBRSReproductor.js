@@ -68,7 +68,7 @@ IBRS.Reproductor = function(graphicEnviroment){
 	
 	this.insterOrderSpent = function(order,startTime,endTime){
 			if (order.orderType == 0 ){//es regular
-				var orderAnimation = new IBRS.Animation(reproductor,order.orderType,69,startTime,endTime,0,0); 
+				var orderAnimation = new IBRS.Animation(reproductor,order.orderType,IBRS.DEC.REGULAR,startTime,endTime,0,0); 
 				reproductor.animationOrderList.push(orderAnimation);
 			}
 	};
@@ -159,8 +159,10 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 
 	//creacio nde EFX si compete
 	switch(type){
-		case 69:// regular order
+		case IBRS.DEC.REGULAR:// regular order
 			this.token = reproductor.ordersContainer.createOrder(target,startTime,endTime);
+			var descriptor = IBRS.DEC.REGULAR;
+			this.efx = reproductor.effectsContainer.createEffect(0,descriptor,this.startTime,this.endTime);
 			break;
 		case 0:
 			var descriptor = startValue; //anti intuitivo, lo se;
@@ -221,14 +223,26 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 					animation.efx.geometry.verticesNeedUpdate = true;
 					
 					break;
-				case 69: //token de ordenes
+				case IBRS.DEC.REGULAR: //token de ordenes
+
+					animation.token.sprite.position.set(2000*percentileComplete,-1000*percentileComplete,0);
+					if (percentileComplete<0.05){
+					animation.token.scaleSprite(1+percentileComplete*20,1+percentileComplete*20,1);
+					}
+					else if(percentileComplete < 0.3){
+					animation.token.scaleSprite(1+Math.cos(percentileComplete*12),1+Math.cos(percentileComplete*12),1);
+					}
+					else{
+					animation.token.scaleSprite(0,0,1);	
+					}
+					/*
 					if (percentileComplete > 0.95){
 					animation.token.materialT.opacity =  1- (percentileComplete-0.95)*10 ;
 					animation.token.scaleSprite(percentileComplete,1,1);
 					
 					}
 					else{animation.token.scaleSprite(Math.sin(percentileComplete*12),1,1);
-					}
+					}*/
 					break;
 				default:
 					console.error("animacion no reconocida, codigo de animación invalido");
@@ -395,6 +409,9 @@ IBRS.Effect = function(efxType,aux,startTime,endTime){
     			break;
     		case 3: //camo
     			
+    			break;
+    		case IBRS.DEC.REGULAR: //orden regular
+    			mapS = THREE.ImageUtils.loadTexture("img/Orden_regular.png");
     			break;
     		default:
 
