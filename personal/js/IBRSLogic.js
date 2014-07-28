@@ -60,7 +60,7 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	this.fury = false; // true la  es impetuosa, false no
 	this.active = true; // si aporta o no su orden al grupo
 	this.unitGraphic = new IBRS.UnitGraphic(this.height,this.width,this.bodyTexture,this.baseTexture,this);
-
+	this.status = this.unitGraphic.status;
 
 		this.setPosition = function(x,y,z){
 			unitLogic.position.set(x,y,z);
@@ -73,7 +73,21 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 			unitLogic.unitGraphic.rotation.set(x,y,z);
 		};
 
+		this.setStatus = function(newStatus){
+			unitLogic.status = newStatus;
+			unitLogic.unitGraphic.status = newStatus;
+		};
 
+		this.asCamo = function(type){
+			if (type == 1){
+				unitGraphic.tempTexture =  new THREE.ImageUtils.loadTexture("img/Camo.png");
+			}
+			else if (type == 2){
+				unitGraphic.tempTexture =  new THREE.ImageUtils.loadTexture("img/TO.png");
+			}
+			unitGraphic.BaseTextureMap = unitGraphic.tempTexture;
+			
+		}
 
 	this.loadModelFromDataBase = function(modelID){
 		//carga mediante ayax

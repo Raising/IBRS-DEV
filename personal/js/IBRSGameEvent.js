@@ -36,6 +36,29 @@ IBRS.DEC.REGULAR = 69;
 
 
 
+IBRS.Resolution = function(order){
+//descriptor: que acccion se define de una lista numeration, 	
+//Source, Marcador/miniatura que lo declara, 
+//target: lugar de destino, movimiento o miniatura/marcador destino. 
+//aro: es una ora o no.
+	var resolution = this;
+	this.order = order;
+	this.type = -1;
+    this.target = 0;
+	this.status = -1;
+	
+	this.locateUnit = function (data){
+		return resolution.order.turn.gameEvents.game.getUnitLogicFromArmyPosition(data);
+	}
+
+    this.insertFromData = function(data){
+    	resolution.type = data.type;
+    	resolution.target = resolution.locateUnit(data.target);
+    	resolution.status= data.status;
+    }
+
+};
+
 IBRS.Declaration = function(order){
 //descriptor: que acccion se define de una lista numeration, 	
 //Source, Marcador/miniatura que lo declara, 
@@ -86,6 +109,10 @@ IBRS.Order =  function(turn){
 	this.addSecondAro= function( declaration){
 		order.SecondAro.push(declaration);
 	};
+	
+	this.addResolution = function( resolution){
+		order.results.push(resolution);
+	};
 
 	this.insertFromData = function(data){
 	
@@ -114,6 +141,12 @@ IBRS.Order =  function(turn){
 			var newDeclaration = new IBRS.Declaration(order);
 			newDeclaration.insertFromData(data.secondAro[i]);
 			order.addSecondAro(newDeclaration);
+		}
+
+		for (var i = 0; i < data.resolutions.length; i++) {
+			var newResolution = new IBRS.Resolution(order);
+			newResolution.insertFromData(data.resolutions[i]);
+			order.addResolution(newResolution);
 		}
 
 	};

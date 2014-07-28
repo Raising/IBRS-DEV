@@ -32,7 +32,8 @@ jQuery(function(){
 				jQuery("#pauseGame").click(function(){
 					GraphicEnviroment.pauseGame();
 					return false;
-				});			
+				});		
+					
 				//boton ampliar canvas	
 				jQuery("#fullscreen-canvas").click(function(){
 					jQuery(this).hide();		

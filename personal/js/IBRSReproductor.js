@@ -41,15 +41,16 @@ IBRS.Reproductor = function(graphicEnviroment){
 				
 				/// RESOLUCIONES
 
-
+				//timeFilled = reproductor.insertResolutions (selectOrder.resolutions,timeFilled);
 
 				/// Token Ordenes
 				reproductor.insterOrderSpent(selectOrder,startOrderTime,timeFilled,reproductor.timePerAction);
 
-			
+				reproductor.actualiceLongerAnimations(startOrderTime,timeFilled);
 			};
 			var endTurnTime = timeFilled;
 			reproductor.actualiceOrderSpent(numRegularOrders,startTurnTime,endTurnTime);	
+			
 		};
 
 	}
@@ -63,8 +64,54 @@ IBRS.Reproductor = function(graphicEnviroment){
 		}
 		return time;
 	};
+/*
+	this.insertResolutions = function(resolutions,timeFilled){
+		for (resolution in resolutions){
+			switch (resolution.type){
+				case 0: //cambio de estado
+				console.log("resolviendo resolution: ");
+					var target = resolution.target;
+						switch (resolution.status){
+							case 0:target.setStatus("Death");break;
+							case 1:target.setStatus("Unconscious");break;
+							case 2:target.setStatus("IMM-1");break;
+							case 3:target.setStatus("IMM-2");break;
+							case 4:target.setStatus("Camo");
+									target.asCamo(1);
+								break;
+							case 5:target.setStatus("TO");
+									target.asCamo(2);
+								break;
+							case 6:target.setStatus("Normal");
+									target.asMiniature();
+								break;
+							case 7:target.setStatus("undeployed");break;
+							case 8:target.setStatus("notDefined :D");break;
+						}
+					break;
+				case 1: //token
+					
+					break;
+				default:
+					
+					break;
+			}
+		}
 
-
+	}
+*/
+	this.actualiceLongerAnimations = function(startTurnTime,endTurnTime){
+		for (var i = 0;i<reproductor.animationList.length; i++){
+			var animation = reproductor.animationList[i];
+			if (animation.long == true){
+				
+				if (animation.startTime > startTurnTime && animation.endTime < endTurnTime){
+					animation.efx.endTime = endTurnTime;
+				
+				}
+			}
+		}
+	}
 	
 	this.insterOrderSpent = function(order,startTime,endTime){
 			if (order.orderType == 0 ){//es regular
@@ -156,6 +203,7 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 	this.endValue = endValue;
 	this.started = false;
 	this.finished = false;
+	this.long = false;
 
 	//creacio nde EFX si compete
 	switch(type){
@@ -168,8 +216,13 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 			var descriptor = startValue; //anti intuitivo, lo se;
 			this.efx = reproductor.effectsContainer.createEffect(0,descriptor,this.startTime,this.endTime);
 			break;
-		case 2:
+		case 1: //silueta en movmimento
+			this.long = true;
+			console.log (" en animation: "+this.startTime+" "+this.endTime);
 			this.efx = reproductor.effectsContainer.createEffect(1,this.target,this.startTime,this.endTime);
+			break;
+		case 2:
+			this.efx = reproductor.effectsContainer.createEffect(2,this.target,this.startTime,this.endTime);
 			break;
 		default:
 
@@ -185,11 +238,12 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 		if (animation.startTime > time && animation.started == true){
 			animation.started = false;
 		}
+
 		if (animation.startTime < time && animation.started == false){
 			animation.started = true;
 		}
 
-		if (animation.finished == false && animation.started==true){
+		if (animation.finished == false && animation.started == true){
 			var percentileComplete = Math.max(0,Math.min(1,(time - animation.startTime)/animation.duration));
 			var directionVector = new THREE.Vector3();
 			directionVector.subVectors(animation.endValue,animation.startValue);
@@ -203,7 +257,21 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 					var tempX = animation.startValue.x+percentileComplete*directionVector.x;
 					var tempY = animation.startValue.y+percentileComplete*directionVector.y;
 					var tempZ = animation.startValue.z+percentileComplete*directionVector.z;
+
 					animation.target.setPosition(tempX,tempY,tempZ);
+					console.log("moviendo: Efx: "+animation.efx.startTime + " " + animation.efx.endTime+ " animation: "+ animation.startTime+" "+animation.endTime );
+					animation.efx.startCyl.scale.set(animation.target.width,animation.target.height+0.5,animation.target.width);
+					animation.efx.endCyl.scale.set(animation.target.width+0.1,animation.target.height+0.51,animation.target.width+0.1);
+					animation.efx.startCyl.position.set(animation.startValue.x,animation.startValue.y+(animation.target.height+0.5)/2,animation.startValue.z);
+					animation.efx.endCyl.position.set(tempX,tempY+(animation.target.height+0.5)/2,tempZ);
+					animation.efx.wall.position.set((animation.startValue.x+tempX)/2,(animation.startValue.y+tempY)/2+(animation.target.height+0.5)/2,(animation.startValue.z+tempZ)/2);
+					var angle = Math.atan2(animation.startValue.x-animation.endValue.x,animation.startValue.z-animation.endValue.z);
+					animation.efx.wall.rotation.set(0,angle,0);
+					var distance =  Math.sqrt((animation.startValue.x-tempX)*(animation.startValue.x-tempX)+(animation.startValue.z-tempZ)*(animation.startValue.z-tempZ));
+					animation.efx.wall.scale.set(animation.target.width,animation.target.height+0.5,distance);
+
+
+					//animation.efx.needsUpdate = true;
 					break;
 				case 2: //CD, cuando se crea el disparo se  determina el pequeño desplazamiento aleatorio del disparo
 					//var random = (animation.startValue.x+animation.startValue.y+animation.startValue.z)%1;
@@ -235,14 +303,7 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 					else{
 					animation.token.scaleSprite(0,0,1);	
 					}
-					/*
-					if (percentileComplete > 0.95){
-					animation.token.materialT.opacity =  1- (percentileComplete-0.95)*10 ;
-					animation.token.scaleSprite(percentileComplete,1,1);
 					
-					}
-					else{animation.token.scaleSprite(Math.sin(percentileComplete*12),1,1);
-					}*/
 					break;
 				default:
 					console.error("animacion no reconocida, codigo de animación invalido");
@@ -393,7 +454,6 @@ IBRS.Effect = function(efxType,aux,startTime,endTime){
 	this.endTime = endTime;
 	this.efxColor = 0x000000;
 	this.inScene = false;
-	
 
     this.getSprite = function(code){
     	var mapS;
@@ -435,10 +495,23 @@ IBRS.Effect = function(efxType,aux,startTime,endTime){
 
 
 				break;		
-			case 1: //linea de disparo
-    	
+			case 1: //move    	
+				this.material = new THREE.MeshBasicMaterial({color: 0xff8000,wireframe:false,opacity: 0.3,transparent: true});
+				this.cylGeometry = new THREE.CylinderGeometry(0.5,0.5,1,16);
+				this.wallGeometry = new THREE.CubeGeometry(1,1,1);
+				this.startCyl = new THREE.Mesh(this.cylGeometry,this.material);
+				this.endCyl = new THREE.Mesh(this.cylGeometry,this.material);
+				this.wall = new THREE.Mesh(this.wallGeometry,this.material);
+				console.log("en move effect creation: "+startTime+" "+endTime);
 
 
+				this.add(this.wall);
+				this.add(this.startCyl);
+				this.add(this.endCyl);
+
+
+				break;
+    		case 2: // armas CD
     			this.startPoint = new THREE.Vector3(0,0,0);
 				this.endPoint = new THREE.Vector3(0,0,0);
 				this.material = new THREE.LineBasicMaterial({color:this.efxColor , linewidth: 5	});
@@ -449,15 +522,14 @@ IBRS.Effect = function(efxType,aux,startTime,endTime){
 				this.geometry.verticesNeedUpdate = true;
     			this.line = new THREE.Line(this.geometry, this.material);
     			this.add(this.line);
-				break;
-    		case 2: // armas de plantilla
-    			console.error("EFX "+efxType+" no definido aun");
     			break;
     		case 3: // iconos
     			console.error("EFX "+efxType+" no definido aun");
     			break;
     		case 4: //areas como sensor o hacking
     			console.error("EFX "+efxType+" no definido aun");
+    			break;
+    		case 5: //armas de plantilla
     			break;
     		default:
     			console.error("tipo de efecto no definido");

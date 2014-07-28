@@ -64,7 +64,8 @@
 						}						
 						],
 					"secondAro":[],
-					"resolutions":[]
+					"resolutions":[{"type":0,"target":{"playerID":200,"groupNumber":1,"unitNumber":1},"status":0}
+									]
 				}
 			]
 		},

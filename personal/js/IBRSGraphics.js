@@ -302,14 +302,14 @@ IBRS.UnitGraphic = function(height,baseDiameter,miniatureTexture,baseTexture,log
     
        this.height = height;
        var baseHeight = 0.5;
-       var MiniatureTextureMap = new THREE.ImageUtils.loadTexture(miniatureTexture);
-       var BaseTextureMap = new THREE.ImageUtils.loadTexture(baseTexture);
+       this.MiniatureTextureMap = new THREE.ImageUtils.loadTexture(miniatureTexture);
+       this.BaseTextureMap = new THREE.ImageUtils.loadTexture(baseTexture);
        var GeoBase = new THREE.BaseGeometry(baseDiameter*0.45,baseDiameter/2,baseHeight,20,1);
        var GeoLapida = new THREE.LapidaGeometry(baseDiameter*0.8,height,0.3);
-       this.TopPiece= new THREE.Mesh(GeoLapida,new THREE.MeshLambertMaterial( { map: MiniatureTextureMap} ));
+       this.TopPiece= new THREE.Mesh(GeoLapida,new THREE.MeshLambertMaterial( { map: this.MiniatureTextureMap} ));
        this.BasePiece = new THREE.Mesh(GeoBase,
         new THREE.MeshFaceMaterial([
-            new THREE.MeshLambertMaterial( { map: BaseTextureMap}),
+            new THREE.MeshLambertMaterial( { map: this.BaseTextureMap}),
             new THREE.MeshBasicMaterial( { color:0x000000})]));
         this.BasePiece.position.set(0,baseHeight/2,0);
         this.TopPiece.position.set(0,baseHeight,0);
@@ -325,14 +325,14 @@ IBRS.UnitGraphic = function(height,baseDiameter,miniatureTexture,baseTexture,log
 
             unitGraphic.children = [];
 
-            var MiniatureTextureMap = new THREE.ImageUtils.loadTexture(miniatureTexture);
-            var BaseTextureMap = new THREE.ImageUtils.loadTexture(baseTexture);
+            unitGraphic.MiniatureTextureMap = new THREE.ImageUtils.loadTexture(miniatureTexture);
+            unitGraphic.BaseTextureMap = new THREE.ImageUtils.loadTexture(baseTexture);
             var GeoBase = new THREE.BaseGeometry(baseDiameter*0.45,baseDiameter/2,baseHeight,20,1);
             var GeoLapida = new THREE.LapidaGeometry(baseDiameter*0.8,height,0.3);
-            unitGraphic.TopPiece= new THREE.Mesh(GeoLapida,new THREE.MeshLambertMaterial( { map: MiniatureTextureMap} ));
+            unitGraphic.TopPiece= new THREE.Mesh(GeoLapida,new THREE.MeshLambertMaterial( { map: unitGraphic.MiniatureTextureMap} ));
             unitGraphic.BasePiece = new THREE.Mesh(GeoBase,
             new THREE.MeshFaceMaterial([
-            new THREE.MeshLambertMaterial( { map: BaseTextureMap}),
+            new THREE.MeshLambertMaterial( { map:unitGraphic.BaseTextureMap}),
             new THREE.MeshBasicMaterial( { color:0x000000})]));
             unitGraphic.BasePiece.position.set(0,baseHeight/2,0);
             unitGraphic.TopPiece.position.set(0,baseHeight,0);
