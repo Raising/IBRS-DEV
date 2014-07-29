@@ -289,12 +289,13 @@ BasicElement.prototype = Object.create(THREE.Object3D.prototype);
 
 var TargeteableElement = function(){
     BasicElement.call(this);
-    tageteableElement = this;
+    targeteableElement = this;
     	//IBRS.tageteableElementsList.push(this);
 	//this.htmlRepresentation = new Object();
 	this.name = "no name";
 	//this.htmlRepresentation.position = new Object();
-	this.status = "normal";
+	this.status = IBRS.STAT.NORMAL;
+    this.statusIcon = "img/NORMAL.png";
 	this.height = 0;
     var selectorGeometry = new THREE.CylinderGeometry(0.5,0.5,1,16); 
     //opacity: 0.8,transparent: true
@@ -323,7 +324,7 @@ var TargeteableElement = function(){
 	this.updateHtml = function (){
         this.container.empty().append('<td>'+this.name+
 		'</td><td>'+parseInt(this.position.x*10)/10+':'+parseInt(this.position.y*10)/10+':'+parseInt(this.position.z*10)/10+
-		'</td><td>'+this.status+'</td>');
+		'</td><td>'+'<img src="'+targeteableElement.statusIcon+'" alt="" border=3 height=20 width=20></img>'+'</td>');
 	};
 
 	this.onElementClick = function(){

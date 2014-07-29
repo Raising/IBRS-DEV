@@ -17,7 +17,7 @@ IBRS.Reproductor = function(graphicEnviroment){
 	this.pausedTime = 0;
 
 	this.playing = false;
-	this.timePerAction = 4000;//4 segundos
+	this.timePerAction = 2000;//2 segundos
 	this.declarationInterval = 1.2;
 	this.insertEvents = function(data){
 		//TODO Aqui la magia
@@ -41,7 +41,7 @@ IBRS.Reproductor = function(graphicEnviroment){
 				
 				/// RESOLUCIONES
 
-				//timeFilled = reproductor.insertResolutions (selectOrder.resolutions,timeFilled);
+				timeFilled = reproductor.insertResolutions(selectOrder.results,timeFilled,reproductor.timePerAction/2);
 
 				/// Token Ordenes
 				reproductor.insterOrderSpent(selectOrder,startOrderTime,timeFilled,reproductor.timePerAction);
@@ -64,42 +64,19 @@ IBRS.Reproductor = function(graphicEnviroment){
 		}
 		return time;
 	};
-/*
-	this.insertResolutions = function(resolutions,timeFilled){
-		for (resolution in resolutions){
-			switch (resolution.type){
-				case 0: //cambio de estado
-				console.log("resolviendo resolution: ");
-					var target = resolution.target;
-						switch (resolution.status){
-							case 0:target.setStatus("Death");break;
-							case 1:target.setStatus("Unconscious");break;
-							case 2:target.setStatus("IMM-1");break;
-							case 3:target.setStatus("IMM-2");break;
-							case 4:target.setStatus("Camo");
-									target.asCamo(1);
-								break;
-							case 5:target.setStatus("TO");
-									target.asCamo(2);
-								break;
-							case 6:target.setStatus("Normal");
-									target.asMiniature();
-								break;
-							case 7:target.setStatus("undeployed");break;
-							case 8:target.setStatus("notDefined :D");break;
-						}
-					break;
-				case 1: //token
-					
-					break;
-				default:
-					
-					break;
-			}
-		}
 
+	this.insertResolutions = function(resolutions,timeFilled,timeForResolutions){
+		for (var i = 0 ; i< resolutions.length; i++){
+			var resolution = resolutions[i];
+			var result = new IBRS.Animation(reproductor,resolution.target,IBRS.ANIM.STATUS,
+											timeFilled,timeFilled+timeForResolutions,
+											resolution.status,0);
+			reproductor.animationList.push(result);
+		}
+		timeFilled += timeForResolutions;
+		return timeFilled;
 	}
-*/
+
 	this.actualiceLongerAnimations = function(startTurnTime,endTurnTime){
 		for (var i = 0;i<reproductor.animationList.length; i++){
 			var animation = reproductor.animationList[i];
@@ -115,7 +92,7 @@ IBRS.Reproductor = function(graphicEnviroment){
 	
 	this.insterOrderSpent = function(order,startTime,endTime){
 			if (order.orderType == 0 ){//es regular
-				var orderAnimation = new IBRS.Animation(reproductor,order.orderType,IBRS.DEC.REGULAR,startTime,endTime,0,0); 
+				var orderAnimation = new IBRS.Animation(reproductor,IBRS.EFX.REGULAR,IBRS.DEC.REGULAR,startTime,endTime,0,0); 
 				reproductor.animationOrderList.push(orderAnimation);
 			}
 	};
@@ -127,7 +104,6 @@ IBRS.Reproductor = function(graphicEnviroment){
 				actualOrder.token.endTime = endTurnTime;
 				actualOrder.token.position.set(i*55-reproductor.graphicEnviroment.canvasWidth/2 ,reproductor.graphicEnviroment.canvasHeight/2-40,1);
 			}
-
 	};
 
 	this.instertActionsFromDeclaration = function(declaration,timeOrigin,timePerAction){
@@ -148,9 +124,7 @@ IBRS.Reproductor = function(graphicEnviroment){
 													action.endPosition);
 			reproductor.animationList.push(tempAnimation);
 		}
-	
 	}
-
 
 	this.update= function(){
 		
@@ -207,23 +181,37 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 
 	//creacio nde EFX si compete
 	switch(type){
-		case IBRS.DEC.REGULAR:// regular order
+		case IBRS.ANIM.REGULAR:// regular order
 			this.token = reproductor.ordersContainer.createOrder(target,startTime,endTime);
 			var descriptor = IBRS.DEC.REGULAR;
-			this.efx = reproductor.effectsContainer.createEffect(0,descriptor,this.startTime,this.endTime);
+			this.efx = reproductor.effectsContainer.createEffect(IBRS.EFX.ICON,descriptor,this.startTime,this.endTime);
 			break;
-		case 0:
+		case IBRS.ANIM.DECLARATION:
 			var descriptor = startValue; //anti intuitivo, lo se;
-			this.efx = reproductor.effectsContainer.createEffect(0,descriptor,this.startTime,this.endTime);
+			this.efx = reproductor.effectsContainer.createEffect(IBRS.EFX.ICON,descriptor,this.startTime,this.endTime);
 			break;
-		case 1: //silueta en movmimento
+		case IBRS.ANIM.MOVE: //silueta en movmimento
 			this.long = true;
-			console.log (" en animation: "+this.startTime+" "+this.endTime);
-			this.efx = reproductor.effectsContainer.createEffect(1,this.target,this.startTime,this.endTime);
+			this.efx = reproductor.effectsContainer.createEffect(IBRS.EFX.MOVE,this.target,this.startTime,this.endTime);
 			break;
-		case 2:
-			this.efx = reproductor.effectsContainer.createEffect(2,this.target,this.startTime,this.endTime);
+		case IBRS.ANIM.SHOOT://disparo
+			this.efx = reproductor.effectsContainer.createEffect(IBRS.EFX.SHOOT,this.target,this.startTime,this.endTime);
 			break;
+
+		case IBRS.ANIM.STATUS:
+							var newStatus = startValue;
+							switch(newStatus){
+								case IBRS.STAT.DEATH:
+									this.efx = reproductor.effectsContainer.createEffect(IBRS.EFX.ICON,newStatus,this.startTime,this.endTime);
+									break;
+								case IBRS.STAT.UNCONS:
+									this.efx = reproductor.effectsContainer.createEffect(IBRS.EFX.ICON,newStatus,this.startTime,this.endTime);
+									break;
+								default:
+									console.error("pedido efecto para status no definido");
+									break;
+							}
+						break;
 		default:
 
 			break;
@@ -248,18 +236,17 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 			var directionVector = new THREE.Vector3();
 			directionVector.subVectors(animation.endValue,animation.startValue);
 			switch(animation.type){
-				case 0: //icono
+				case IBRS.ANIM.DECLARATION: //icono
 					animation.efx.position.x = animation.target.position.x;
 					animation.efx.position.z = animation.target.position.z;
 					animation.efx.position.y = animation.target.position.y+ Math.max(1,1/(percentileComplete*3+0.1))*8;
 					break;
-				case 1://movimiento
+				case IBRS.ANIM.MOVE://movimiento
 					var tempX = animation.startValue.x+percentileComplete*directionVector.x;
 					var tempY = animation.startValue.y+percentileComplete*directionVector.y;
 					var tempZ = animation.startValue.z+percentileComplete*directionVector.z;
 
 					animation.target.setPosition(tempX,tempY,tempZ);
-					console.log("moviendo: Efx: "+animation.efx.startTime + " " + animation.efx.endTime+ " animation: "+ animation.startTime+" "+animation.endTime );
 					animation.efx.startCyl.scale.set(animation.target.width,animation.target.height+0.5,animation.target.width);
 					animation.efx.endCyl.scale.set(animation.target.width+0.1,animation.target.height+0.51,animation.target.width+0.1);
 					animation.efx.startCyl.position.set(animation.startValue.x,animation.startValue.y+(animation.target.height+0.5)/2,animation.startValue.z);
@@ -273,7 +260,7 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 
 					//animation.efx.needsUpdate = true;
 					break;
-				case 2: //CD, cuando se crea el disparo se  determina el pequeño desplazamiento aleatorio del disparo
+				case IBRS.ANIM.SHOOT: //CD, cuando se crea el disparo se  determina el pequeño desplazamiento aleatorio del disparo
 					//var random = (animation.startValue.x+animation.startValue.y+animation.startValue.z)%1;
 					var init = (Math.max(0,(percentileComplete)*5)%1);
 					var last = Math.min(1,init+0.03);
@@ -291,7 +278,7 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 					animation.efx.geometry.verticesNeedUpdate = true;
 					
 					break;
-				case IBRS.DEC.REGULAR: //token de ordenes
+				case IBRS.ANIM.REGULAR: //token de ordenes
 
 					animation.token.sprite.position.set(2000*percentileComplete,-1000*percentileComplete,0);
 					if (percentileComplete<0.05){
@@ -305,12 +292,31 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 					}
 					
 					break;
+				case IBRS.ANIM.STATUS:
+					
+					animation.efx.sprite.position.set(animation.target.position.x,animation.target.position.y+animation.target.height+3+1.5*Math.sin(10*percentileComplete),animation.target.position.z);
+					if (percentileComplete < 0.4){
+					animation.efx.scaleSprite(percentileComplete*3,percentileComplete*3,1);					
+					}
+					else if (percentileComplete<0.9){
+					animation.efx.scaleSprite(1.2,1.2,1);						
+					}
+					else{
+					animation.efx.scaleSprite(9-percentileComplete*10,9-percentileComplete*10,1);
+					}
+					break;
 				default:
 					console.error("animacion no reconocida, codigo de animación invalido");
 					break;
-			};
+				};
+			
 			if (animation.endTime < time){
 				animation.finished = true;
+
+				if (animation.type == IBRS.ANIM.STATUS){
+					animation.target.setStatus(animation.startValue);
+
+				};
 			}
 		}
 	};
@@ -416,13 +422,13 @@ IBRS.Token = function(orderType,startTime,endTime){
 
 	
     switch(orderType){
-    		case 0:
+    		case IBRS.EFX.REGULAR:
     			this.map = THREE.ImageUtils.loadTexture("img/Orden_regular.png");
     			break;
-    		case 1:
+    		case IBRS.EFX.IRREGULAR:
     			this.map = THREE.ImageUtils.loadTexture("img/Orden_regular.png");
     			break;
-    		case 2:
+    		case IBRS.EFX.FURY:
     			this.map = THREE.ImageUtils.loadTexture("img/Orden_regular.png");
     			break;
     		default:
@@ -473,15 +479,27 @@ IBRS.Effect = function(efxType,aux,startTime,endTime){
     		case IBRS.DEC.REGULAR: //orden regular
     			mapS = THREE.ImageUtils.loadTexture("img/Orden_regular.png");
     			break;
+    		case IBRS.DEC.DEATH: //orden regular
+    			mapS = THREE.ImageUtils.loadTexture("img/DEATH.png");
+    			break;
+    		case IBRS.DEC.UNCONS: //orden regular
+    			mapS = THREE.ImageUtils.loadTexture("img/Orden_regular.png");
+    			break;
     		default:
 
     			break;
     	}
-    	var materialS = new THREE.SpriteMaterial( { map: mapS , color: 0xffffff } );
-    	var sprite = new THREE.Sprite( materialS );
-    	sprite.scale.set(2.5,2.5, 1.0 );
+    	
+    	effect.materialS = new THREE.SpriteMaterial( { map: mapS , color: 0xffffff } );
+    		
 
-    	return sprite;
+    	effect.sprite = new THREE.Sprite( effect.materialS );
+    	effect.scaleSprite = function (x,y,z){
+    		effect.sprite.scale.set(2.5*x,2.5*y,z);
+    	};
+    	effect.scaleSprite(1,1,1);
+
+    	return effect.sprite;
     };
 
 
@@ -489,21 +507,20 @@ IBRS.Effect = function(efxType,aux,startTime,endTime){
 
 
 	switch(efxType){
-			case 0: // Icono
+			case IBRS.EFX.ICON: // Icono
 				this.icon = effect.getSprite(this.aux); 
 				this.add(this.icon);
 
 
 				break;		
-			case 1: //move    	
+			case IBRS.EFX.MOVE: //move    	
 				this.material = new THREE.MeshBasicMaterial({color: 0xff8000,wireframe:false,opacity: 0.3,transparent: true});
 				this.cylGeometry = new THREE.CylinderGeometry(0.5,0.5,1,16);
 				this.wallGeometry = new THREE.CubeGeometry(1,1,1);
 				this.startCyl = new THREE.Mesh(this.cylGeometry,this.material);
 				this.endCyl = new THREE.Mesh(this.cylGeometry,this.material);
 				this.wall = new THREE.Mesh(this.wallGeometry,this.material);
-				console.log("en move effect creation: "+startTime+" "+endTime);
-
+				
 
 				this.add(this.wall);
 				this.add(this.startCyl);
@@ -511,7 +528,7 @@ IBRS.Effect = function(efxType,aux,startTime,endTime){
 
 
 				break;
-    		case 2: // armas CD
+    		case IBRS.EFX.SHOOT: // armas CD
     			this.startPoint = new THREE.Vector3(0,0,0);
 				this.endPoint = new THREE.Vector3(0,0,0);
 				this.material = new THREE.LineBasicMaterial({color:this.efxColor , linewidth: 5	});
@@ -523,14 +540,21 @@ IBRS.Effect = function(efxType,aux,startTime,endTime){
     			this.line = new THREE.Line(this.geometry, this.material);
     			this.add(this.line);
     			break;
-    		case 3: // iconos
+    		case IBRS.EFX.TERMINAL: //plantilla termina
     			console.error("EFX "+efxType+" no definido aun");
     			break;
-    		case 4: //areas como sensor o hacking
+    		case IBRS.EFX.ZONE: //areas como sensor o hacking
     			console.error("EFX "+efxType+" no definido aun");
     			break;
-    		case 5: //armas de plantilla
+    		case IBRS.EFX.TEMPLATE: //armas de plantilla
+    			console.error("EFX "+efxType+" no definido aun");
     			break;
+    		case IBRS.EFX.GUIDED:
+    			console.error("EFX "+efxType+" no definido aun");
+    			break;
+			case IBRS.EFX.PARABOLIC:
+				console.error("EFX "+efxType+" no definido aun");
+				break;
     		default:
     			console.error("tipo de efecto no definido");
     			break;
@@ -541,3 +565,36 @@ IBRS.Effect = function(efxType,aux,startTime,endTime){
 IBRS.Effect.prototype = Object.create(BasicElement.prototype);
 
 
+/*
+for (resolution in resolutions){
+			switch (resolution.type){
+				case 0: //cambio de estado
+				console.log("resolviendo resolution: ");
+					var target = resolution.target;
+						switch (resolution.status){
+							case 0:target.setStatus("Death");break;
+							case 1:target.setStatus("Unconscious");break;
+							case 2:target.setStatus("IMM-1");break;
+							case 3:target.setStatus("IMM-2");break;
+							case 4:target.setStatus("Camo");
+									target.asCamo(1);
+								break;
+							case 5:target.setStatus("TO");
+									target.asCamo(2);
+								break;
+							case 6:target.setStatus("Normal");
+									target.asMiniature();
+								break;
+							case 7:target.setStatus("undeployed");break;
+							case 8:target.setStatus("notDefined :D");break;
+						}
+					break;
+				case 1: //token
+					
+					break;
+				default:
+					
+					break;
+			}
+		}
+		*/

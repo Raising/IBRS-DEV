@@ -65,18 +65,41 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 		this.setPosition = function(x,y,z){
 			unitLogic.position.set(x,y,z);
 			unitLogic.unitGraphic.position.set(x,y,z);
+			unitLogic.updateHtml();
 		};
 
 
 		this.setRotation = function(x,y,z){
 			unitLogic.rotation.set(x,y,z);
 			unitLogic.unitGraphic.rotation.set(x,y,z);
+			unitLogic.updateHtml();
 		};
 
 		this.setStatus = function(newStatus){
 			unitLogic.status = newStatus;
 			unitLogic.unitGraphic.status = newStatus;
+			unitLogic.updateStatusIcon();
+			unitLogic.updateHtml();
 		};
+
+		this.updateHtml = function(){
+			unitLogic.unitGraphic.updateHtml();
+		}
+
+		this.updateStatusIcon = function(){
+			var actualStatus = unitLogic.status;
+			switch( actualStatus){
+				case IBRS.STAT.NORMAL:
+					unitLogic.unitGraphic.statusIcon = "img/NORMAL.png";
+					break;
+				case IBRS.STAT.DEATH:
+					unitLogic.unitGraphic.statusIcon = "img/DEATH.png";
+					break;
+				default:
+					unitLogic.unitGraphic.statusIcon = "img/NORMAL.png";
+					break;
+			}
+		}
 
 		this.asCamo = function(type){
 			if (type == 1){
