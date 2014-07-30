@@ -76,8 +76,8 @@
 					"firstDeclaration":[
 						{"descriptor":0,"source":{"playerID":201,"groupNumber":1,"unitNumber":3},
 							"actions":[{"type":1,"startTime":0,"endTime":0.5,"startPosition":{"x":31,"y":0,"z":-17},"endPosition":{"x":31,"y":0,"z":-22}},
-										{"type":1,"startTime":0.5,"endTime":0.8,"startPosition":{"x":31,"y":0,"z":-22},"endPosition":{"x":31,"y":0,"z":-20}}
-										]
+										{"type":1,"startTime":0.5,"endTime":0.7,"startPosition":{"x":31,"y":0,"z":-22},"endPosition":{"x":31,"y":0,"z":-20}}
+											]
 						}
 						],
 					"firstAro":[
@@ -91,6 +91,26 @@
 							"actions":[{"type":2,"startTime":0,"endTime":0.92,"startPosition":{"x":31,"y":0,"z":-22},"endPosition":{"x":-4,"y":2,"z":-22}},
 										{"type":2,"startTime":0.04,"endTime":0.96,"startPosition":{"x":31,"y":0,"z":-22},"endPosition":{"x":-4,"y":2,"z":-22}},
 										{"type":2,"startTime":0.08,"endTime":1,"startPosition":{"x":31,"y":0,"z":-22},"endPosition":{"x":-4,"y":2,"z":-22}}
+										]
+						}						
+						],
+					"secondAro":[],
+					"resolutions":[{"type":0,"target":{"playerID":200,"groupNumber":1,"unitNumber":1},"status":100}]
+				},
+
+				{"groupNumber":1,"orderType":0,
+					"firstDeclaration":[
+						{"descriptor":0,"source":{"playerID":201,"groupNumber":1,"unitNumber":2},
+							"actions":[{"type":1,"startTime":0,"endTime":0.5,"startPosition":{"x":31,"y":0,"z":-9},"endPosition":{"x":31,"y":0,"z":-4}},
+										{"type":1,"startTime":0.5,"endTime":1,"startPosition":{"x":31,"y":0,"z":-4},"endPosition":{"x":27,"y":0,"z":-1}}
+										]
+						}
+						],
+					"firstAro":[],
+					"secondDeclaration":[
+						{"descriptor":14,"source":{"playerID":201,"groupNumber":1,"unitNumber":2},
+							"actions":[{"type":1,"startTime":0,"endTime":1,"startPosition":{"x":27,"y":0,"z":-1},"endPosition":{"x":16,"y":0,"z":5}}
+									
 										]
 						}						
 						],

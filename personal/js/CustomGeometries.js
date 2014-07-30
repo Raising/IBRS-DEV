@@ -322,9 +322,9 @@ var TargeteableElement = function(){
     
 
 	this.updateHtml = function (){
-        this.container.empty().append('<td>'+this.name+
-		'</td><td>'+parseInt(this.position.x*10)/10+':'+parseInt(this.position.y*10)/10+':'+parseInt(this.position.z*10)/10+
-		'</td><td>'+'<img src="'+targeteableElement.statusIcon+'" alt="" border=3 height=20 width=20></img>'+'</td>');
+         this.container.empty().append('<td>'+this.name+
+		'</td><td>'+parseInt(this.position.x)+':'+parseInt(this.position.y)+':'+parseInt(this.position.z)+
+		'</td><td>'+'<img src="'+this.statusIcon+'" alt="" border=3 height=20 width=20></img>'+'</td>');
 	};
 
 	this.onElementClick = function(){

@@ -88,12 +88,14 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 
 		this.updateStatusIcon = function(){
 			var actualStatus = unitLogic.status;
+			console.log(actualStatus);
 			switch( actualStatus){
 				case IBRS.STAT.NORMAL:
 					unitLogic.unitGraphic.statusIcon = "img/NORMAL.png";
 					break;
 				case IBRS.STAT.DEATH:
 					unitLogic.unitGraphic.statusIcon = "img/DEATH.png";
+					unitLogic.setPosition(0,-10,0);
 					break;
 				default:
 					unitLogic.unitGraphic.statusIcon = "img/NORMAL.png";

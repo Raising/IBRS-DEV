@@ -17,7 +17,7 @@ IBRS.Reproductor = function(graphicEnviroment){
 	this.pausedTime = 0;
 
 	this.playing = false;
-	this.timePerAction = 2000;//2 segundos
+	this.timePerAction =1000;//2 segundos
 	this.declarationInterval = 1.2;
 	this.insertEvents = function(data){
 		//TODO Aqui la magia
