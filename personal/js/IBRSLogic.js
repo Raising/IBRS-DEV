@@ -13,7 +13,7 @@ IBRS.getID = function(){
 
 IBRS.GameArea =  function (){
 	
-	gameArea =  this;
+	var gameArea =  this;
 	this.sceneryElementList = []; // llenado con IBR.SceneryLogic
 	this.name = "no name";
 	this.table = new IBRS.TableLogic();
@@ -40,6 +40,17 @@ IBRS.GameArea =  function (){
 			};
 		});
 	};
+
+	this.toJson = function (key) {
+		salida= {};
+		salida.name = gameArea.name;
+		salida.table = gameArea.table;
+		salida.sceneryList = [];
+		for (var i = gameArea.sceneryElementList.length - 1; i >= 0; i--) {
+				salida.sceneryList.push(gameArea.sceneryElementList[i]);
+		};
+		return salida;
+	}
 };
 IBRS.GameArea.prototype = Object.create(THREE.Object3D.prototype);
 
@@ -95,7 +106,7 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 					break;
 				case IBRS.STAT.DEATH:
 					unitLogic.unitGraphic.statusIcon = "img/DEATH.png";
-					unitLogic.setPosition(0,-10,0);
+					unitLogic.unitGraphic.scale.set(1,0.1,1);
 					break;
 				default:
 					unitLogic.unitGraphic.statusIcon = "img/NORMAL.png";
@@ -138,6 +149,16 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 		unitLogic.setRotation(data.rotation.x,data.rotation.y,data.rotation.z);	
 	};
 
+
+	this.toJson = function(key) {
+		var salida = {}
+		salida.unitNumber = unitLogic.unitNumber;
+		salida.modelID = unitLogic.name;
+		salida.position = {x:unitLogic.position.x,y:unitLogic.position.y,z:unitLogic.position.z};
+		salida.rotation = {x:unitLogic.rotation.x,y:unitLogic.rotation.y,z:unitLogic.rotation.z};	
+		return salida;
+	};
+
 	
 };
 
@@ -155,7 +176,7 @@ IBRS.TacticalGroup =  function (army) {
 	jQuery('#inBoardElements').append(this.container);
 	
 	this.actualizeHtml = function(){
-		tacticalGroup.container.empty().append('<tr>	<th>'+this.army.player.name+'</th><th>Group</th><th>'+this.groupNumber+'</th></tr>');
+		tacticalGroup.container.empty().append('<tr><th>'+this.army.player.name+'</th><th>Group</th><th>'+this.groupNumber+'</th></tr>');
 	};
 	// restart order counting
 	this.actualizeOrders =  function(){
@@ -163,8 +184,8 @@ IBRS.TacticalGroup =  function (army) {
 		for (var i = 0; i<unitList.length;i++){
 			var countingUnit = tacticalGroup.unitList[i];
 			if (countingUnit.active){
-				if (countingUnit.regular){			tacticalGroup.regularAmount +=1;}
-				else{								tacticalGroup.irregularAmount +=1;}
+				if (countingUnit.regular){		tacticalGroup.regularAmount +=1;}
+				else{							tacticalGroup.irregularAmount +=1;}
 				if (countingUnit.fury){			tacticalGroup.furyAmount +=1;}
 			}
 		}
@@ -180,6 +201,17 @@ IBRS.TacticalGroup =  function (army) {
 			tacticalGroup.unitList.push(newUnit);
 		}
 	};
+
+	this.toJson = function(key) {
+		var salida = {}
+		salida.groupNumber = tacticalGroup.groupNumber;
+		salida.unitList = [];	
+		for (var i=0;i<data.unitList.length;i++){
+			salida.unitList.push(tacticalGroup.unitList[i]);
+		}
+		return salida;
+	};
+	
 	
 	
 	this.getMiniatures = function(){
@@ -212,6 +244,19 @@ IBRS.Army = function(player){
 			army.addGroup(newTacticalGroup);
 		}
 	};
+
+
+	this.toJson = function(key) {
+		var salida = {};
+		salida.faction = army.faction;
+		salida.tacticalGroupList = [];
+		for (var i=0;i<army.tacticalGroupList.length;i++){
+			var newTacticalGroup = new IBRS.TacticalGroup(army);
+			salida.tacticalGroupList.push(army.tacticalGroupList[i]);
+		}
+		return salida;
+
+	}
 	
 	this.getMiniatures = function(){
 		var miniatures = [];
@@ -231,7 +276,7 @@ IBRS.Player = function (){
 	this.army = new IBRS.Army();
 
 	this.loadPlayerfromDataBase = function (playerID){
-		//cargar
+		//cargar perfil de jugador
 	};
 
 	this.insertFromData = function (data) {
@@ -242,7 +287,15 @@ IBRS.Player = function (){
 		player.army = newArmy;
 		
 	};
-	
+	this.toJson = function(key) {
+		var salida = {};
+		salida.name = player.name;
+		salida.playerID = player.playerID;
+		salida.army = player.army;
+		return salida;
+	}
+
+
 	this.getMiniatures = function(){
 		return player.army.getMiniatures();
 	};
@@ -276,6 +329,18 @@ IBRS.Game = function(gameID){
 			game.gameArea.loadGameAreaFromDataBase(data.gameAreaID);
 		});
 	};
+
+	this.toJson = function(key){
+		var salida = {};
+		salida.gameEventsID = "Events_"+game.ID;
+		salida.gameAreaID = "GameArea_"+game.ID;
+		salida.name = game.name;
+		salida.playerList = [];
+		for (var i = 0;i<2;i++){
+				salida.playerList.push(game.playerList[i]);	
+			}
+		return salida;
+	}
 //hacer este metodo de forma que se integre en los objetos
 	this.getMiniatures = function(){
 		var unitGraphicList = [];
@@ -367,7 +432,15 @@ IBRS.SceneryLogic = function(sceneryModelID){
 				
 		//sceneryLogic.sceneryGraphic.dimension.set(x,y,z);
 	};
-
+	this.toJson = function(key){
+		var salida = {};
+		salida.sceneryModelID = sceneryLogic.ID;
+		salida.dimension = {x:sceneryLogic.dimension.x,y:sceneryLogic.dimension.y,z:sceneryLogic.dimension.z};
+		salida.position = {x:sceneryLogic.position.x,y:sceneryLogic.position.y,z:sceneryLogic.position.z};
+		salida.rotation = {x:sceneryLogic.rotation.x,y:sceneryLogic.rotation.y,z:sceneryLogic.rotation.z};
+		
+		return salida;
+	}
 
 
 };
@@ -379,6 +452,7 @@ IBRS.TableLogic = function(TableModelID){
 	this.position = new THREE.Vector3();
 	this.rotation = new THREE.Vector3();
 	this.tableGraphic = new IBRS.TableGraphic(new THREE.Vector3(120,3,120),"img/terrain01.png");
+	this.coverTexture = 0;
 	
 	this.setPosition = function(x,y,z){
 		tableLogic.position.set(x,y,z);
@@ -398,7 +472,15 @@ IBRS.TableLogic = function(TableModelID){
 	this.insertFromData = function(data){
 		tableLogic.setDimension(data.dimension.x,data.dimension.y,data.dimension.z);
 		tableLogic.tableGraphic.refactor(tableLogic.dimension,data.coverTexture);
+		tableLogic.coverTexture = data.coverTexture;
 	}
 
+	this.toJson = function(data){
+		var salida = {};
+		salida.TableModelID = tableLogic.ID;
+		salida.dimension = {x:tableLogic.dimension.x,y:tableLogic.dimension.y,z:tableLogic.dimension.z};
+		salida.coverTexture = tableLogic.coverTexture;
+		return salida;
+	}
 };
 

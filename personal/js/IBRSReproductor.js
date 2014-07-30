@@ -38,10 +38,8 @@ IBRS.Reproductor = function(graphicEnviroment){
 				timeFilled = reproductor.instertDeclarationsFromSubGroup( selectOrder.firstAro,timeFilled);
 				timeFilled = reproductor.instertDeclarationsFromSubGroup( selectOrder.secondDeclaration,timeFilled);
 				timeFilled = reproductor.instertDeclarationsFromSubGroup( selectOrder.secondAro,timeFilled);
-				
 				/// RESOLUCIONES
-
-				timeFilled = reproductor.insertResolutions(selectOrder.results,timeFilled,reproductor.timePerAction/2);
+				timeFilled = reproductor.insertResolutions(selectOrder.resolutions,timeFilled,reproductor.timePerAction/2);
 
 				/// Token Ordenes
 				reproductor.insterOrderSpent(selectOrder,startOrderTime,timeFilled,reproductor.timePerAction);
@@ -53,6 +51,7 @@ IBRS.Reproductor = function(graphicEnviroment){
 			
 		};
 
+		
 	}
 	this.instertDeclarationsFromSubGroup = function(list,time){
 		for (var k =0; k< list.length ; k++) {

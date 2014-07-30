@@ -86,6 +86,10 @@ IBRS.Graphics = function(){
         graphics.addListToScene(newGame.getMiniatures(),true);
         graphics.addListToScene(newGame.getSceneryElementList(),false);
         graphics.reproductor.insertEvents(newGame.events);
+        var stringJson = JSON.stringify(newGame.events,null,'\t');
+        var blob = new Blob([stringJson], {type: "application/json"});
+        var urll  = URL.createObjectURL(blob);
+        jQuery("#getJson").attr("href",urll);
     };
 
     this.setTargeteableElements=function(newList){

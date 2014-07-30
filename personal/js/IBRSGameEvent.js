@@ -109,6 +109,17 @@ IBRS.Resolution = function(order){
     	resolution.status= data.status;
     }
 
+    this.toJSON = function(key){
+    	var salida = {};
+    	salida.type =  resolution.type;
+    	salida.status = resolution.status;
+    	salida.target = {groupNumber : resolution.target.tacticalGroup.groupNumber,
+    					playerID : resolution.target.tacticalGroup.army.player.playerID,
+    					unitNumber : resolution.target.unitNumber};
+    	return salida;
+
+    }
+
 };
 
 IBRS.Declaration = function(order){
@@ -132,6 +143,17 @@ IBRS.Declaration = function(order){
     	declaration.actions= data.actions;
     }
 
+    this.toJSON = function(key){
+    	var salida = {};
+    	salida.descriptor = declaration.descriptor;
+    	salida.actions =  declaration.actions;
+    	salida.source = {groupNumber :declaration.source.tacticalGroup.groupNumber,
+    					playerID : declaration.source.tacticalGroup.army.player.playerID,
+    					unitNumber : declaration.source.unitNumber};
+    	return salida;
+
+    }
+
 };
 
  
@@ -142,7 +164,7 @@ IBRS.Order =  function(turn){
 	this.secondDeclaration = [];
 	this.firstAro = [];
 	this.secondAro = [];
-	this.results = [];// TODO
+	this.resolutions = [];// TODO
 	this.turn = turn;
 	this.groupNumber = -1;
 	this.orderType = -1; //0 = regular, 1 = irregular, 2 = impetuosa.
@@ -161,9 +183,9 @@ IBRS.Order =  function(turn){
 	this.addSecondAro= function( declaration){
 		order.SecondAro.push(declaration);
 	};
-	
+
 	this.addResolution = function( resolution){
-		order.results.push(resolution);
+		order.resolutions.push(resolution);
 	};
 
 	this.insertFromData = function(data){
@@ -204,6 +226,39 @@ IBRS.Order =  function(turn){
 	};
 
 
+	this.toJSON = function(key){
+		var salida = {};
+		salida.groupNumber = order.groupNumber;
+		salida.orderType = order.orderType;
+		salida.firstDeclaration = [];
+		salida.secondDeclaration = [];
+		salida.firstAro = [];
+		salida.secondAro = [];
+		salida.resolutions = []
+		
+		for (var i = 0; i < order.firstDeclaration.length; i++) {			
+			salida.firstDeclaration.push(order.firstDeclaration[i]);		
+		}
+
+		for (var i = 0; i < order.secondDeclaration.length; i++) {			
+			salida.secondDeclaration.push(order.secondDeclaration[i]);			
+		}
+
+		for (var i = 0; i < order.firstAro.length; i++) {			
+			salida.firstAro.push(order.firstAro[i]);		
+		}
+		
+		for (var i = 0; i < order.secondAro.length; i++) {
+			salida.secondAro.push(order.secondAro[i]);
+		}
+
+		for (var i = 0; i < order.resolutions.length; i++) {
+			salida.resolutions.push(order.resolutions[i]);
+		}
+		return salida;
+	}
+
+
 };
 
 IBRS.Turn =  function(gameEvents){
@@ -226,6 +281,16 @@ IBRS.Turn =  function(gameEvents){
 		};
 
 	};
+
+	this.toJSON = function(key){
+		var salida = {};
+		salida.playerID = turn.playerID;
+		salida.orderList = [];
+		for (var i = 0; i < turn.orderList.length; i++) {
+			salida.orderList.push(turn.orderList[i]);
+		};
+		return salida;
+	}
 
 };
  
@@ -253,4 +318,13 @@ IBRS.GameEvents =  function(game){
 
 		});
 	};
+
+	this.toJSON = function(key){
+		var salida = {};
+		salida.turnList = [];
+		for (var i = 0; i< gameEvents.turnList.length;i++){
+			salida.turnList.push(gameEvents.turnList[i]);
+		}
+		return salida;
+	}
 };
