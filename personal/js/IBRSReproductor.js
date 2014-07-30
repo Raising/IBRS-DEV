@@ -17,7 +17,7 @@ IBRS.Reproductor = function(graphicEnviroment){
 	this.pausedTime = 0;
 
 	this.playing = false;
-	this.timePerAction =1000;//2 segundos
+	this.timePerAction =3000; //velocidad, a mas pequeño más rapido.
 	this.declarationInterval = 1.2;
 	this.insertEvents = function(data){
 		//TODO Aqui la magia
@@ -51,7 +51,7 @@ IBRS.Reproductor = function(graphicEnviroment){
 			
 		};
 
-		
+
 	}
 	this.instertDeclarationsFromSubGroup = function(list,time){
 		for (var k =0; k< list.length ; k++) {
