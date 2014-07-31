@@ -3396,7 +3396,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
 .nav > li > a {
   position: relative;
   display: block;
-  padding: 10px 15px;
+  padding: 3px 3px;
 }
 .nav > li > a:hover,
 .nav > li > a:focus {
@@ -3436,10 +3436,11 @@ textarea.input-group-sm > .input-group-btn > .btn {
   margin-bottom: -1px;
 }
 .nav-tabs > li > a {
-  margin-right: 2px;
-  line-height: 1.428571429;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  line-height: 0;
   border: 1px solid transparent;
-  border-radius: 6px 6px 0 0;
+  border-radius: 10px 10px 0 0;
 }
 .nav-tabs > li > a:hover {
   border-color: #eeeeee #eeeeee #dddddd;
@@ -3447,8 +3448,8 @@ textarea.input-group-sm > .input-group-btn > .btn {
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
-  color: #555555;
-  background-color: #ffffff;
+  color: rgba(64, 185, 185, 0.64);
+  background-color: rgba(64, 185, 185, 0.64);
   border: 1px solid #dddddd;
   border-bottom-color: transparent;
   cursor: default;
@@ -3557,12 +3558,12 @@ textarea.input-group-sm > .input-group-btn > .btn {
 @media (min-width: 768px) {
   .nav-tabs-justified > li > a {
     border-bottom: 1px solid #dddddd;
-    border-radius: 6px 6px 0 0;
+    border-radius: 6px 0px 0 6px;
   }
   .nav-tabs-justified > .active > a,
   .nav-tabs-justified > .active > a:hover,
   .nav-tabs-justified > .active > a:focus {
-    border-bottom-color: #ffffff;
+    border-right-color: #ffffff;
   }
 }
 .tab-content > .tab-pane {

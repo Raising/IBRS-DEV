@@ -64,7 +64,7 @@ jQuery(function(){
 						}).slideDown();
 				});
 				// Script de Pestañas, para añadir una nueva simplemente crear el li con su a correspondiente en la parte html y ponerle de href el nombre del div a cargar 
-				jQuery("ul.nav > li > a").click(function(){	
+				/*jQuery("ul.nav > li > a").click(function(){	
 					var thisMenu =jQuery(this);
 					thisMenu.parent().parent().children().removeClass("active");
 					thisMenu.parent().addClass("active");
@@ -76,7 +76,7 @@ jQuery(function(){
 						}).slideDown();
 					return false;
 				});
-				
+				*/
 				// Relacion html con los elementos en el canvas 
 				
 
