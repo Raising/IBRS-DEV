@@ -414,6 +414,12 @@ IBRS.TableGraphic = function(dimension,coverTexture){
 
 IBRS.TableGraphic.prototype = Object.create(BasicElement.prototype);
 
+IBRS.SCENERY = {ENUM : "tipos de escenografia"};
+IBRS.SCENERY.BASIC=0;   
+IBRS.SCENERY.JSONLOADED = 1;
+               
+
+
 IBRS.SceneryGraphic = function(dimension){
     BasicElement.call(this);
     var sceneryGraphic = this;
@@ -424,20 +430,64 @@ IBRS.SceneryGraphic = function(dimension){
     for (var i = 1; i< 6;i++){
             this.textures.push(new THREE.ImageUtils.loadTexture("img/edificioFace"+i+tipo+".jpg"));
         }*/
-    var GeoEdificio = new THREE.CubeGeometry(dimension.x,dimension.y,dimension.z);
+    this.GeoEdificio = new THREE.CubeGeometry(dimension.x,dimension.y,dimension.z);
     
-    var MeshEdificio = new THREE.Mesh(GeoEdificio,new THREE.MeshNormalMaterial({color:0x156000}));
-    MeshEdificio.position.set(0,dimension.y/2,0);
-    this.add(MeshEdificio);
+    this.MeshEdificio = new THREE.Mesh(this.GeoEdificio,new THREE.MeshNormalMaterial({color:0x156000}));
+    this.MeshEdificio.position.set(0,dimension.y/2,0);
+    this.add(this.MeshEdificio);
 
 	
 	this.refactor = function(sceneryModelID,dimension){
       
-            sceneryGraphic.children = [];
-            GeoEdificio = new THREE.CubeGeometry(dimension.x,dimension.y,dimension.z);
-            MeshEdificio = new THREE.Mesh(GeoEdificio,new THREE.MeshNormalMaterial({color:0x156000}));
-            MeshEdificio.position.set(0,dimension.y/2,0);
-            sceneryGraphic.add(MeshEdificio);
+            sceneryGraphic.remove(sceneryGraphic.children[0]);
+            switch(sceneryModelID){
+
+                case IBRS.SCENERY.BASIC:
+                     sceneryGraphic.GeoEdificio = new THREE.CubeGeometry(dimension.x,dimension.y,dimension.z);
+                     sceneryGraphic.MeshEdificio = new THREE.Mesh(sceneryGraphic.GeoEdificio,new THREE.MeshNormalMaterial({color:0x156000}));
+                     sceneryGraphic.MeshEdificio.position.set(0,dimension.y/2,0);
+                     sceneryGraphic.add(sceneryGraphic.MeshEdificio);
+                break;
+                case IBRS.SCENERY.JSONLOADED:
+                
+                    jQuery.getJSON("DataBase/SceneryElement/"+dimension+".json",function(data){ 
+                    console.log(data); 
+                        switch(data.BaseModel){
+                            case 0://cubico
+                                console.log("cubico");
+                                var textures = [];
+                                var materials = [];
+                            
+                                for (var i =0; i< data.texturesPath.length ; i++ ){
+                                    textures.push(new THREE.ImageUtils.loadTexture("img/"+data.texturesPath[i]));
+                                    materials.push(new THREE.MeshLambertMaterial({ map: textures[0]}));
+                                }
+                             
+                               
+                                var keyGeoEdificio =  new THREE.CubeGeometry(data.dimension.x,data.dimension.y,data.dimension.z);
+                                sceneryGraphic.MeshEdificio = new THREE.Mesh(keyGeoEdificio,new THREE.MeshFaceMaterial(materials));
+                                sceneryGraphic.MeshEdificio.position.set(0,data.dimension.y/2,0);
+                                sceneryGraphic.add(sceneryGraphic.MeshEdificio);
+                            break;
+                            case 1://edificio Ice Storm
+                            
+                            break;
+                            default:
+                                console.error("tipo de edificio base no encontrado");
+                            break;
+                            }
+                    });  
+
+
+
+
+                break;
+                default:
+                    console.error("tipo de carga de escenografía no valida");
+                break;
+            }
+           
+          //  sceneryGraphic.add(sceneryGraphic.MeshEdificio);
            
 	   	//implementar cambio de modelo al que se carge por ajax
 	}

@@ -406,7 +406,7 @@ IBRS.SceneryLogic = function(sceneryModelID){
 	this.dimension = new THREE.Vector3();
 	this.position = new THREE.Vector3();
 	this.rotation = new THREE.Vector3();
-	this.sceneryGraphic = new IBRS.SceneryGraphic(new THREE.Vector3(10,10,10));
+	this.sceneryGraphic = new IBRS.SceneryGraphic(new THREE.Vector3(1,1,1));
 	
 	this.setPosition = function(x,y,z){
 		sceneryLogic.position.set(x,y,z);
@@ -424,8 +424,8 @@ IBRS.SceneryLogic = function(sceneryModelID){
 	};
 
 	this.insertFromData = function(data){
-		sceneryLogic.dimension.set(data.dimension.x,data.dimension.y,data.dimension.z);
-		sceneryLogic.sceneryGraphic.refactor(sceneryLogic.ID,sceneryLogic.dimension);
+		//sceneryLogic.dimension.set(data.dimension.x,data.dimension.y,data.dimension.z);
+		sceneryLogic.sceneryGraphic.refactor(sceneryLogic.ID,data.dimension);
 		sceneryLogic.setPosition(data.position.x,data.position.y,data.position.z);
 		sceneryLogic.setRotation(data.rotation.x,data.rotation.y,data.rotation.z);
 		

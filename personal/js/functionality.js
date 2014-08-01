@@ -64,7 +64,7 @@ jQuery(function(){
 						}).slideDown();
 				});
 				// Script de Pestañas, para añadir una nueva simplemente crear el li con su a correspondiente en la parte html y ponerle de href el nombre del div a cargar 
-				jQuery("ul.nav > li > a").click(function(){	
+				jQuery("ul.nav-pills > li > a").click(function(){	
 					var thisMenu =jQuery(this);
 					thisMenu.parent().parent().children().removeClass("active");
 					thisMenu.parent().addClass("active");
@@ -74,6 +74,20 @@ jQuery(function(){
 					jQuery(displaying_menu).appendTo(jQuery("#menu_area"));
 					if (displaying_menu == "#menu_initial" || displaying_menu == "#menu_events" ){jQuery("#canvas").appendTo(jQuery("#menu_area"));}
 						}).slideDown();
+					return false;
+				});
+
+				jQuery("ul.initialStateEditor > li > a").click(function(){	
+	
+					var thisMenu =jQuery(this);
+					thisMenu.parent().parent().children().removeClass("active");
+					thisMenu.parent().addClass("active");
+
+					var displaying_menu = thisMenu.attr("href");
+					jQuery("#menu_initial_load").slideUp(function(){
+					jQuery("#menu_initial_load > div").appendTo(jQuery("#hidden_storage"));
+					jQuery(displaying_menu).appendTo(jQuery("#menu_initial_load"));
+					}).slideDown();
 					return false;
 				});
 				
