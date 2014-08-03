@@ -1,18 +1,18 @@
 {"name":"Tablero de pruebas",
-"table":{"coverTexture":"TableIS.jpg","dimension":{"x":85,"y":3,"z":60}},
+"table":{"coverTexture":"IStable.jpg","dimension":{"x":85,"y":3,"z":60}},
 "sceneryList":
    [
 	{"sceneryModelID":1,"position":{"x":9,"y":0,"z":2},"rotation":{"x":0,"y":1.56,"z":0},"dimension":"IS_CONTAINER_A"},
-	{"sceneryModelID":0,"position":{"x":-7,"y":0,"z":-3},"rotation":{"x":0,"y":1.56,"z":0},"dimension":{"x":10,"y":5,"z":5}},
-	{"sceneryModelID":0,"position":{"x":-28,"y":0,"z":-18},"rotation":{"x":0,"y":1.56,"z":0},"dimension":{"x":10,"y":5,"z":5}},
-	{"sceneryModelID":0,"position":{"x":-3,"y":6,"z":-16},"rotation":{"x":0,"y":0,"z":0},"dimension":{"x":10,"y":5,"z":5}},
-	{"sceneryModelID":0,"position":{"x":-17.5,"y":0,"z":15},"rotation":{"x":0,"y":0,"z":0},"dimension":{"x":10,"y":5,"z":5}},
-	{"sceneryModelID":0,"position":{"x":37.5,"y":0,"z":10},"rotation":{"x":0,"y":0,"z":0},"dimension":{"x":10,"y":5,"z":5}},
+	{"sceneryModelID":1,"position":{"x":-7,"y":0,"z":-2},"rotation":{"x":0,"y":1.56,"z":0},"dimension":"IS_CONTAINER_A"},
+	{"sceneryModelID":1,"position":{"x":-28,"y":0,"z":-18},"rotation":{"x":0,"y":1.56,"z":0},"dimension":"IS_CONTAINER_A"},
+	{"sceneryModelID":1,"position":{"x":-3,"y":4,"z":-16},"rotation":{"x":0,"y":0,"z":0},"dimension":"IS_CONTAINER_A"},
+	{"sceneryModelID":1,"position":{"x":-17.5,"y":0,"z":15},"rotation":{"x":0,"y":0,"z":0},"dimension":"IS_CONTAINER_A"},
+	{"sceneryModelID":1,"position":{"x":37.5,"y":0,"z":10},"rotation":{"x":0,"y":0,"z":0},"dimension":"IS_CONTAINER_A"},
 	
-	{"sceneryModelID":0,"position":{"x":-28.5,"y":0,"z":13.5},"rotation":{"x":0,"y":1.56,"z":0},"dimension":{"x":17,"y":6,"z":12}},
-	{"sceneryModelID":0,"position":{"x":10,"y":0,"z":13},"rotation":{"x":0,"y":0,"z":0},"dimension":{"x":17,"y":6,"z":12}},
-	{"sceneryModelID":0,"position":{"x":23.5,"y":0,"z":-13.5},"rotation":{"x":0,"y":1.56,"z":0},"dimension":{"x":17,"y":6,"z":12}},
-	{"sceneryModelID":0,"position":{"x":-6,"y":0,"z":-13},"rotation":{"x":0,"y":0,"z":0},"dimension":{"x":17,"y":6,"z":12}},
+	{"sceneryModelID":1,"position":{"x":-28.5,"y":0,"z":13.5},"rotation":{"x":0,"y":1.56,"z":0},"dimension":"IS_BUILDING_A"},
+	{"sceneryModelID":1,"position":{"x":10,"y":0,"z":13},"rotation":{"x":0,"y":0,"z":0},"dimension":"IS_BUILDING_A"},
+	{"sceneryModelID":1,"position":{"x":23.5,"y":0,"z":-13.5},"rotation":{"x":0,"y":1.56,"z":0},"dimension":"IS_BUILDING_A"},
+	{"sceneryModelID":1,"position":{"x":-6,"y":0,"z":-13},"rotation":{"x":0,"y":0,"z":0},"dimension":"IS_BUILDING_A"},
 
 	{"sceneryModelID":0,"position":{"x":-22.5,"y":0,"z":0},"rotation":{"x":0,"y":0,"z":0},"dimension":{"x":0.25,"y":0.25,"z":60}},
 	{"sceneryModelID":0,"position":{"x":22.5,"y":0,"z":0},"rotation":{"x":0,"y":0,"z":0},"dimension":{"x":0.25,"y":0.25,"z":60}}

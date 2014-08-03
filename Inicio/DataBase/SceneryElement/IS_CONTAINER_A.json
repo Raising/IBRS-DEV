@@ -1,8 +1,34 @@
-{"BaseModel":0,"dimension":{"x":10,"y":5,"z":5},
-	"texturesPath":["IScontainerA1.png",
-					"IScontainerA2.png",
-					"IScontainerA3.png",
-					"IScontainerA4.png",
-					"IScontainerA5.png",
-					"IScontainerA6.png"
-	]}
+{"BaseModel":0,"heightOffset":2.5,
+	"planes":[
+		{"texture":"IScontainerA1.jpg",
+			"width":5,"height":5,
+			"position":{"x":-5,"y":0,"z":0},
+			"rotation":{"x":0,"y":-0.5,"z":0}
+		},
+		{"texture":"IScontainerA2.jpg",
+			"width":5,"height":5,
+			"position":{"x":5,"y":0,"z":0},
+			"rotation":{"x":0,"y":0.5,"z":0}
+		},
+		{"texture":"IScontainerA3.jpg",
+			"width":10,"height":5,
+			"position":{"x":0,"y":2.5,"z":0},
+			"rotation":{"x":-0.5,"y":0,"z":0}
+		},
+		{"texture":"IScontainerA4.jpg",
+			"width":10,"height":5,
+			"position":{"x":0,"y":-2.5,"z":0},
+			"rotation":{"x":0.5,"y":0,"z":0}
+		},
+		{"texture":"IScontainerA5.jpg",
+			"width":10,"height":5,
+			"position":{"x":0,"y":0,"z":2.5},
+			"rotation":{"x":0,"y":0,"z":0}
+		},
+		{"texture":"IScontainerA6.jpg",
+			"width":10,"height":5,
+			"position":{"x":0,"y":0,"z":-2.5},
+			"rotation":{"x":0,"y":1,"z":0}
+		}
+		]
+}

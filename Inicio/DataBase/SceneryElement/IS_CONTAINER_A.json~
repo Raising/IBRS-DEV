@@ -1,4 +1,4 @@
-{"BaseModel":0,"dimensions":{"x":10,"y":5,"z":5},
+{"BaseModel":0,"dimension":{"x":10,"y":5,"z":5},
 	"texturesPath":["IScontainerA1.png",
 					"IScontainerA2.png",
 					"IScontainerA3.png",

@@ -1,8 +1,8 @@
 {"BaseModel":0,"dimension":{"x":10,"y":5,"z":5},
-	"texturesPath":["IScontainerC1.png",
-					"IScontainerC2.png",
-					"IScontainerC3.png",
-					"IScontainerC4.png",
-					"IScontainerC5.png",
-					"IScontainerC6.png"
+	"texturesPath":["IScontainerC1.jpg",
+					"IScontainerC2.jpg",
+					"IScontainerC3.jpg",
+					"IScontainerC4.jpg",
+					"IScontainerC5.jpg",
+					"IScontainerC6.jpg"
 	]}

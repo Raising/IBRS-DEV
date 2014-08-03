@@ -373,3 +373,5 @@ var Building = function(frontalTexture,tipo){
 	this.add(MeshEdificio);
 }
 Building.prototype = Object.create(BasicElement.prototype);
+
+

@@ -9,6 +9,7 @@ IBRS.Graphics = function(){
     this.render.setSize(this.canvasWidth, this.canvasHeight);
 
     this.scene = new THREE.Scene();
+
     //this.scene.fog = new THREE.Fog( 0x000000, 1500, 2100 );
     this.camera = new THREE.PerspectiveCamera(45, this.canvasWidth / this.canvasHeight, 0.1, 1000);
     this.cameraOrtho = new THREE.OrthographicCamera(-this.canvasWidth/2,this.canvasWidth/2,this.canvasHeight/2,-this.canvasHeight/2,1,10);
@@ -449,21 +450,52 @@ IBRS.SceneryGraphic = function(dimension){
                      sceneryGraphic.add(sceneryGraphic.MeshEdificio);
                 break;
                 case IBRS.SCENERY.JSONLOADED:
-                
-                    jQuery.getJSON("DataBase/SceneryElement/"+dimension+".json",function(data){ 
-                    console.log(data); 
+                    
+                  /*  sceneryGraphic.MeshEdificio = new IBRS.TOOLS.JsonLoadedBuilding(dimension);
+                    sceneryGraphic.MeshEdificio.position.set(0,sceneryGraphic.MeshEdificio.heightOffset,0);
+                    sceneryGraphic.add(sceneryGraphic.MeshEdificio);
+
+
+                     var geometry = new THREE.PlaneGeometry( 500, 50 );
+                      var material = new THREE.MeshBasicMaterial( {color: 0xff0000, side: THREE.DoubleSide} );
+                      var mesh = new THREE.Mesh( geometry, material ); 
+                    sceneryGraphic.MeshEdificio.add(mesh);
+                */
+
+                    var element = new THREE.Object3D();
+                 jQuery.getJSON("DataBase/SceneryElement/"+dimension+".json",function(data){     
+                    for (var i = 0; i < data.planes.length; i++){
+                        var plane = data.planes[i];
+                         console.log(data.planes.length); 
+                        var planeGeo = new THREE.PlaneGeometry(plane.width,plane.height);
+                        var texture = new THREE.ImageUtils.loadTexture("img/"+plane.texture);
+                        var material = new THREE.MeshBasicMaterial({ map: texture});
+                        var mesh = new THREE.Mesh(planeGeo,material);
+                        mesh.position.set(plane.position.x,plane.position.y,plane.position.z);
+                        mesh.rotation.set(plane.rotation.x*Math.PI,plane.rotation.y*Math.PI,plane.rotation.z*Math.PI);
+                        element.add(mesh);
+                               
+                            }
+
+                            element.position.set(0,data.heightOffset,0);
+                         });
+                       
+                       sceneryGraphic.add(element);
+
+
+                /*
+
+
+                    jQuery.getJSON("DataBase/SceneryElement/"+dimension+".json",function(data){     
                         switch(data.BaseModel){
-                            case 0://cubico
-                                console.log("cubico");
+                            case 0://cubico                     
                                 var textures = [];
                                 var materials = [];
                             
                                 for (var i =0; i< data.texturesPath.length ; i++ ){
                                     textures.push(new THREE.ImageUtils.loadTexture("img/"+data.texturesPath[i]));
-                                    materials.push(new THREE.MeshLambertMaterial({ map: textures[0]}));
+                                    materials.push(new THREE.MeshLambertMaterial({ map: textures[i]}));
                                 }
-                             
-                               
                                 var keyGeoEdificio =  new THREE.CubeGeometry(data.dimension.x,data.dimension.y,data.dimension.z);
                                 sceneryGraphic.MeshEdificio = new THREE.Mesh(keyGeoEdificio,new THREE.MeshFaceMaterial(materials));
                                 sceneryGraphic.MeshEdificio.position.set(0,data.dimension.y/2,0);
@@ -477,7 +509,7 @@ IBRS.SceneryGraphic = function(dimension){
                             break;
                             }
                     });  
-
+                    */
 
 
 
