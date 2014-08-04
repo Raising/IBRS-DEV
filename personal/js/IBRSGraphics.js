@@ -466,7 +466,6 @@ IBRS.SceneryGraphic = function(dimension){
                  jQuery.getJSON("DataBase/SceneryElement/"+dimension+".json",function(data){     
                     for (var i = 0; i < data.planes.length; i++){
                         var plane = data.planes[i];
-                         console.log(data.planes.length); 
                         var planeGeo = new THREE.PlaneGeometry(plane.width,plane.height);
                         var texture = new THREE.ImageUtils.loadTexture("img/"+plane.texture);
                         var material = new THREE.MeshBasicMaterial({ map: texture});

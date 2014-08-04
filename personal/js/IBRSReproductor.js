@@ -17,7 +17,7 @@ IBRS.Reproductor = function(graphicEnviroment){
 	this.pausedTime = 0;
 
 	this.playing = false;
-	this.timePerAction =3000; //velocidad, a mas pequeño más rapido.
+	this.timePerAction =3000; //velocidad, a mas pequeño ms rapido.
 	this.declarationInterval = 1.2;
 	this.insertEvents = function(data){
 		//TODO Aqui la magia
@@ -457,7 +457,7 @@ IBRS.Effect = function(efxType,aux,startTime,endTime){
 	this.aux = aux;
 	this.startTime = startTime;
 	this.endTime = endTime;
-	this.efxColor = 0x000000;
+	this.efxColor = 0xFFFF00;
 	this.inScene = false;
 
     this.getSprite = function(code){

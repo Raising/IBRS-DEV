@@ -173,10 +173,11 @@ IBRS.TacticalGroup =  function (army) {
 	this.furyAmount = 0;
 	
 	this.container = jQuery('<table id="'+ this.id+'" class="table table-hover h6 "></table>')
-	jQuery('#inBoardElements').append(this.container);
+	this.army.container.append(this.container);
+	//jQuery('#inBoardElements').append(this.container);
 	
 	this.actualizeHtml = function(){
-		tacticalGroup.container.empty().append('<tr><th>'+this.army.player.name+'</th><th>Group</th><th>'+this.groupNumber+'</th></tr>');
+		tacticalGroup.container.empty().append('<tr><th>Group'+this.groupNumber+'</th></tr>');
 	};
 	// restart order counting
 	this.actualizeOrders =  function(){
@@ -232,12 +233,22 @@ IBRS.Army = function(player){
 	this.id = IBRS.getID();
 	this.tacticalGroupList = [];
 	this.faction = "no faction";
+
+	this.container = jQuery('<div id="'+ this.id+'" class="panel panel-default "></div>')
+	
+	this.player.game.container.append(this.container);
+
+	this.actualizeHtml = function(){
+		army.container.empty().append('<div class="panel-heading">'+army.player.name+'   '+army.faction+'</div>');
+	};
+
 	this.addGroup = function(group){
 		army.tacticalGroupList.push(group);
 	}
 
 	this.insertFromData = function (data) {
 		army.faction = data.faction;
+		army.actualizeHtml();
 		for (var i=0;i<data.tacticalGroupList.length;i++){
 			var newTacticalGroup = new IBRS.TacticalGroup(army);
 			newTacticalGroup.insertFromData(data.tacticalGroupList[i]);
@@ -268,12 +279,13 @@ IBRS.Army = function(player){
 };
 
 
-IBRS.Player = function (){
+IBRS.Player = function (game){
 	var player = this;
 	this.playerID = 0;
+	this.game = game;
 	this.id = IBRS.getID();
 	this.name = "no name";
-	this.army = new IBRS.Army();
+	this.army = 0;
 
 	this.loadPlayerfromDataBase = function (playerID){
 		//cargar perfil de jugador
@@ -282,7 +294,7 @@ IBRS.Player = function (){
 	this.insertFromData = function (data) {
 		player.name = data.name;
 		player.playerID = data.playerID;
-		var newArmy = new IBRS.Army(this);
+		var newArmy = new IBRS.Army(player);
 		newArmy.insertFromData(data.army);
 		player.army = newArmy;
 		
@@ -313,6 +325,11 @@ IBRS.Game = function(gameID){
 	this.gameArea = new IBRS.GameArea();
 	this.events = new IBRS.GameEvents(this);
 	this.playerList = [];
+	this.container = jQuery("#inBoardElements");
+
+	this.updateHtml = function(){
+		game.container.empty();
+	}
 
 	this.loadGameFromDataBase = function(gameID){
 		//cargar mediante ayax
@@ -321,7 +338,7 @@ IBRS.Game = function(gameID){
 			if(IBRS.depurarAyax){console.info("Ajax Cargando DataBase/Game/"+gameID+".json");}	
 			game.name = data.name;
 			for (var i = 0;i<2;i++){
-				var newPlayer = new IBRS.Player();
+				var newPlayer = new IBRS.Player(game);
 				newPlayer.insertFromData(data.playerList[i]);
 				game.playerList.push(newPlayer);
 			}

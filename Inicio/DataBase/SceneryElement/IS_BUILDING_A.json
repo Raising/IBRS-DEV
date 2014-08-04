@@ -16,12 +16,12 @@
 			"rotation":{"x":-0.5,"y":0,"z":0}
 		},
 		{"texture":"ISbuildingA2.jpg",
-			"width":16.5,"height":5,
+			"width":16.5,"height":5.4,
 			"position":{"x":0,"y":0.7,"z":5.75},
 			"rotation":{"x":0,"y":0,"z":0}
 		},
 		{"texture":"ISbuildingA3.jpg",
-			"width":16.5,"height":5,
+			"width":16.5,"height":5.4,
 			"position":{"x":0,"y":0.7,"z":-5.75},
 			"rotation":{"x":0,"y":1,"z":0}
 		},
