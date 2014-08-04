@@ -352,7 +352,7 @@ IBRS.UnitGraphic = function(height,baseDiameter,miniatureTexture,baseTexture,log
             unitGraphic.children[i].onClick = this;
         }
 
-        unitGraphic.updateHtml();
+        unitGraphic.logicModel.updateHtml();
 
         };
 

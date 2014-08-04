@@ -303,8 +303,11 @@ var TargeteableElement = function(){
     this.selector = new THREE.Mesh( selectorGeometry, selectorMaterial );
     
     this.add(this.selector);
+    this.selectorOpacity = function(opacity){
+         selectorMaterial.opacity = opacity;
+    }
     //this.add(this.selector);
-	this.container = jQuery('<tr id="'+this.id+'"></tr>');
+/*	this.container = jQuery('<tr id="'+this.id+'"></tr>');
     this.container.click(function(){   
       //  selectorMaterial.opacity = 1;
     //que hacer cuando se hace click en la tupla de cada miniatura
@@ -326,9 +329,9 @@ var TargeteableElement = function(){
 		'</td><td>'+parseInt(this.position.x)+':'+parseInt(this.position.y)+':'+parseInt(this.position.z)+
 		'</td><td>'+'<img src="'+this.statusIcon+'" alt="" border=3 height=20 width=20></img>'+'</td>');
 	};
-
+*/
 	this.onElementClick = function(){
-		this.updateHtml();
+		//this.updateHtml();
 	};
 	
 	

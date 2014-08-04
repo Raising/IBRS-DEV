@@ -72,6 +72,40 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	this.active = true; // si aporta o no su orden al grupo
 	this.unitGraphic = new IBRS.UnitGraphic(this.height,this.width,this.bodyTexture,this.baseTexture,this);
 	this.status = this.unitGraphic.status;
+	this.name = "no name";
+	this.statusIcon = "img/NORMAL.png";
+
+	this.container = jQuery('<tr id="'+this.id+'"></tr>');
+    this.container.click(function(){   
+      //  selectorMaterial.opacity = 1;
+    //que hacer cuando se hace click en la tupla de cada miniatura
+    return false;});
+
+    this.container.mouseenter(function(){   
+        unitLogic.unitGraphic.selectorOpacity(0.5);
+    //que hacer cuando se hace click en la tupla de cada miniatura
+    return false;});
+
+    this.container.mouseleave(function(){   
+        unitLogic.unitGraphic.selectorOpacity(0);
+    //que hacer cuando se hace click en la tupla de cada miniatura
+    return false;});
+    
+
+	this.updateHtml = function (){
+         this.container.empty().append('<td>'+unitLogic.name+
+		'</td><td>'+parseInt(unitLogic.position.x)+':'+parseInt(unitLogic.position.y)+':'+parseInt(unitLogic.position.z)+
+		'</td><td>'+'<img src="'+unitLogic.statusIcon+'" alt="" border=3 height=20 width=20></img>'+'</td>');
+	};
+
+
+
+
+
+
+
+
+
 
 		this.setPosition = function(x,y,z){
 			unitLogic.position.set(x,y,z);
@@ -93,23 +127,23 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 			unitLogic.updateHtml();
 		};
 
-		this.updateHtml = function(){
+/*		this.updateHtml = function(){
 			unitLogic.unitGraphic.updateHtml();
 		}
-
+*/
 		this.updateStatusIcon = function(){
 			var actualStatus = unitLogic.status;
 			console.log(actualStatus);
 			switch( actualStatus){
 				case IBRS.STAT.NORMAL:
-					unitLogic.unitGraphic.statusIcon = "img/NORMAL.png";
+					unitLogic.statusIcon = "img/NORMAL.png";
 					break;
 				case IBRS.STAT.DEATH:
-					unitLogic.unitGraphic.statusIcon = "img/DEATH.png";
+					unitLogic.statusIcon = "img/DEATH.png";
 					unitLogic.unitGraphic.scale.set(1,0.1,1);
 					break;
 				default:
-					unitLogic.unitGraphic.statusIcon = "img/NORMAL.png";
+					unitLogic.statusIcon = "img/NORMAL.png";
 					break;
 			}
 		}
@@ -136,6 +170,7 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 			unitLogic.regular = unitModel.regular;
 			unitLogic.fury = unitModel.fury;
 			unitLogic.unitGraphic.name = modelID;
+			unitLogic.name = modelID;
 			unitLogic.unitGraphic.refactor(unitModel.height,unitModel.width,unitModel.bodyTexture,unitModel.baseTexture);
 
 		});
@@ -176,9 +211,17 @@ IBRS.TacticalGroup =  function (army) {
 	this.army.container.append(this.container);
 	//jQuery('#inBoardElements').append(this.container);
 	
-	this.actualizeHtml = function(){
-		tacticalGroup.container.empty().append('<tr><th>Group'+this.groupNumber+'</th></tr>');
-	};
+	this.updateHtml = function(){
+			tacticalGroup.container.empty().append('<tr><th>Group'+this.groupNumber+'</th></tr>');	
+			console.log("actualizando group");
+			for (var j = 0 ; j<tacticalGroup.unitList.length;j++){
+				var unit = tacticalGroup.unitList[j];
+				army.container.append(unit.container);
+				unit.updateHtml();
+			}
+
+	
+		};
 	// restart order counting
 	this.actualizeOrders =  function(){
 		tacticalGroup.furyAmount = tacticalGroup.regularAmount = tacticalGroup.irregularAmount = 0;
@@ -195,7 +238,7 @@ IBRS.TacticalGroup =  function (army) {
 	this.insertFromData = function(data) {
 		tacticalGroup.groupNumber = data.groupNumber;
 			
-		tacticalGroup.actualizeHtml();
+		tacticalGroup.updateHtml();
 		for (var i=0;i<data.unitList.length;i++){
 			var newUnit = new IBRS.UnitLogic(tacticalGroup);
 			newUnit.insertFromData(data.unitList[i]);
@@ -238,8 +281,20 @@ IBRS.Army = function(player){
 	
 	this.player.game.container.append(this.container);
 
-	this.actualizeHtml = function(){
+	/*this.updateHtml = function(){
+
 		army.container.empty().append('<div class="panel-heading">'+army.player.name+'   '+army.faction+'</div>');
+	};*/
+
+	this.updateHtml = function(){
+		army.container.empty().append('<div class="panel-heading">'+army.player.name+'   '+army.faction+'</div>');
+			console.log("actualizando armycontainer");
+			for (var j = 0 ; j<army.tacticalGroupList.length;j++){
+				var group = army.tacticalGroupList[j];
+				army.container.append(group.container);
+				group.updateHtml();
+			}
+		
 	};
 
 	this.addGroup = function(group){
@@ -248,7 +303,7 @@ IBRS.Army = function(player){
 
 	this.insertFromData = function (data) {
 		army.faction = data.faction;
-		army.actualizeHtml();
+		army.updateHtml();
 		for (var i=0;i<data.tacticalGroupList.length;i++){
 			var newTacticalGroup = new IBRS.TacticalGroup(army);
 			newTacticalGroup.insertFromData(data.tacticalGroupList[i]);
@@ -328,7 +383,12 @@ IBRS.Game = function(gameID){
 	this.container = jQuery("#inBoardElements");
 
 	this.updateHtml = function(){
-		game.container.empty();
+		//game.container.empty();
+		for (var i = 0 ; i<2;i++){
+			var army = game.playerList[i].army;
+			game.container.append(army.container);
+			army.updateHtml();
+		}
 	}
 
 	this.loadGameFromDataBase = function(gameID){
@@ -344,6 +404,7 @@ IBRS.Game = function(gameID){
 			}
 			game.events.loadGameEventsFromDataBase(data.gameEventsID);
 			game.gameArea.loadGameAreaFromDataBase(data.gameAreaID);
+			game.updateHtml();
 		});
 	};
 
