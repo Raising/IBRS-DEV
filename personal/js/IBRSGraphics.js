@@ -1,6 +1,11 @@
 ///
+IBRS.refreshObjects = function (){
+        IBRS.actualGraphics.refreshSceneObjects(IBRS.actualGame);
+}
+
 IBRS.Graphics = function(){
     var graphics = this;
+    IBRS.actualGraphics = this;
     this.render = new THREE.WebGLRenderer({premultipliedAlpha:false, alpha:true, antialias: true });
     this.render.autoClear = false;
     this.render.setClearColor(new THREE.Color(0xff0000),0);
@@ -48,15 +53,27 @@ IBRS.Graphics = function(){
     this.camera_Horizonatl_Angle = 0;
     this.camera_Vertical_Angle = Math.PI/3;
     this.camera_target = this.scene;
+    this.sceneObjects = new THREE.Object3D();
+    this.scene.add(this.sceneObjects);
+
+    this.refreshSceneObjects = function(game){
+        graphics.scene.remove(graphics.sceneObjects);
+        graphics.sceneObjects = new THREE.Object3D();
+        graphics.scene.add(graphics.sceneObjects);
+        graphics.addListToScene(game.getMiniatures(),true);
+        graphics.addListToScene(game.getSceneryElementList(),false);
+        
+    };
 
     this.addListToScene= function(list,targeteable){
         for (var i=0;i<list.length;i++){
-            graphics.scene.add(list[i]);
+            graphics.sceneObjects.add(list[i]);
             if (targeteable){
                 graphics.tageteableElementsList.push(list[i]);
             }
         }
     };
+
     this.startScene = function(){
         graphics.SetupUpMouseInteraction(graphics.render.domElement);
         graphics.SetupUpLeapInteraction();
@@ -84,8 +101,9 @@ IBRS.Graphics = function(){
     };
 
     this.insertGameData= function(newGame){
-        graphics.addListToScene(newGame.getMiniatures(),true);
-        graphics.addListToScene(newGame.getSceneryElementList(),false);
+       graphics.refreshSceneObjects(newGame);
+       // graphics.addListToScene(newGame.getMiniatures(),true);
+       // graphics.addListToScene(newGame.getSceneryElementList(),false);
         graphics.reproductor.insertEvents(newGame.events);
         var stringJson = JSON.stringify(newGame.events,null,'\t');
         var blob = new Blob([stringJson], {type: "application/json"});

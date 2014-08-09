@@ -82,11 +82,12 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	
 
 	this.setHtmlInteractions = function(){
-		
+
 		unitLogic.deleteButton.click(function(){
-				console.log("click en delete");
-			unitLogic.tacticalGroup.removeUnit(unitLogic);
-			unitLogic.tacticalGroup.updateHtml();
+		unitLogic.tacticalGroup.removeUnit(unitLogic);
+		unitLogic.tacticalGroup.updateHtml();
+			IBRS.refreshObjects();
+
 		return false});
 
 	    unitLogic.container.click(function(){   
@@ -396,6 +397,7 @@ IBRS.Player = function (game){
 IBRS.Game = function(gameID){
 	var game = this;
 	this.ID = 0 || gameID;
+	IBRS.actualGame = this;
 	this.name ="no name";
 	this.gameArea = new IBRS.GameArea();
 	this.events = new IBRS.GameEvents(this);
