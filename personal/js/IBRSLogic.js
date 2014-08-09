@@ -76,36 +76,43 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	this.statusIcon = "img/NORMAL.png";
 
 	this.container = jQuery('<tr id="'+this.id+'"></tr>');
-    this.container.click(function(){   
-      //  selectorMaterial.opacity = 1;
-    //que hacer cuando se hace click en la tupla de cada miniatura
-    return false;});
 
-    this.container.mouseenter(function(){   
-        unitLogic.unitGraphic.selectorOpacity(0.5);
-    //que hacer cuando se hace click en la tupla de cada miniatura
-    return false;});
+	//this.deleteButton = jQuery('<td><button type="button" class="btn btn-default"><span class="pull-right glyphicon glyphicon-remove-sign"></span></button></td>');
+	this.deleteButton = jQuery('<span class="pull-right glyphicon glyphicon-remove-sign"></span>');
+	
 
-    this.container.mouseleave(function(){   
-        unitLogic.unitGraphic.selectorOpacity(0);
-    //que hacer cuando se hace click en la tupla de cada miniatura
-    return false;});
-    
+	this.setHtmlInteractions = function(){
+		
+		unitLogic.deleteButton.click(function(){
+				console.log("click en delete");
+			unitLogic.tacticalGroup.removeUnit(unitLogic);
+			unitLogic.tacticalGroup.updateHtml();
+		return false});
+
+	    unitLogic.container.click(function(){   
+	         unitLogic.unitGraphic.selectorOpacity(1);
+	   	
+	   		//que hacer cuando se hace click en la tupla de cada miniatura
+	    return false;});
+
+	    unitLogic.container.mouseenter(function(){   
+	        unitLogic.unitGraphic.selectorOpacity(0.5);
+	    //que hacer cuando se hace click en la tupla de cada miniatura
+	    return false;});
+
+	    unitLogic.container.mouseleave(function(){   
+	        unitLogic.unitGraphic.selectorOpacity(0);
+	    //que hacer cuando se hace click en la tupla de cada miniatura
+	    return false;});
+    }
 
 	this.updateHtml = function (){
-         this.container.empty().append('<td>'+unitLogic.name+
+
+        unitLogic.container.empty().append('<td>'+unitLogic.name+
 		'</td><td>'+parseInt(unitLogic.position.x)+':'+parseInt(unitLogic.position.y)+':'+parseInt(unitLogic.position.z)+
-		'</td><td>'+'<img src="'+unitLogic.statusIcon+'" alt="" border=3 height=20 width=20></img>'+'</td>');
+		'</td><td>'+'<img src="'+unitLogic.statusIcon+'" alt="" border=3 height=20 width=20></img>'+'</td>').append(unitLogic.deleteButton);
+		unitLogic.setHtmlInteractions();
 	};
-
-
-
-
-
-
-
-
-
 
 		this.setPosition = function(x,y,z){
 			unitLogic.position.set(x,y,z);
@@ -212,17 +219,31 @@ IBRS.TacticalGroup =  function (army) {
 	//jQuery('#inBoardElements').append(this.container);
 	
 	this.updateHtml = function(){
-			tacticalGroup.container.empty().append('<tr><th>Group'+this.groupNumber+'</th></tr>');	
-			console.log("actualizando group");
+			tacticalGroup.container.empty().append('<tr><th>Group  '+this.groupNumber+'</th></tr>');	
+			
 			for (var j = 0 ; j<tacticalGroup.unitList.length;j++){
 				var unit = tacticalGroup.unitList[j];
-				army.container.append(unit.container);
+				tacticalGroup.container.append(unit.container);
 				unit.updateHtml();
 			}
 
 	
 		};
 	// restart order counting
+	this.removeUnit = function(deletedUnit){
+		var alternateUnitList = [];
+		for (var i = 0; i< tacticalGroup.unitList.length; i++){
+			if (deletedUnit === tacticalGroup.unitList[i]){
+
+			}
+			else{
+				alternateUnitList.push(tacticalGroup.unitList[i]);
+			}
+		}
+		tacticalGroup.unitList=null;
+		tacticalGroup.unitList=alternateUnitList;
+	};
+
 	this.actualizeOrders =  function(){
 		tacticalGroup.furyAmount = tacticalGroup.regularAmount = tacticalGroup.irregularAmount = 0;
 		for (var i = 0; i<unitList.length;i++){
@@ -288,7 +309,6 @@ IBRS.Army = function(player){
 
 	this.updateHtml = function(){
 		army.container.empty().append('<div class="panel-heading">'+army.player.name+'   '+army.faction+'</div>');
-			console.log("actualizando armycontainer");
 			for (var j = 0 ; j<army.tacticalGroupList.length;j++){
 				var group = army.tacticalGroupList[j];
 				army.container.append(group.container);

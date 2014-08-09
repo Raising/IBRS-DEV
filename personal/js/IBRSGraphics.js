@@ -1,7 +1,7 @@
 ///
 IBRS.Graphics = function(){
     var graphics = this;
-    this.render = new THREE.WebGLRenderer({premultipliedAlpha:false, alpha:true});
+    this.render = new THREE.WebGLRenderer({premultipliedAlpha:false, alpha:true, antialias: true });
     this.render.autoClear = false;
     this.render.setClearColor(new THREE.Color(0xff0000),0);
     this.canvasWidth = 1280;
@@ -334,7 +334,7 @@ IBRS.UnitGraphic = function(height,baseDiameter,miniatureTexture,baseTexture,log
             unitGraphic.BaseTextureMap = new THREE.ImageUtils.loadTexture(baseTexture);
             var GeoBase = new THREE.BaseGeometry(baseDiameter*0.45,baseDiameter/2,baseHeight,20,1);
             var GeoLapida = new THREE.LapidaGeometry(baseDiameter*0.8,height,0.3);
-            unitGraphic.TopPiece= new THREE.Mesh(GeoLapida,new THREE.MeshLambertMaterial( { map: unitGraphic.MiniatureTextureMap} ));
+            unitGraphic.TopPiece= new THREE.Mesh(GeoLapida,new THREE.MeshBasicMaterial( { map: unitGraphic.MiniatureTextureMap} ));
             unitGraphic.BasePiece = new THREE.Mesh(GeoBase,
             new THREE.MeshFaceMaterial([
             new THREE.MeshLambertMaterial( { map:unitGraphic.BaseTextureMap}),
@@ -377,7 +377,7 @@ IBRS.TableGraphic = function(dimension,coverTexture){
     this.TableTop = new THREE.Mesh(GeoTop,
         new THREE.MeshFaceMaterial([
             new THREE.MeshLambertMaterial({ map: WoodTextureMap}),
-            new THREE.MeshLambertMaterial({ map: CoverTextureMap} )]));
+            new THREE.MeshBasicMaterial({ map: CoverTextureMap} )]));
     
     this.TableTop.position.set(0,-dimension.y/2,0);
     this.add(this.TableTop);
@@ -402,7 +402,7 @@ IBRS.TableGraphic = function(dimension,coverTexture){
         tableGraphic.TableTop = new THREE.Mesh(GeoTop,
             new THREE.MeshFaceMaterial([
                 new THREE.MeshLambertMaterial({ map: WoodTextureMap}),
-                new THREE.MeshLambertMaterial({ map: CoverTextureMap} )]));
+                new THREE.MeshBasicMaterial({ map: CoverTextureMap} )]));
     
         tableGraphic.TableTop.position.set(0,-dimension.y/2,0);
         tableGraphic.add(tableGraphic.TableTop);
