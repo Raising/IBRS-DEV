@@ -79,31 +79,42 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 
 	//this.deleteButton = jQuery('<td><button type="button" class="btn btn-default"><span class="pull-right glyphicon glyphicon-remove-sign"></span></button></td>');
 	this.deleteButton = jQuery('<span class="pull-right glyphicon glyphicon-remove-sign"></span>');
-	
+	//cambiar el glyficon
+	this.modifyButton = jQuery('<span class="pull-right glyphicon glyphicon-remove-sign"></span>');
+		
+	this.delete = function(){
+		unitLogic.tacticalGroup.removeUnit(unitLogic);
+		unitLogic.tacticalGroup.updateHtml();
+	}
 
 	this.setHtmlInteractions = function(){
 
+		//click en el boton de eliminar
 		unitLogic.deleteButton.click(function(){
-		unitLogic.tacticalGroup.removeUnit(unitLogic);
-		unitLogic.tacticalGroup.updateHtml();
+			unitLogic.delete();
 			IBRS.refreshObjects();
-
 		return false});
 
+
+		//click en el boton de modificar
+		unitLogic.modifyButton.click(function(){
+			//TO
+		return false});
+
+
+	   	//que hacer cuando se hace click en la tupla de cada miniatura
 	    unitLogic.container.click(function(){   
 	         unitLogic.unitGraphic.selectorOpacity(1);
-	   	
-	   		//que hacer cuando se hace click en la tupla de cada miniatura
 	    return false;});
 
+	    //que hacer cuando entra el raton en la tupla de cada miniatura
 	    unitLogic.container.mouseenter(function(){   
 	        unitLogic.unitGraphic.selectorOpacity(0.5);
-	    //que hacer cuando se hace click en la tupla de cada miniatura
 	    return false;});
 
+	   	//que hacer cuando se SALE EL RATON DE  la tupla de cada miniatura
 	    unitLogic.container.mouseleave(function(){   
 	        unitLogic.unitGraphic.selectorOpacity(0);
-	    //que hacer cuando se hace click en la tupla de cada miniatura
 	    return false;});
     }
 
@@ -219,17 +230,52 @@ IBRS.TacticalGroup =  function (army) {
 	this.army.container.append(this.container);
 	//jQuery('#inBoardElements').append(this.container);
 	
+this.deleteButton = jQuery('<span class="pull-right glyphicon glyphicon-remove-sign"></span>');
+this.addTroopButton = jQuery('<span class="pull-right glyphicon glyphicon-remove-sign"></span>');
+
 	this.updateHtml = function(){
-			tacticalGroup.container.empty().append('<tr><th>Group  '+this.groupNumber+'</th></tr>');	
+			tacticalGroup.container.empty().append('<tr><th>Group  '+this.groupNumber+'</th></tr>').children().children().append(tacticalGroup.deleteButton).append(tacticalGroup.addTroopButton);
 			
 			for (var j = 0 ; j<tacticalGroup.unitList.length;j++){
 				var unit = tacticalGroup.unitList[j];
 				tacticalGroup.container.append(unit.container);
 				unit.updateHtml();
 			}
-
+			tacticalGroup.setHtmlInteractions();
 	
 		};
+
+	this.delete = function(){
+
+			for (var i =0;i< tacticalGroup.unitList.length;i++){
+				var unitSelected = tacticalGroup.unitList[i];
+				unitSelected.delete();
+			}
+			tacticalGroup.army.removeGroup(tacticalGroup);
+			tacticalGroup.army.updateHtml();
+	}	
+
+	this.setHtmlInteractions = function(){
+
+		//click en el boton de eliminar
+		tacticalGroup.deleteButton.click(function(){
+			tacticalGroup.delete();
+			tacticalGroup.army.removeGroup(tacticalGroup);
+			tacticalGroup.army.updateHtml();
+			IBRS.refreshObjects();
+		return false});
+
+		//click en el boton de modificar
+		tacticalGroup.addTroopButton.click(function(){
+			//TODO
+		return false});
+
+
+	  
+    }	
+
+	
+
 	// restart order counting
 	this.removeUnit = function(deletedUnit){
 		var alternateUnitList = [];
@@ -317,6 +363,22 @@ IBRS.Army = function(player){
 			}
 		
 	};
+
+	this.removeGroup = function(deletedGroup){
+		var alternateGroupList = [];
+		for (var i = 0; i< army.tacticalGroupList.length; i++){
+			if (deletedGroup === army.tacticalGroupList[i]){
+
+			}
+			else{
+				alternateGroupList.push(army.tacticalGroupList[i]);
+			}
+		}
+		army.tacticalGroupList=null;
+		army.tacticalGroupList=alternateGroupList;
+	};
+
+
 
 	this.addGroup = function(group){
 		army.tacticalGroupList.push(group);

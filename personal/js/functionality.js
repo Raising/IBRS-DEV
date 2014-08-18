@@ -78,7 +78,7 @@ jQuery(function(){
 				});
 
 				jQuery("ul.initialStateEditor > li > a").click(function(){	
-	
+					console.log("initialstate editor");
 					var thisMenu =jQuery(this);
 					thisMenu.parent().parent().children().removeClass("active");
 					thisMenu.parent().addClass("active");
