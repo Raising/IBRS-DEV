@@ -211,12 +211,17 @@ var izqPresente = false;
 var derPresente = false;
 var izqDisplay = jQuery("#leap_hand_izq");
 var derDisplay = jQuery("#leap_hand_der");
+var menuArray = ["#menu_search","#menu_initial","#menu_events","#reproductor"];
+var tabArray =["#tab0","#tab1","#tab2","#tab3"];
+var actualMenu = 0;
+var fullScreen = false;
      Lctrl = Leap.loop(options, function(frame) {
             /*if (lastTimeSelection === undefined){
                 var lastTimeSelection = -100;   
             }*/
             izqPresente = false;
             derPresente = false;
+
 
             if (frame.id%2 == 0){
 
@@ -260,7 +265,7 @@ var derDisplay = jQuery("#leap_hand_der");
                /* if (playTreshold == undefined || playTreshold < 0){
                     var playTreshold = -100;   
                 }*/
-                if (playTreshold < Lctrl.frame(0).id-20){
+                if (playTreshold < Lctrl.frame(0).id-50){
                     frame0 = Lctrl.frame(0);
                       if (frame0.hands.length == 2 &&  Lctrl.frame(10).hands.length == 2){
                         
@@ -273,48 +278,114 @@ var derDisplay = jQuery("#leap_hand_der");
                             }
                         }
                     } 
+                       if (frame0.hands.length > 0 && 
+                        Lctrl.frame(0).hands.length ==  Lctrl.frame(20).hands.length ){
+                       // console.log(frame0);
+                        for (var i = 0; i < Math.min(Lctrl.frame(20).hands.length,Lctrl.frame(0).hands.length,Lctrl.frame(10).hands.length,Lctrl.frame(5).hands.length); i++) {
+                            if (Lctrl.frame(0).hands[i].fingers[1].tipPosition[2] > -150 && 
+                                Lctrl.frame(10).hands[i].fingers[1].tipPosition[2] < -150 && 
+                                Lctrl.frame(20).hands[i].fingers[1].tipPosition[2] > -150   ){
+                                playTreshold = frame0.id;
+                                if (Lctrl.frame(10).hands[i].fingers[1].tipPosition[0] > 0){
+                                            actualMenu = (actualMenu+1)%4;
+                                        }else{
+                                            actualMenu = (actualMenu+3)%4;
+                                        }
+                                        ////
+                                        var thisMenu =jQuery(tabArray[actualMenu]);
+                                        thisMenu.parent().parent().children().removeClass("active");
+                                        thisMenu.parent().addClass("active");
+                                        ///
+                                        jQuery("#menu_area").slideUp(function(){
+                                        jQuery("#menu_area > div").appendTo(jQuery("#hidden_storage"));
+                                        jQuery(menuArray[actualMenu]).appendTo(jQuery("#menu_area"));
+                                        if (menuArray[actualMenu] == "#menu_initial" || menuArray[actualMenu] == "#menu_events" ){jQuery("#canvas").appendTo(jQuery("#menu_area"));}
+                                            }).slideDown();
 
-                    if (frame0.hands.length == 2 &&  Lctrl.frame(10).hands.length == 2){
-                        console.log(frame0.fingers[1].tipPosition);
-                        distanceIndices = distance3D(frame0.fingers[1].tipPosition,frame0.fingers[6].tipPosition);
-                        distancePulgares = distance3D(frame0.fingers[0].tipPosition,frame0.fingers[5].tipPosition);
-                        distanceCruzado1 = distance3D(frame0.fingers[1].tipPosition,frame0.fingers[5].tipPosition);
-                        distanceCruzado2 = distance3D(frame0.fingers[0].tipPosition,frame0.fingers[6].tipPosition);
-                        
-                        // console.log("distancias, indices: "+ distanceIndices+ "  pulgares: "+ distancePulgares); 
-                           if (distanceIndices<30 && distancePulgares<30 && playTreshold < (frame0.id-50)){
-                            distanceIndices10 = distance3D(Lctrl.frame(10).fingers[1].tipPosition,Lctrl.frame(10).fingers[6].tipPosition);
-                            distancePulgares10 = distance3D(Lctrl.frame(10).fingers[0].tipPosition,Lctrl.frame(10).fingers[5].tipPosition);
-                            
-                                if(distanceIndices10>80 && distancePulgares10>80){
-                                    playTreshold = frame0.id; 
-                                    jQuery("#fullscreen-canvas").hide();        
-                                    jQuery("#resize-canvas").show();
-                                    jQuery("#cabecera").slideUp();
-                                    jQuery("#tabs").slideUp();
-                                    jQuery("#menu_area").children().slideUp( function(){jQuery("#canvas").queue(function(){jQuery( this ).removeClass("col-md-6").addClass("col-md-12").dequeue();}).slideDown("slow");});
-                                    
-                                 }
+                           }
+                           //console.log(Lctrl.frame(0).hands[i].fingers[1].tipPosition[1]+"  "+Lctrl.frame(0).hands[i].fingers[2].tipPosition[1]);
+                            if (Lctrl.frame(0).hands[i].fingers[1].tipPosition[1] < (Lctrl.frame(0).hands[i].fingers[2].tipPosition[1]-5) &&
+                                Lctrl.frame(5).hands[i].fingers[1].tipPosition[1] > (Lctrl.frame(5).hands[i].fingers[2].tipPosition[1]+5) &&
+                                Lctrl.frame(10).hands[i].fingers[1].tipPosition[1] < (Lctrl.frame(10).hands[i].fingers[2].tipPosition[1]-5) 
+                                ){
+                                 playTreshold = frame0.id;
+                                graphics.pauseGame(); 
+                            }
+                          // console.log( distance3D(Lctrl.frame(0).hands[i].fingers[1].tipPosition,Lctrl.frame(0).hands[i].fingers[2].tipPosition));
+                            if (distance3D(Lctrl.frame(0).hands[i].fingers[1].tipPosition,Lctrl.frame(0).hands[i].fingers[2].tipPosition) <25 &&
+                               distance3D(Lctrl.frame(5).hands[i].fingers[1].tipPosition,Lctrl.frame(5).hands[i].fingers[2].tipPosition) >75){
+                                console.log("pause/play");
+                                 playTreshold = frame0.id;
+                                graphics.pauseGame(); 
                             }
 
-                            if ((distanceCruzado1<30 || distanceCruzado2<30) && playTreshold < (frame0.id-50)){
-                            distanceCruzado1_10 = distance3D(Lctrl.frame(10).fingers[1].tipPosition,Lctrl.frame(10).fingers[5].tipPosition);
-                            distanceCruzado2_10 = distance3D(Lctrl.frame(10).fingers[0].tipPosition,Lctrl.frame(10).fingers[6].tipPosition);
-                            
-                                if(distanceCruzado1_10>80 || distanceCruzado2_10>80){
-                                    playTreshold = frame0.id; 
-                                    jQuery("#resize-canvas").hide();        
-                                    jQuery("#fullscreen-canvas").show();
-                                    jQuery("#menu_area").children().slideDown();
-                                    jQuery("#tabs").slideDown("slow");
-                                    jQuery("#cabecera").slideDown("slow");
-                                    jQuery("#canvas").slideUp(function() {  jQuery( "#canvas").removeClass("col-md-12").addClass("col-md-6");}).slideDown();
-                                 
-                                 }
-                            }
+                       }
+                   }
 
 
-                    }            
+                        if (frame0.hands.length == 2 &&  Lctrl.frame(10).hands.length == 2){
+                          //  distanceIndices = distance3D(frame0.fingers[1].tipPosition,frame0.fingers[6].tipPosition);
+                           // distancePulgares = distance3D(frame0.fingers[0].tipPosition,frame0.fingers[5].tipPosition);
+                            distanceCruzado1 = distance3D(frame0.fingers[1].tipPosition,frame0.fingers[5].tipPosition);
+                            distanceCruzado2 = distance3D(frame0.fingers[0].tipPosition,frame0.fingers[6].tipPosition);
+                           
+                            //tap
+                         
+
+                            // console.log("distancias, indices: "+ distanceIndices+ "  pulgares: "+ distancePulgares); 
+                          /*     if (distanceIndices<30 && distancePulgares<30 && playTreshold < (frame0.id-50)){
+                                distanceIndices10 = distance3D(Lctrl.frame(10).fingers[1].tipPosition,Lctrl.frame(10).fingers[6].tipPosition);
+                                distancePulgares10 = distance3D(Lctrl.frame(10).fingers[0].tipPosition,Lctrl.frame(10).fingers[5].tipPosition);
+                                
+                                    if(distanceIndices10>80 && distancePulgares10>80){
+                                        playTreshold = frame0.id; 
+                                        jQuery("#fullscreen-canvas").hide();        
+                                        jQuery("#resize-canvas").show();
+                                        jQuery("#cabecera").slideUp();
+                                        jQuery("#tabs").slideUp();
+                                        jQuery("#menu_area").children().slideUp( function(){jQuery("#canvas").queue(function(){jQuery( this ).removeClass("col-md-6").addClass("col-md-12").dequeue();}).slideDown("slow");});
+                                        
+                                     }
+                                }*/
+
+                                if ((distanceCruzado1<30 || distanceCruzado2<30) && playTreshold < (frame0.id-50)){
+                                distanceCruzado1_10 = distance3D(Lctrl.frame(10).fingers[1].tipPosition,Lctrl.frame(10).fingers[5].tipPosition);
+                                distanceCruzado2_10 = distance3D(Lctrl.frame(10).fingers[0].tipPosition,Lctrl.frame(10).fingers[6].tipPosition);
+                                
+                                    if(distanceCruzado1_10>80 || distanceCruzado2_10>80){
+                                        playTreshold = frame0.id; 
+                                        if (fullScreen){
+                                        
+                                            jQuery("#resize-canvas").hide();        
+                                            jQuery("#fullscreen-canvas").show();
+                                            jQuery("#menu_area").children().slideDown();
+                                            jQuery("#tabs").slideDown("slow");
+                                            jQuery("#cabecera").slideDown("slow");
+                                            jQuery("#canvas").slideUp(function() {  jQuery( "#canvas").removeClass("col-md-12").addClass("col-md-6");}).slideDown();
+                                            fullScreen = false;
+                                        }else{
+                                             jQuery("#fullscreen-canvas").hide();        
+                                            jQuery("#resize-canvas").show();
+                                            jQuery("#cabecera").slideUp();
+                                            jQuery("#tabs").slideUp();
+                                            jQuery("#menu_area").children().slideUp( function(){jQuery("#canvas").queue(function(){jQuery( this ).removeClass("col-md-6").addClass("col-md-12").dequeue();}).slideDown("slow");});
+                                            fullScreen = true;
+                                        }
+
+                                     }
+                                }
+                                 //console.log(frame0);
+/*
+                                if (frame0.fingers[1].tipPosition[0] < frame0.fingers[6].tipPosition[0] && playTreshold< (frame0.id-50)){
+                                   
+                                    if (Lctrl.frame(10).fingers[1].tipPosition[0] > Lctrl.frame(10).fingers[6].tipPosition[0]+80){
+                                        playTreshold  = frame0;
+                                        
+                                    }
+                                }
+*/
+
+                        }            
                 }
                 if(!izqPresente){
                     izqDisplay.css( "background-color", "lightgrey" ).empty();
