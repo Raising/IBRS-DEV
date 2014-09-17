@@ -38,8 +38,8 @@ IBRS.Graphics = function(){
 
     //Puntero LEAP MOTION
     //cambiar la opacidad para activar el puntero del leap motion
-    var spherePointer = new THREE.Mesh(new THREE.SphereGeometry( 1.5, 12, 12 ),new THREE.MeshBasicMaterial( {color: 0xff5500,wireframe:false,opacity: 0,transparent: true}));
-    var cylinderPointer = new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.2,300),new THREE.MeshBasicMaterial( {color: 0xff5500,wireframe:false,opacity: 0,transparent: true}));
+    var spherePointer = new THREE.Mesh(new THREE.SphereGeometry( 1, 12, 12 ),new THREE.MeshBasicMaterial( {color: 0xff5500,wireframe:false,opacity: 0.7,transparent: true}));
+    var cylinderPointer = new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.2,300),new THREE.MeshBasicMaterial( {color: 0xff5500,wireframe:false,opacity: 0.7,transparent: true}));
     this.pointer = new THREE.Object3D();
     this.pointer.add(spherePointer);
     this.pointer.add(cylinderPointer);
@@ -188,46 +188,142 @@ IBRS.Graphics = function(){
         }
         return closest;
     }
+    var carpDistance =  function(frame){
+        return Math.sqrt(Math.pow(frame.fingers[0].mcpPosition[0]-frame.fingers[5].mcpPosition[0],2)+
+                                        Math.pow(frame.fingers[0].mcpPosition[1]-frame.fingers[5].mcpPosition[1],2)+
+                                        Math.pow(frame.fingers[0].mcpPosition[2]-frame.fingers[5].mcpPosition[2],2));
+    }
+    var distance3D = function(pointA,pointB){
+        return Math.sqrt(Math.pow(pointA[0]-pointB[0],2)+
+                                        Math.pow(pointA[1]-pointB[1],2)+
+                                        Math.pow(pointA[2]-pointB[2],2));
+   }
+
     this.SetupUpLeapInteraction = function(){
+     
         var options = { enableGestures: false }
         var lastPosition = [0,0,0];
-        
+       
 
-        Leap.loop(options, function(frame) {
-            var lastTimeSelection = -100;
+var lastTimeSelection = -100;
+var playTreshold = -100;
+var izqPresente = false;
+var derPresente = false;
+var izqDisplay = jQuery("#leap_hand_izq");
+var derDisplay = jQuery("#leap_hand_der");
+     Lctrl = Leap.loop(options, function(frame) {
+            /*if (lastTimeSelection === undefined){
+                var lastTimeSelection = -100;   
+            }*/
+            izqPresente = false;
+            derPresente = false;
+
             if (frame.id%2 == 0){
+
+
                 for (var i = frame.hands.length - 1; i >= 0; i--) {
                     var hand = frame.hands[i];
            
                     if (hand.type == "left"){//mano de manipulacion de camara
-                        
+                        izqPresente = true; 
+                        izqDisplay.css( "background-color", "green" ).empty().append(Math.round(hand.confidence * 100) / 100 );
                         var actualPosition =  hand.fingers[0].dipPosition;
-                        if (hand.confidence > 0.5 && hand.pinchStrength<1){ //&& hand.grabStrength < 0.9){
+                        if (hand.confidence > 0.4 && hand.pinchStrength<0.9){ //&& hand.grabStrength < 0.9){
                             lastPosition =  actualPosition;
                         }
-                        else if (hand.confidence > 0.5 && hand.pinchStrength==1){
+                        else if (hand.confidence > 0.4 && hand.pinchStrength>0.9){
                           graphics.CameraReposition((actualPosition[2]-lastPosition[2]),(lastPosition[0]-actualPosition[0])/100,(lastPosition[1]-actualPosition[1])/100);
                           lastPosition =  actualPosition;
                         }
                     
                     }
                     else if(hand.type = "right"){//mano de puntero, se podria partir el espacio de interaccion y suponer que la mano derecha está solo en ese eje
+                        derPresente = true;
+                            derDisplay.css( "background-color", "green" ).empty().append(Math.round(hand.confidence * 100) / 100 );
                        
                             var indicePos = hand.fingers[0].dipPosition;
                             var sinA =  Math.sin(graphics.camera_Horizonatl_Angle);
                             var cosA =  Math.cos(graphics.camera_Horizonatl_Angle);
                             graphics.pointer.position.set((cosA*indicePos[2]+sinA*(indicePos[0]-80))*0.005*graphics.camera_Distance,indicePos[1]*0.2-20,-(cosA*(indicePos[0]-80)-sinA*indicePos[2])*0.005*graphics.camera_Distance);
                         
-                        if (hand.confidence > 0.5 && hand.pinchStrength==1 && lastTimeSelection < (frame.id-20)){
+                        if (hand.confidence > 0.4 && hand.pinchStrength>0.9 && lastTimeSelection < (frame.id-20)){
                                    var elementSelected = graphics.GetClosestTargeteableElement(graphics.pointer.position);
                             elementSelected.onElementClick();
-                            console.log("eleigiendo elemento")
+                            console.log("eligiendo elemento")
                             graphics.CameraReposition(0,0,0,elementSelected);
                             lastTimeSelection = frame.id;
                         }
                     }
                 }
-            }    
+                // Gestos
+                //plaY/pause, juntar muñecas
+               /* if (playTreshold == undefined || playTreshold < 0){
+                    var playTreshold = -100;   
+                }*/
+                if (playTreshold < Lctrl.frame(0).id-20){
+                    frame0 = Lctrl.frame(0);
+                      if (frame0.hands.length == 2 &&  Lctrl.frame(10).hands.length == 2){
+                        
+                        cistance = carpDistance(frame0);
+                           if (cistance<40 && playTreshold < (frame0.id-50)){
+                            
+                            if(carpDistance(Lctrl.frame(10))>80){
+                                playTreshold = frame0.id; 
+                                graphics.pauseGame();    
+                            }
+                        }
+                    } 
+
+                    if (frame0.hands.length == 2 &&  Lctrl.frame(10).hands.length == 2){
+                        console.log(frame0.fingers[1].tipPosition);
+                        distanceIndices = distance3D(frame0.fingers[1].tipPosition,frame0.fingers[6].tipPosition);
+                        distancePulgares = distance3D(frame0.fingers[0].tipPosition,frame0.fingers[5].tipPosition);
+                        distanceCruzado1 = distance3D(frame0.fingers[1].tipPosition,frame0.fingers[5].tipPosition);
+                        distanceCruzado2 = distance3D(frame0.fingers[0].tipPosition,frame0.fingers[6].tipPosition);
+                        
+                        // console.log("distancias, indices: "+ distanceIndices+ "  pulgares: "+ distancePulgares); 
+                           if (distanceIndices<30 && distancePulgares<30 && playTreshold < (frame0.id-50)){
+                            distanceIndices10 = distance3D(Lctrl.frame(10).fingers[1].tipPosition,Lctrl.frame(10).fingers[6].tipPosition);
+                            distancePulgares10 = distance3D(Lctrl.frame(10).fingers[0].tipPosition,Lctrl.frame(10).fingers[5].tipPosition);
+                            
+                                if(distanceIndices10>80 && distancePulgares10>80){
+                                    playTreshold = frame0.id; 
+                                    jQuery("#fullscreen-canvas").hide();        
+                                    jQuery("#resize-canvas").show();
+                                    jQuery("#cabecera").slideUp();
+                                    jQuery("#tabs").slideUp();
+                                    jQuery("#menu_area").children().slideUp( function(){jQuery("#canvas").queue(function(){jQuery( this ).removeClass("col-md-6").addClass("col-md-12").dequeue();}).slideDown("slow");});
+                                    
+                                 }
+                            }
+
+                            if ((distanceCruzado1<30 || distanceCruzado2<30) && playTreshold < (frame0.id-50)){
+                            distanceCruzado1_10 = distance3D(Lctrl.frame(10).fingers[1].tipPosition,Lctrl.frame(10).fingers[5].tipPosition);
+                            distanceCruzado2_10 = distance3D(Lctrl.frame(10).fingers[0].tipPosition,Lctrl.frame(10).fingers[6].tipPosition);
+                            
+                                if(distanceCruzado1_10>80 || distanceCruzado2_10>80){
+                                    playTreshold = frame0.id; 
+                                    jQuery("#resize-canvas").hide();        
+                                    jQuery("#fullscreen-canvas").show();
+                                    jQuery("#menu_area").children().slideDown();
+                                    jQuery("#tabs").slideDown("slow");
+                                    jQuery("#cabecera").slideDown("slow");
+                                    jQuery("#canvas").slideUp(function() {  jQuery( "#canvas").removeClass("col-md-12").addClass("col-md-6");}).slideDown();
+                                 
+                                 }
+                            }
+
+
+                    }            
+                }
+                if(!izqPresente){
+                    izqDisplay.css( "background-color", "lightgrey" ).empty();
+                }
+                if(!derPresente){
+                   derDisplay.css( "background-color", "lightgrey" ).empty();
+                }   
+            }
+
               // Showcase some new V2 features
         });
     }
