@@ -10,7 +10,10 @@
 		<script>jQuery.noConflict();</script>
 		
 		<script type="text/javascript" src="../libs/js/three.js"></script>
+<!--	
+		
 		<script type="text/javascript" src="../libs/js/leap-0.6.0-beta2.js"></script>
+-->
 		<script type="text/javascript" src="../personal/js/CustomGeometries.js"></script>
 		<script type="text/javascript" src="../personal/js/IBRSLogic.js"></script>
 		<script type="text/javascript" src="../personal/js/IBRSGraphics.js"></script>
@@ -34,7 +37,7 @@
     <body>
 
     	<div id="main_container" class="background">
-    		<div id="canvas_container" class="canvas">
+    		<div id="canvas" class="canvas">
 
     		</div>
 
@@ -62,65 +65,100 @@
     		
 
 
-    		<div id="Scenery"   class="noAuto topSlider" >
+    		<div id="scenery_tray"   class="noAuto topSlider" >
+    			
+    			<div id="left_Scenery_Buttons" class="topButtonContainer">
+    					<button id="buttonLEFT_scenery" type="button" class="centeredVerticalButton"> < 
+ 	 					</button>
+    			</div>
 
+    			<div id="right_Scenery_Buttons" class="topButtonContainer">
+    				<button id="buttonRIGHT_scenery" type="button" class="centeredVerticalButton"> > 
+ 	 					</button>
+ 	 				
+ 	 					<button id="retract_scenery" type="button" class="topExpandButton"> +
+ 	 					</button>
+    			</div>
     		</div>
 
 
     		<div id="editorTools" class="noAuto bottomSlider" >
+    			EDITOR TOOLS
+    		</div>
 
+    		<div id="deployTools" class="noAuto bottomSlider" >
+    			DEPLOY TOOLS
+    		</div>
+
+    		<div id="timeTracker" class="noAuto topSlider reduced" >
+    			TIME TRACKER
     		</div>
 
     		<div id="reproductorTools" class="noAuto bottomSlider" >
-
+    			REPRODUCTOR TOOLS
     		</div>
 
 
     		<div id="leftGameFilter" class="noAuto leftSlider">
 				
-
+    			FILTRO IZQ
     		</div>
 
 
     		<div id="rightGameFilter" class="noAuto rightSlider">
-    			
+    			FILTRO DER
     		</div>
 
 
-    		<div id="leftTroop" class="noAuto leftSlider">
+
+    		<div id="leftTroop_tray" class="noAuto leftSlider">
     				<div id="left_Troop_Head" class="leftTopButtons sideButtons">
-    					<button id="buttonUP_troop_left" type="button" class="centeredButton"> A 
+    					<button id="buttonUP_troop_left" type="button" class="centeredHorizontalButton"> A 
  	 					</button>
  	 				
- 	 					<button id="buttonUP_troop_left" type="button" class="leftExpandButton"> -->
+ 	 					<button id="retract_troop_left" type="button" class="leftExpandButton"> <-->
  	 					</button>
     				</div>
     				<div class="sideBody leftBody"></div>
  					
  					<div id="left_Troop_Bottom" class="leftBottomButtons sideButtons">
- 						<button id="buttonDOWN_troop_left" type="button" class="centeredButton"> V
+ 						<button id="buttonDOWN_troop_left" type="button" class="centeredHorizontalButton"> V
  	 					</button>
  					</div>
     		</div>
 
 
-    		<div id="rightTroop" class="noAuto rightSlider">
+    		<div id="rightTroop_tray" class="noAuto rightSlider">
     				 <div id="right_Troop_Head" class="rightTopButtons sideButtons">
-    				 	<button id="buttonUP_troop_right" type="button" class="centeredButton"> A 
+    				 	<button id="buttonUP_troop_right" type="button" class="centeredHorizontalButton"> A 
  	 					</button>
  	 				
- 	 					<button id="buttonUP_troop_right" type="button" class="rightExpandButton"> <--
+ 	 					<button id="retract_troop_right" type="button" class="rightExpandButton"> <-->
  	 					</button>
     				 </div>
     				 <div class="sideBody rightBody"></div>
     				  <div id="right_Troop_Bottom" class="rightBottomButtons sideButtons">
-    				  		<button id="buttonDOWN_troop_right" type="button" class="centeredButton"> V
+    				  		<button id="buttonDOWN_troop_right" type="button" class="centeredHorizontalButton"> V
     				  </div>
     		</div>
 
 
+
+
+
     		<div id="searchTools" class="noAuto bottomSlider" >
-				
+				SEARCH TOOLS
+    		</div>
+
+    		<div id="top_left_corner" class="noAuto">
+    			<button id="back_button" type="button" class="control_button"> BACK
+ 	 			</button>
+    		</div>
+
+
+    		<div id="top_right_corner" class="noAuto">
+    			<button id="next_button" type="button" class="control_button"> NEXT
+ 	 			</button>
     		</div>
     	</div>
 

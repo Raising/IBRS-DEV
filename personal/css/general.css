@@ -7,7 +7,7 @@ body{
   border-style: solid;
   border-width: 2px;
   border-color: #27408B;
-  box-shadow:  2px 2px 5px #24F;
+  box-shadow:  2px 2px 5px #24A;
 }
 
 .background{
@@ -32,7 +32,7 @@ body{
   border-radius:0px 15px 15px 0px;
   width: 19%;
   height: 85%;
-  left: -1%;
+  left: -20%;
   top: 10%;
   background:#3A5FCD;
 
@@ -44,7 +44,7 @@ body{
    border-radius:15px 0px 0px 15px;
   width: 19%;
   height: 85%;
-  right: -1%;
+  right: -20%;
   top: 10%;
   background:#3A5FCD;
   
@@ -57,8 +57,12 @@ body{
   width: 60%;
   height: 19%;
   left:20%;
-  top: -1%;
+  top: -20%;
   background:#3A5FCD;
+}
+
+.reduced{
+  height: 9%;
 }
 
 .bottomSlider{
@@ -66,19 +70,39 @@ body{
   width: 60%;
   height: 19%;
   left: 20%;
-  bottom: -1%;
+  bottom: -20%;
   background:#3A5FCD;
 }
 
 .canvas{
   position: absolute;
-  width: 90%;
-  height: 90%;
-  left: 5%;
-  bottom: 5%;
+  width: 100%;
+  height: 100%;
+  left: 0%;
+  top: 10%;
   background:#5886FF;
   border-width: 2px;
   border-color: #6896FF;
+  opacity: 0 ;
+}
+
+
+#top_left_corner{
+  border-radius:0px 0px 15px 0px;
+  width: 19%;
+  height: 9%;
+  left:-20%;
+  top: -20%;
+  background:#3A5FCD;
+}
+
+#top_right_corner{
+  border-radius:0px 0px 0px 15px;
+  width: 19%;
+  height: 9%;
+  right:-20%;
+  top: -20%;
+  background:#3A5FCD;
 }
 
 .leftTopButtons{
@@ -126,13 +150,22 @@ body{
   left: 1%;
 } 
 
-.centeredButton{
+.centeredHorizontalButton{
   position:absolute;
   width: 60%;
   height: 100%;
   background: #45aa45;
   top:0%;
   left: 20%;
+}
+
+.centeredVerticalButton{
+  position:absolute;
+  width: 100%;
+  height: 60%;
+  background: #45aa45;
+  top:20%;
+  left: 0%;
 }
 
 .leftExpandButton{
@@ -153,6 +186,17 @@ body{
   background: #80aa45;
   top:0%;
   left: 0%;
+
+}
+
+.topExpandButton{
+  position:absolute;
+  border-radius:0px 0px 11px 0px;
+  width: 100%;
+  height: 20%;
+  background: #80aa45;
+  bottom:0%;
+  right: 0%;
 
 }
 
@@ -193,4 +237,34 @@ position:absolute;
   top:5%;
   left: 10%; 
    background: #79F;
+}
+
+
+.control_button{
+position:absolute;
+  border-radius: 10px;
+  width: 80%;
+  height: 75%;
+  top:15%;
+  left: 10%; 
+  background: #79F;
+
+}
+
+#left_Scenery_Buttons{
+  border-radius:0px 0px 0px 11px;
+  top:0.75%;
+  left: 0.25%;
+}
+#right_Scenery_Buttons{
+  border-radius:0px 0px 11px 0px;
+  bottom:0.75%;
+  right: 0.25%;
+}
+
+.topButtonContainer{
+  position:absolute;
+  width: 3.5%;
+  height: 98%;
+  background: #CCCCFF;
 }

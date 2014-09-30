@@ -37,14 +37,15 @@ IBRS.Graphics = function(){
    
 
     //Puntero LEAP MOTION
-    //cambiar la opacidad para activar el puntero del leap motion
+  
+  /*  //cambiar la opacidad para activar el puntero del leap motion
     var spherePointer = new THREE.Mesh(new THREE.SphereGeometry( 1, 12, 12 ),new THREE.MeshBasicMaterial( {color: 0xff5500,wireframe:false,opacity: 0.7,transparent: true}));
     var cylinderPointer = new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.2,300),new THREE.MeshBasicMaterial( {color: 0xff5500,wireframe:false,opacity: 0.7,transparent: true}));
     this.pointer = new THREE.Object3D();
     this.pointer.add(spherePointer);
     this.pointer.add(cylinderPointer);
     this.scene.add(this.pointer);
-        
+    */    
 
     this.tageteableElementsList = [];//tienen uqe ser objetos 3d de THREE
 
@@ -141,7 +142,7 @@ IBRS.Graphics = function(){
             graphics.camera_Distance = Math.max(graphics.camera_Distance+distance_inc,0.2);
             graphics.camera_Horizonatl_Angle += hoizontalAngle_inc;
             graphics.camera_Vertical_Angle += verticalAngle_inc;
-            graphics.camera_Vertical_Angle = Math.max(0,Math.min(Math.PI,graphics.camera_Vertical_Angle));
+            graphics.camera_Vertical_Angle = Math.max(Math.PI/4,Math.min(Math.PI*3/7,graphics.camera_Vertical_Angle));
             var current_target_position = new THREE.Vector3();
             current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
             graphics.camera.position.set(
@@ -215,11 +216,11 @@ var menuArray = ["#menu_search","#menu_initial","#menu_events","#reproductor"];
 var tabArray =["#tab0","#tab1","#tab2","#tab3"];
 var actualMenu = 0;
 var fullScreen = false;
-     Lctrl = Leap.loop(options, function(frame) {
+ /*    Lctrl = Leap.loop(options, function(frame) {
             /*if (lastTimeSelection === undefined){
                 var lastTimeSelection = -100;   
             }*/
-            izqPresente = false;
+   /*         izqPresente = false;
             derPresente = false;
 
 
@@ -265,7 +266,7 @@ var fullScreen = false;
                /* if (playTreshold == undefined || playTreshold < 0){
                     var playTreshold = -100;   
                 }*/
-                if (playTreshold < Lctrl.frame(0).id-50){
+/*                if (playTreshold < Lctrl.frame(0).id-50){
                     frame0 = Lctrl.frame(0);
                       if (frame0.hands.length == 2 &&  Lctrl.frame(10).hands.length == 2){
                         
@@ -332,22 +333,7 @@ var fullScreen = false;
                             //tap
                          
 
-                            // console.log("distancias, indices: "+ distanceIndices+ "  pulgares: "+ distancePulgares); 
-                          /*     if (distanceIndices<30 && distancePulgares<30 && playTreshold < (frame0.id-50)){
-                                distanceIndices10 = distance3D(Lctrl.frame(10).fingers[1].tipPosition,Lctrl.frame(10).fingers[6].tipPosition);
-                                distancePulgares10 = distance3D(Lctrl.frame(10).fingers[0].tipPosition,Lctrl.frame(10).fingers[5].tipPosition);
-                                
-                                    if(distanceIndices10>80 && distancePulgares10>80){
-                                        playTreshold = frame0.id; 
-                                        jQuery("#fullscreen-canvas").hide();        
-                                        jQuery("#resize-canvas").show();
-                                        jQuery("#cabecera").slideUp();
-                                        jQuery("#tabs").slideUp();
-                                        jQuery("#menu_area").children().slideUp( function(){jQuery("#canvas").queue(function(){jQuery( this ).removeClass("col-md-6").addClass("col-md-12").dequeue();}).slideDown("slow");});
-                                        
-                                     }
-                                }*/
-
+                     
                                 if ((distanceCruzado1<30 || distanceCruzado2<30) && playTreshold < (frame0.id-50)){
                                 distanceCruzado1_10 = distance3D(Lctrl.frame(10).fingers[1].tipPosition,Lctrl.frame(10).fingers[5].tipPosition);
                                 distanceCruzado2_10 = distance3D(Lctrl.frame(10).fingers[0].tipPosition,Lctrl.frame(10).fingers[6].tipPosition);
@@ -384,7 +370,7 @@ var fullScreen = false;
                                     }
                                 }
 */
-
+/*
                         }            
                 }
                 if(!izqPresente){
@@ -396,7 +382,7 @@ var fullScreen = false;
             }
 
               // Showcase some new V2 features
-        });
+        });*/
     }
     this.SetupUpMouseInteraction = function(currentRenderDomElement){
         var mouseIsDown = 0;
