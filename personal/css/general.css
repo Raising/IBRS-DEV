@@ -1,0 +1,196 @@
+body{
+   overflow:hidden;
+}
+
+ .noAuto {
+  position: absolute;
+  border-style: solid;
+  border-width: 2px;
+  border-color: #27408B;
+  box-shadow:  2px 2px 5px #24F;
+}
+
+.background{
+  width: 100%;
+  height:  100%;
+  background:#4876FF;
+  
+}
+
+.frontalSlider{
+   border-radius: 15px;
+  width: 60%;
+  height: 260%;
+  left: 20%;
+  top: -80%;
+  background:#3A5FCD;
+
+}
+
+
+.leftSlider{
+  border-radius:0px 15px 15px 0px;
+  width: 19%;
+  height: 85%;
+  left: -1%;
+  top: 10%;
+  background:#3A5FCD;
+
+  
+}
+
+
+.rightSlider{
+   border-radius:15px 0px 0px 15px;
+  width: 19%;
+  height: 85%;
+  right: -1%;
+  top: 10%;
+  background:#3A5FCD;
+  
+}
+
+
+
+.topSlider{
+  border-radius:0px 0px 15px 15px;
+  width: 60%;
+  height: 19%;
+  left:20%;
+  top: -1%;
+  background:#3A5FCD;
+}
+
+.bottomSlider{
+   border-radius:15px 15px 0px 0px;
+  width: 60%;
+  height: 19%;
+  left: 20%;
+  bottom: -1%;
+  background:#3A5FCD;
+}
+
+.canvas{
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  left: 5%;
+  bottom: 5%;
+  background:#5886FF;
+  border-width: 2px;
+  border-color: #6896FF;
+}
+
+.leftTopButtons{
+  border-radius:0px 9px 0px 0px;
+  top:0.75%;
+  right: 1%;
+}
+
+.leftBottomButtons{
+  border-radius:0px 0px 9px 0px;
+  bottom:0.75%;
+  right: 1%;
+}
+.rightTopButtons{
+  border-radius:9px 0px 0px 0px;
+  top:0.75%;
+  left: 1%;
+}
+.rightBottomButtons{
+  border-radius:0px 0px 0px 9px;
+  bottom:0.75%;
+  left: 1%;
+}
+
+.sideButtons{
+  position:absolute;
+  width: 98%;
+  height: 3.5%;
+  background: #CCCCFF;
+}
+
+.sideBody{
+  position:absolute;
+  width: 98%;
+  height: 90%;
+  background: #9CCCFF;
+  top:5%;
+}
+
+.leftBody{
+  right: 1%;
+}
+
+.rightBody{
+  left: 1%;
+} 
+
+.centeredButton{
+  position:absolute;
+  width: 60%;
+  height: 100%;
+  background: #45aa45;
+  top:0%;
+  left: 20%;
+}
+
+.leftExpandButton{
+  position:absolute;
+  border-radius:0px 9px 0px 0px;
+  width: 20%;
+  height: 100%;
+  background: #80aa45;
+  top:0%;
+  right: 0%;
+
+}
+.rightExpandButton{
+  position:absolute;
+  border-radius:9px 0px 0px 0px;
+  width: 20%;
+  height: 100%;
+  background: #80aa45;
+  top:0%;
+  left: 0%;
+
+}
+
+#menu_inicial{
+
+  position:absolute;
+  border-radius: 35px;
+  width: 60%;
+  height: 20%;
+  background: #57F;
+  top:40%;
+  left: 20%;
+}
+
+#texto_central{
+  position:absolute;
+  width: 80%;
+  height: 30%;
+  top:40%;
+  left: 10%;
+}
+
+#buton_search{
+position:absolute;
+ border-radius: 50px;
+  width: 80%;
+  height: 30%;
+  bottom:5%;
+  left: 10%;
+   background: #79F;
+}
+
+#buton_create_new{
+ position:absolute;
+  border-radius: 50px;
+  width: 80%;
+  height: 30%;
+  top:5%;
+  left: 10%; 
+   background: #79F;
+}

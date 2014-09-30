@@ -1,0 +1,130 @@
+<html>
+    <head>
+        <title>V 0.1.1, Event animations</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		<link href="../personal/css/general.css" rel="stylesheet">
+		
+		<script type="text/javascript" src="../libs/js/jquery-1.9.1.js"></script>
+		<script>jQuery.noConflict();</script>
+		
+		<script type="text/javascript" src="../libs/js/three.js"></script>
+		<script type="text/javascript" src="../libs/js/leap-0.6.0-beta2.js"></script>
+		<script type="text/javascript" src="../personal/js/CustomGeometries.js"></script>
+		<script type="text/javascript" src="../personal/js/IBRSLogic.js"></script>
+		<script type="text/javascript" src="../personal/js/IBRSGraphics.js"></script>
+		<script type="text/javascript" src="../personal/js/IBRSGameEvent.js"></script>
+		<script type="text/javascript" src="../personal/js/IBRSReproductor.js"></script>
+		<script type="text/javascript" src="../personal/js/IBRSTools.js"></script>
+		<script type="text/javascript" src="../personal/js/functionality.js"></script>
+		
+<!--	
+<script type="text/javascript" src="../personal/js/canvasInteraction.js"></script>
+	<script type="text/javascript" src="../personal/js/leapControler.js"></script>
+	
+-->
+
+
+    </head>
+
+
+
+
+    <body>
+
+    	<div id="main_container" class="background">
+    		<div id="canvas_container" class="canvas">
+
+    		</div>
+
+
+    		<div id="frontalSelector" class="noAuto frontalSlider">
+    			<div id="filtros_objetos">
+    			</div>
+    			<div id= "menu_inicial" >
+					<button id="buton_create_new" type="button"> Crear Partida nueva
+ 	 					</button>
+    				<div id="texto_central">
+					<h3>Infinity Battle Report System   <small>By Raising Spirit</small></h3>
+					<h6>Herramienta de creación y visualización de informes de batalla
+					</h6>
+					</div>
+					<button id="buton_search" type="button"> Buscar Partida ya existente
+ 	 				</button>
+
+    			</div>
+    			<div id="busqueda_partidas">
+    			</div>
+    		</div>
+
+
+    		
+
+
+    		<div id="Scenery"   class="noAuto topSlider" >
+
+    		</div>
+
+
+    		<div id="editorTools" class="noAuto bottomSlider" >
+
+    		</div>
+
+    		<div id="reproductorTools" class="noAuto bottomSlider" >
+
+    		</div>
+
+
+    		<div id="leftGameFilter" class="noAuto leftSlider">
+				
+
+    		</div>
+
+
+    		<div id="rightGameFilter" class="noAuto rightSlider">
+    			
+    		</div>
+
+
+    		<div id="leftTroop" class="noAuto leftSlider">
+    				<div id="left_Troop_Head" class="leftTopButtons sideButtons">
+    					<button id="buttonUP_troop_left" type="button" class="centeredButton"> A 
+ 	 					</button>
+ 	 				
+ 	 					<button id="buttonUP_troop_left" type="button" class="leftExpandButton"> -->
+ 	 					</button>
+    				</div>
+    				<div class="sideBody leftBody"></div>
+ 					
+ 					<div id="left_Troop_Bottom" class="leftBottomButtons sideButtons">
+ 						<button id="buttonDOWN_troop_left" type="button" class="centeredButton"> V
+ 	 					</button>
+ 					</div>
+    		</div>
+
+
+    		<div id="rightTroop" class="noAuto rightSlider">
+    				 <div id="right_Troop_Head" class="rightTopButtons sideButtons">
+    				 	<button id="buttonUP_troop_right" type="button" class="centeredButton"> A 
+ 	 					</button>
+ 	 				
+ 	 					<button id="buttonUP_troop_right" type="button" class="rightExpandButton"> <--
+ 	 					</button>
+    				 </div>
+    				 <div class="sideBody rightBody"></div>
+    				  <div id="right_Troop_Bottom" class="rightBottomButtons sideButtons">
+    				  		<button id="buttonDOWN_troop_right" type="button" class="centeredButton"> V
+    				  </div>
+    		</div>
+
+
+    		<div id="searchTools" class="noAuto bottomSlider" >
+				
+    		</div>
+    	</div>
+
+
+
+    </body>
+</html>
