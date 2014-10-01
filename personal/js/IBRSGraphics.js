@@ -48,7 +48,7 @@ IBRS.Graphics = function(){
 
     //luces
     var light = new THREE.PointLight(0xffffff);
-    light.position.set(40,10,40);
+    light.position.set(20,20,20);
     this.scene.add(light);
 
     var globalLight = new THREE.AmbientLight(0x444444);
@@ -538,7 +538,7 @@ IBRS.UnitGraphic = function(height,baseDiameter,miniatureTexture,baseTexture,log
             unitGraphic.add(unitGraphic.BasePiece);
             unitGraphic.add(unitGraphic.TopPiece);
             unitGraphic.selector.scale.set(baseDiameter,height+baseHeight,baseDiameter);
-            unitGraphic.selector.position.set(0,(height+baseHeight)/2,0);
+            unitGraphic.selector.position.set(0,(height+baseHeight)/2+height*1.2,0);
             unitGraphic.add(this.selector);
        
        for (var i = 0; i< unitGraphic.children.length;i++){
@@ -564,13 +564,14 @@ IBRS.TableGraphic = function(dimension,coverTexture){
     var WoodTextureMap =  new THREE.ImageUtils.loadTexture("img/woodtexture.jpg");
     var GeoTop = new THREE.CubeGeometry(dimension.x,dimension.y,dimension.z);
         for (var i = 0; i<GeoTop.faces.length;i++){ GeoTop.faces[i].materialIndex = 0;}
+
         GeoTop.faces[4].materialIndex = GeoTop.faces[5].materialIndex = 1;
     var GeoLeg = new THREE.CubeGeometry(dimension.x*0.1,dimension.y*2,dimension.z*0.1);
     
     this.TableTop = new THREE.Mesh(GeoTop,
         new THREE.MeshFaceMaterial([
             new THREE.MeshLambertMaterial({ map: WoodTextureMap}),
-            new THREE.MeshBasicMaterial({ map: CoverTextureMap} )]));
+            new THREE.MeshLambertMaterial({ map: CoverTextureMap} )]));
     
     this.TableTop.position.set(0,-dimension.y/2,0);
     this.add(this.TableTop);
@@ -595,7 +596,7 @@ IBRS.TableGraphic = function(dimension,coverTexture){
         tableGraphic.TableTop = new THREE.Mesh(GeoTop,
             new THREE.MeshFaceMaterial([
                 new THREE.MeshLambertMaterial({ map: WoodTextureMap}),
-                new THREE.MeshBasicMaterial({ map: CoverTextureMap} )]));
+                new THREE.MeshLambertMaterial({ map: CoverTextureMap} )]));
     
         tableGraphic.TableTop.position.set(0,-dimension.y/2,0);
         tableGraphic.add(tableGraphic.TableTop);
@@ -661,7 +662,7 @@ IBRS.SceneryGraphic = function(dimension){
                         var plane = data.planes[i];
                         var planeGeo = new THREE.PlaneGeometry(plane.width,plane.height);
                         var texture = new THREE.ImageUtils.loadTexture("img/"+plane.texture);
-                        var material = new THREE.MeshBasicMaterial({ map: texture});
+                        var material = new THREE.MeshLambertMaterial({ map: texture});
                         var mesh = new THREE.Mesh(planeGeo,material);
                         mesh.position.set(plane.position.x,plane.position.y,plane.position.z);
                         mesh.rotation.set(plane.rotation.x*Math.PI,plane.rotation.y*Math.PI,plane.rotation.z*Math.PI);

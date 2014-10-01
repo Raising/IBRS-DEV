@@ -297,9 +297,9 @@ var TargeteableElement = function(){
 	this.status = IBRS.STAT.NORMAL;
     this.statusIcon = "img/NORMAL.png";
 	this.height = 0;
-    var selectorGeometry = new THREE.CylinderGeometry(0.5,0.5,1,16); 
+    var selectorGeometry = new THREE.CylinderGeometry(0.5,0.01,1,16); 
     //opacity: 0.8,transparent: true
-    var selectorMaterial = new THREE.MeshBasicMaterial( {color: 0x66ff00,wireframe:false,opacity: 0,transparent: true} ); 
+    var selectorMaterial = new THREE.MeshBasicMaterial( {color: 0xFFff00,wireframe:false,opacity: 0,transparent: true} ); 
     this.selector = new THREE.Mesh( selectorGeometry, selectorMaterial );
     
     this.add(this.selector);

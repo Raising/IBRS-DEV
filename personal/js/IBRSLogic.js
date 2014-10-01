@@ -238,16 +238,19 @@ IBRS.TacticalGroup =  function (army) {
 	this.irregularAmount = 0;
 	this.furyAmount = 0;
 	
-	this.container = jQuery('<div id="'+ this.id+'" class="tacticalGroup "></div>')
+	this.container = jQuery('<div id="'+ this.id+'" class="tacticalGroup "></div>');
 	this.army.container.append(this.container);
 	//jQuery('#inBoardElements').append(this.container);
-	
+	this.groupHeader = jQuery('<div class="tacticalGroupHeader ">Group '+this.groupNumber+'</div>');
+
 	this.deleteButton = jQuery('<span class="pull-right glyphicon glyphicon-remove-sign">del</span>');
 	this.addTroopButton = jQuery('<span class="pull-right glyphicon glyphicon-remove-sign">add</span>');
 
 	this.updateHtml = function(){
-			tacticalGroup.container.empty().append('<tr><th>Group  '+this.groupNumber+'</th></tr>').children().children().append(tacticalGroup.deleteButton).append(tacticalGroup.addTroopButton);
-			
+			tacticalGroup.container.empty();
+			tacticalGroup.groupHeader = jQuery('<div class="tacticalGroupHeader ">Group '+this.groupNumber+'</div>');
+			tacticalGroup.groupHeader.append(tacticalGroup.deleteButton);
+			tacticalGroup.container.append(tacticalGroup.groupHeader);
 			for (var j = 0 ; j<tacticalGroup.unitList.length;j++){
 				var unit = tacticalGroup.unitList[j];
 				tacticalGroup.container.append(unit.container);
@@ -283,7 +286,26 @@ IBRS.TacticalGroup =  function (army) {
 		return false});
 
 
-	  
+
+
+	   tacticalGroup.container.click(function(){   
+	        // unitLogic.unitGraphic.selectorOpacity(1);
+	    return false;});
+
+	    //que hacer cuando entra el raton en la tupla de cada miniatura
+	    tacticalGroup.groupHeader.mouseenter(function(){
+	    	for (var i = tacticalGroup.unitList.length - 1; i >= 0; i--) {
+	    	   	tacticalGroup.unitList[i].unitGraphic.selectorOpacity(0.5);
+	    	   };   
+	       
+	    return false;});
+
+	   	//que hacer cuando se SALE EL RATON DE  la tupla de cada miniatura
+	    tacticalGroup.groupHeader.mouseleave(function(){   
+	        for (var i = tacticalGroup.unitList.length - 1; i >= 0; i--) {
+	    	   	tacticalGroup.unitList[i].unitGraphic.selectorOpacity(0);
+	    	   };   
+	    return false;});
     }	
 
 	
