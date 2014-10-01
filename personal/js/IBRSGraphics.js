@@ -83,7 +83,7 @@ IBRS.Graphics = function(){
     this.scene.add(selector);*/
    this.contextualMenu.addToMenu(sprite); 
    //this.contextualMenu.addToMenu(selector); 
-    this.contextualMenu.getMenu().position.set(90,20,0);
+    this.contextualMenu.getMenu().position.set(20,20,0);
     this.scene.add(this.contextualMenu.getMenu());
    
 
@@ -787,7 +787,7 @@ IBRS.ContextMenu = function(graphics){
     this.sprite.scale.set(20,20,1.0);
   */  
 
-    var planeGeometry = new THREE.CubeGeometry( 5, 5, 5, 1 );
+    var planeGeometry = new THREE.CubeGeometry( 25, 20, 1, 1 );
     var finalRenderTarget = new THREE.WebGLRenderTarget( 512, 512, { format: THREE.RGBAFormat } );
     var planeMaterial = new THREE.MeshBasicMaterial( { map: finalRenderTarget ,transparent:true} );
     this.plane = new THREE.Mesh( planeGeometry, planeMaterial );
@@ -806,6 +806,7 @@ IBRS.ContextMenu = function(graphics){
       //  graphics.render.render(contextMenu.sceneOrtho, contextMenu.cameraOrtho );
          
          graphics.render.render(contextMenu.sceneOrtho, contextMenu.cameraOrtho, finalRenderTarget,true );
+         //graphics.render.render(graphics.scene,graphics.camera, finalRenderTarget,true );
         
        
     };
