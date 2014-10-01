@@ -110,7 +110,7 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 
 	    //que hacer cuando entra el raton en la tupla de cada miniatura
 	    unitLogic.container.mouseenter(function(){   
-	        unitLogic.unitGraphic.selectorOpacity(0.5);
+	        unitLogic.unitGraphic.selectorOpacity(0.8);
 	    return false;});
 
 	   	//que hacer cuando se SALE EL RATON DE  la tupla de cada miniatura
@@ -295,7 +295,7 @@ IBRS.TacticalGroup =  function (army) {
 	    //que hacer cuando entra el raton en la tupla de cada miniatura
 	    tacticalGroup.groupHeader.mouseenter(function(){
 	    	for (var i = tacticalGroup.unitList.length - 1; i >= 0; i--) {
-	    	   	tacticalGroup.unitList[i].unitGraphic.selectorOpacity(0.5);
+	    	   	tacticalGroup.unitList[i].unitGraphic.selectorOpacity(0.8);
 	    	   };   
 	       
 	    return false;});

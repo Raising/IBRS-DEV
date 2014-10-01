@@ -47,15 +47,42 @@ IBRS.Graphics = function(){
 
 
     //luces
-    var light = new THREE.PointLight(0xffffff);
-    light.position.set(20,20,20);
+    var light = new THREE.PointLight(0x999999);
+    light.position.set(-20,15,20);
+    this.scene.add(light);
+     var light = new THREE.PointLight(0x999999);
+    light.position.set(20,2,20);
+    this.scene.add(light); 
+    var light = new THREE.PointLight(0x999999);
+    light.position.set(20,15,-20);
+    this.scene.add(light); 
+    var light = new THREE.PointLight(0x999999);
+    light.position.set(-20,2,-20);
     this.scene.add(light);
 
-    var globalLight = new THREE.AmbientLight(0x444444);
+    var globalLight = new THREE.AmbientLight(0x333333);
     this.scene.add(globalLight);
     this.referenceTime = 0;
 
+    this.contextualMenu = new IBRS.ContextMenu();
 
+
+    var materialT = new THREE.SpriteMaterial( {map: THREE.ImageUtils.loadTexture("img/Orden_regular.png"),transparent: true,opacity:1 } );
+    var sprite = new THREE.Sprite(materialT);
+    sprite.scale.set(50,50,1.0);
+    sprite.position.set(0,0,0);
+
+     var selectorGeometry = new THREE.CylinderGeometry(5,0.01,20,50); 
+    //opacity: 0.8,transparent: true
+    var selectorMaterial = new THREE.MeshBasicMaterial( {color: 0xFFffFF,wireframe:true,opacity: 0,transparent: true} ); 
+    var selector = new THREE.Mesh( selectorGeometry, selectorMaterial );
+    
+   selector.scale.set(20,20,20);
+    selector.position.set(50,-30,0);
+   this.contextualMenu.addToMenu(sprite); 
+   //this.contextualMenu.addToMenu(selector); 
+    this.contextualMenu.getMenu().position.set(0,20,0);
+    this.scene.add(this.contextualMenu.getMenu());
    
 
     //Puntero LEAP MOTION
@@ -99,8 +126,10 @@ IBRS.Graphics = function(){
 
     this.startScene = function(){
         graphics.SetupUpMouseInteraction(graphics.render.domElement);
+        graphics.contextualMenu.start();
         //graphics.SetupUpLeapInteraction();
         graphics.CameraReposition(0,0,0);
+
     };
     this.renderScene = function(){
       
@@ -116,6 +145,7 @@ IBRS.Graphics = function(){
         // this.referenceTime =Date.now();
         graphics.reproductor.update();
         graphics.renderScene();
+        graphics.contextualMenu.update();
         requestAnimationFrame(graphics.animateScene);
     };
     this.webGLStart= function () {
@@ -455,7 +485,7 @@ var fullScreen = false;
         },false);
     }
     this.getCanvasStats = function(scope){
-        var canvasStat = [] ;
+        var canvasStat = {} ;
         canvasStat.Offset = jQuery(scope).offset();
         canvasStat.width =jQuery(scope).width(); 
         canvasStat.height =jQuery(scope).height();
@@ -537,7 +567,7 @@ IBRS.UnitGraphic = function(height,baseDiameter,miniatureTexture,baseTexture,log
         
             unitGraphic.add(unitGraphic.BasePiece);
             unitGraphic.add(unitGraphic.TopPiece);
-            unitGraphic.selector.scale.set(baseDiameter,height+baseHeight,baseDiameter);
+            unitGraphic.selector.scale.set(baseDiameter/2,height+baseHeight/2,baseDiameter/2);
             unitGraphic.selector.position.set(0,(height+baseHeight)/2+height*1.2,0);
             unitGraphic.add(this.selector);
        
@@ -719,3 +749,54 @@ IBRS.SceneryGraphic = function(dimension){
 };
 
 IBRS.SceneryGraphic.prototype = Object.create(BasicElement.prototype);
+
+
+IBRS.ContextMenu = function(){
+    var contextMenu = this;
+    this.render = new THREE.WebGLRenderer({premultipliedAlpha:false, alpha:true });
+    this.render.setClearColor(new THREE.Color(0x008800),0);
+    this.canvasWidth = 100;
+    this.canvasHeight = 100;
+    this.render.setSize(this.canvasWidth, this.canvasHeight);
+
+
+    //this.scene.fog = new THREE.Fog( 0x000000, 1500, 2100 );
+    this.cameraOrtho = new THREE.OrthographicCamera(-this.canvasWidth/2,this.canvasWidth/2,this.canvasHeight/2,-this.canvasHeight/2,1,10);
+    this.cameraOrtho.position.z = 10;
+    this.sceneOrtho  = new THREE.Scene();
+    this.sceneOrtho.add(this.cameraOrtho);
+
+    jQuery("#alternateCanvas").append(jQuery(this.render.domElement));
+
+    this.texture = new THREE.Texture(this.render.domElement);
+    this.texture.needsUpdate = true;
+    this.spriteMaterial = new THREE.SpriteMaterial( { map: this.texture  , transparent: true,opacity:1 } );
+    this.sprite = new THREE.Sprite(this.spriteMaterial);
+    this.sprite.scale.set(20,20,1.0);
+    
+
+    this.scaleMenu = function (x,y,z){
+        contextmenu.sprite.scale.set(5*x,5*y,z);
+    };
+
+    this.start = function(){
+         contextMenu.SetupUpMouseInteraction();
+    };
+
+    this.update = function(){
+        contextMenu.render.render(contextMenu.sceneOrtho, contextMenu.cameraOrtho );
+    };
+
+    this.SetupUpMouseInteraction = function () {
+        // body...
+    };
+
+    this.getMenu = function(){
+        return contextMenu.sprite;
+    };
+
+    this.addToMenu = function(element){
+        contextMenu.sceneOrtho.add(element);
+    }
+
+};
