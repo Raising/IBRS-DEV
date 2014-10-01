@@ -64,7 +64,7 @@ IBRS.Graphics = function(){
     this.scene.add(globalLight);
     this.referenceTime = 0;
 
-    this.contextualMenu = new IBRS.ContextMenu();
+    this.contextualMenu = new IBRS.ContextMenu(this);
 
 
     var materialT = new THREE.SpriteMaterial( {map: THREE.ImageUtils.loadTexture("img/Orden_regular.png"),transparent: true,opacity:1 } );
@@ -83,7 +83,7 @@ IBRS.Graphics = function(){
     this.scene.add(selector);*/
    this.contextualMenu.addToMenu(sprite); 
    //this.contextualMenu.addToMenu(selector); 
-    this.contextualMenu.getMenu().position.set(0,20,0);
+    this.contextualMenu.getMenu().position.set(90,20,0);
     this.scene.add(this.contextualMenu.getMenu());
    
 
@@ -146,8 +146,9 @@ IBRS.Graphics = function(){
         //var delta=(Date.now()- this.referenceTime )/1000;
         // this.referenceTime =Date.now();
         graphics.reproductor.update();
+         graphics.contextualMenu.update();
         graphics.renderScene();
-        graphics.contextualMenu.update();
+       
         requestAnimationFrame(graphics.animateScene);
     };
     this.webGLStart= function () {
@@ -753,13 +754,13 @@ IBRS.SceneryGraphic = function(dimension){
 IBRS.SceneryGraphic.prototype = Object.create(BasicElement.prototype);
 
 
-IBRS.ContextMenu = function(){
+IBRS.ContextMenu = function(graphics){
     var contextMenu = this;
-    this.render = new THREE.WebGLRenderer({premultipliedAlpha:false, alpha:true });
-    this.render.setClearColor(new THREE.Color(0x008800),0);
+   // this.render = new THREE.WebGLRenderer({premultipliedAlpha:true, alpha:true });
+   // this.render.setClearColor(new THREE.Color(0x008800),0);
     this.canvasWidth = 100;
     this.canvasHeight = 100;
-    this.render.setSize(this.canvasWidth, this.canvasHeight);
+   // this.render.setSize(this.canvasWidth, this.canvasHeight);
 
 
     //this.scene.fog = new THREE.Fog( 0x000000, 1500, 2100 );
@@ -768,11 +769,6 @@ IBRS.ContextMenu = function(){
     this.sceneOrtho  = new THREE.Scene();
     this.sceneOrtho.add(this.cameraOrtho);
 
-    var renderTargetParams = {
-      minFilter:THREE.LinearFilter,
-      stencilBuffer:false,
-      depthBuffer:false
-    };
 
 
     var myTexture = new THREE.WebGLRenderTarget( 100, 100, {format: THREE.RGBFormat }  );
@@ -782,22 +778,21 @@ IBRS.ContextMenu = function(){
 
 
 
-    jQuery("#alternateCanvas").append(jQuery(this.render.domElement));
-
+/*
     this.texture = new THREE.Texture(this.render.domElement);
     this.texture.needsUpdate = true;
    
-    this.spriteMaterial = new THREE.SpriteMaterial( { map: myTexture , transparent:true ,opacity:1,side:THREE.DoubleSide } );
+    this.spriteMaterial = new THREE.SpriteMaterial( { map: myTexture , transparent:true ,opacity:1 } );
     this.sprite = new THREE.Sprite(this.spriteMaterial);
     this.sprite.scale.set(20,20,1.0);
-    
+  */  
 
-    var planeGeometry = new THREE.CubeGeometry( 40, 20, 20, 20 );
-    var finalRenderTarget = new THREE.WebGLRenderTarget( 512, 512, { format: THREE.RGBFormat } );
-    var planeMaterial = new THREE.SpriteMaterial( { map: finalRenderTarget } );
-    this.plane = new THREE.Sprite(planeMaterial);
+    var planeGeometry = new THREE.CubeGeometry( 5, 5, 5, 1 );
+    var finalRenderTarget = new THREE.WebGLRenderTarget( 512, 512, { format: THREE.RGBAFormat } );
+    var planeMaterial = new THREE.MeshBasicMaterial( { map: finalRenderTarget ,transparent:true} );
+    this.plane = new THREE.Mesh( planeGeometry, planeMaterial );
 
-this.plane.scale.set(20,20,1.0);
+
 
     this.scaleMenu = function (x,y,z){
         contextmenu.sprite.scale.set(5*x,5*y,z);
@@ -808,8 +803,10 @@ this.plane.scale.set(20,20,1.0);
     };
 
     this.update = function(){
-         contextMenu.render.render(contextMenu.sceneOrtho, contextMenu.cameraOrtho, finalRenderTarget,true );
-         contextMenu.render.render(contextMenu.sceneOrtho, contextMenu.cameraOrtho );
+      //  graphics.render.render(contextMenu.sceneOrtho, contextMenu.cameraOrtho );
+         
+         graphics.render.render(contextMenu.sceneOrtho, contextMenu.cameraOrtho, finalRenderTarget,true );
+        
        
     };
 
@@ -821,9 +818,7 @@ this.plane.scale.set(20,20,1.0);
         //return contextMenu.sprite;
         return contextMenu.plane;
     };
-    contextMenu.texture.onUpdate = function(){
-       // console.log("textureUpdated");
-    };
+   
     this.addToMenu = function(element){
         contextMenu.sceneOrtho.add(element);
         
