@@ -72,13 +72,15 @@ IBRS.Graphics = function(){
     sprite.scale.set(50,50,1.0);
     sprite.position.set(0,0,0);
 
-     var selectorGeometry = new THREE.CylinderGeometry(5,0.01,20,50); 
+   /*  var selectorGeometry = new THREE.PlaneGeometry(10,10,1,1); 
     //opacity: 0.8,transparent: true
-    var selectorMaterial = new THREE.MeshBasicMaterial( {color: 0xFFffFF,wireframe:true,opacity: 0,transparent: true} ); 
+    
+    var selectorMaterial = new THREE.MeshBasicMaterial( {map:new THREE.Texture(jQuery("#alternateCanvas").children[0]),color:0x345345,opacity: 1,transparent: true,side:THREE.DoubleSide} ); 
     var selector = new THREE.Mesh( selectorGeometry, selectorMaterial );
     
    selector.scale.set(20,20,20);
-    selector.position.set(50,-30,0);
+    selector.position.set(0,10,0);
+    this.scene.add(selector);*/
    this.contextualMenu.addToMenu(sprite); 
    //this.contextualMenu.addToMenu(selector); 
     this.contextualMenu.getMenu().position.set(0,20,0);
@@ -761,19 +763,41 @@ IBRS.ContextMenu = function(){
 
 
     //this.scene.fog = new THREE.Fog( 0x000000, 1500, 2100 );
-    this.cameraOrtho = new THREE.OrthographicCamera(-this.canvasWidth/2,this.canvasWidth/2,this.canvasHeight/2,-this.canvasHeight/2,1,10);
+    this.cameraOrtho = new THREE.OrthographicCamera(-this.canvasWidth/2,this.canvasWidth/2,this.canvasHeight/2,-this.canvasHeight/2,-100,100);
     this.cameraOrtho.position.z = 10;
     this.sceneOrtho  = new THREE.Scene();
     this.sceneOrtho.add(this.cameraOrtho);
+
+    var renderTargetParams = {
+      minFilter:THREE.LinearFilter,
+      stencilBuffer:false,
+      depthBuffer:false
+    };
+
+
+    var myTexture = new THREE.WebGLRenderTarget( 100, 100, {format: THREE.RGBFormat }  );
+
+
+
+
+
 
     jQuery("#alternateCanvas").append(jQuery(this.render.domElement));
 
     this.texture = new THREE.Texture(this.render.domElement);
     this.texture.needsUpdate = true;
-    this.spriteMaterial = new THREE.SpriteMaterial( { map: this.texture  , transparent: true,opacity:1 } );
+   
+    this.spriteMaterial = new THREE.SpriteMaterial( { map: myTexture , transparent:true ,opacity:1,side:THREE.DoubleSide } );
     this.sprite = new THREE.Sprite(this.spriteMaterial);
     this.sprite.scale.set(20,20,1.0);
     
+
+    var planeGeometry = new THREE.CubeGeometry( 40, 20, 20, 20 );
+    var finalRenderTarget = new THREE.WebGLRenderTarget( 512, 512, { format: THREE.RGBFormat } );
+    var planeMaterial = new THREE.SpriteMaterial( { map: finalRenderTarget } );
+    this.plane = new THREE.Sprite(planeMaterial);
+
+this.plane.scale.set(20,20,1.0);
 
     this.scaleMenu = function (x,y,z){
         contextmenu.sprite.scale.set(5*x,5*y,z);
@@ -784,7 +808,9 @@ IBRS.ContextMenu = function(){
     };
 
     this.update = function(){
-        contextMenu.render.render(contextMenu.sceneOrtho, contextMenu.cameraOrtho );
+         contextMenu.render.render(contextMenu.sceneOrtho, contextMenu.cameraOrtho, finalRenderTarget,true );
+         contextMenu.render.render(contextMenu.sceneOrtho, contextMenu.cameraOrtho );
+       
     };
 
     this.SetupUpMouseInteraction = function () {
@@ -792,11 +818,54 @@ IBRS.ContextMenu = function(){
     };
 
     this.getMenu = function(){
-        return contextMenu.sprite;
+        //return contextMenu.sprite;
+        return contextMenu.plane;
     };
-
+    contextMenu.texture.onUpdate = function(){
+       // console.log("textureUpdated");
+    };
     this.addToMenu = function(element){
         contextMenu.sceneOrtho.add(element);
-    }
+        
+    };
 
 };
+
+/*// new render-to-texture scene
+myScene = new THREE.Scene();
+
+// you may need to modify these parameters
+var renderTargetParams = {
+      minFilter:THREE.LinearFilter,
+      stencilBuffer:false,
+      depthBuffer:false
+    };
+
+myImage = THREE.ImageUtils.loadTexture( 'path/to/texture.png', new THREE.UVMapping(), function() { myCallbackFunction(); } );
+
+imageWidth = myImage.image.width;
+imageHeight = myImage.image.height;
+
+// create buffer
+myTexture = new THREE.WebGLRenderTarget( width, height, renderTargetParams );       
+
+// custom RTT materials
+myUniforms = {
+  colorMap: { type: "t", value: myImage },
+};
+myTextureMat = new THREE.ShaderMaterial({
+  uniforms: myUniforms,
+  vertexShader: document.getElementById( 'my_custom_vs' ).textContent,
+  fragmentShader: document.getElementById( 'my_custom_fs' ).textContent
+});       
+
+// Setup render-to-texture scene
+myCamera = new THREE.OrthographicCamera( imageWidth / - 2, imageWidth / 2, imageHeight / 2, imageHeight / - 2, -10000, 10000 );
+
+var myTextureGeo = new THREE.PlaneGeometry( imageWidth, imageHeight );
+myTextureMesh = new THREE.Mesh( myTextureGeo, myTextureMat );
+myTextureMesh.position.z = -100;
+myScene.add( myTextureMesh );
+
+renderer.render( myScene, myCamera, myTexture, true );
+*/
