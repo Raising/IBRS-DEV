@@ -73,14 +73,15 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	this.unitGraphic = new IBRS.UnitGraphic(this.height,this.width,this.bodyTexture,this.baseTexture,this);
 	this.status = this.unitGraphic.status;
 	this.name = "no name";
+	this.unitIcon =  "img/NORMAL.png"
 	this.statusIcon = "img/NORMAL.png";
 
-	this.container = jQuery('<tr id="'+this.id+'"></tr>');
+	this.container = jQuery('<div id="'+this.id+'" class="troop"></div>');
 
 	//this.deleteButton = jQuery('<td><button type="button" class="btn btn-default"><span class="pull-right glyphicon glyphicon-remove-sign"></span></button></td>');
-	this.deleteButton = jQuery('<span class="pull-right glyphicon glyphicon-remove-sign"></span>');
+	this.deleteButton = jQuery('<span >B</span>');
 	//cambiar el glyficon
-	this.modifyButton = jQuery('<span class="pull-right glyphicon glyphicon-remove-sign"></span>');
+	this.modifyButton = jQuery('<span> E</span>');
 		
 	this.delete = function(){
 		unitLogic.tacticalGroup.removeUnit(unitLogic);
@@ -120,9 +121,20 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 
 	this.updateHtml = function (){
 
-        unitLogic.container.empty().append('<td>'+unitLogic.name+
+     
+ 		unitLogic.container.empty().append('<div class="troopElement troopIcon"><img src="'+unitLogic.unitIcon+
+ 			'" border=0 height=20 width=20></img></div>'+
+ 			'<div class="troopElement troopText">'+
+ 				'<div class="troopElement troopName">'+ unitLogic.name+'</div>'+
+ 				'<div class="troopElement troopEquip">EQUIP_HERE</div>'+
+ 			'</div>');
+
+ 		
+
+     /*   unitLogic.container.empty().append('<td>'+unitLogic.name+
 		'</td><td>'+parseInt(unitLogic.position.x)+':'+parseInt(unitLogic.position.y)+':'+parseInt(unitLogic.position.z)+
 		'</td><td>'+'<img src="'+unitLogic.statusIcon+'" alt="" border=3 height=20 width=20></img>'+'</td>').append(unitLogic.deleteButton);
+		*/
 		unitLogic.setHtmlInteractions();
 	};
 
@@ -226,12 +238,12 @@ IBRS.TacticalGroup =  function (army) {
 	this.irregularAmount = 0;
 	this.furyAmount = 0;
 	
-	this.container = jQuery('<table id="'+ this.id+'" class="table table-hover h6 "></table>')
+	this.container = jQuery('<div id="'+ this.id+'" class="tacticalGroup "></div>')
 	this.army.container.append(this.container);
 	//jQuery('#inBoardElements').append(this.container);
 	
-this.deleteButton = jQuery('<span class="pull-right glyphicon glyphicon-remove-sign"></span>');
-this.addTroopButton = jQuery('<span class="pull-right glyphicon glyphicon-remove-sign"></span>');
+	this.deleteButton = jQuery('<span class="pull-right glyphicon glyphicon-remove-sign">del</span>');
+	this.addTroopButton = jQuery('<span class="pull-right glyphicon glyphicon-remove-sign">add</span>');
 
 	this.updateHtml = function(){
 			tacticalGroup.container.empty().append('<tr><th>Group  '+this.groupNumber+'</th></tr>').children().children().append(tacticalGroup.deleteButton).append(tacticalGroup.addTroopButton);
@@ -344,10 +356,14 @@ IBRS.Army = function(player){
 	this.id = IBRS.getID();
 	this.tacticalGroupList = [];
 	this.faction = "no faction";
-
-	this.container = jQuery('<div id="'+ this.id+'" class="panel panel-default "></div>')
+	if (this.player.num === 1){
+		this.side = "left";	
+	}else{
+    	this.side = "right";
+    }
+	this.container = jQuery('<div id="'+ this.id+'" class="army '+this.side+'"></div>');
 	
-	this.player.game.container.append(this.container);
+	//this.player.game.container.append(this.container);
 
 	/*this.updateHtml = function(){
 
@@ -355,7 +371,7 @@ IBRS.Army = function(player){
 	};*/
 
 	this.updateHtml = function(){
-		army.container.empty().append('<div class="panel-heading">'+army.player.name+'   '+army.faction+'</div>');
+	//	army.container.empty().append('<div class="panel-heading">'+army.player.name+'   '+army.faction+'</div>');
 			for (var j = 0 ; j<army.tacticalGroupList.length;j++){
 				var group = army.tacticalGroupList[j];
 				army.container.append(group.container);
@@ -424,14 +440,16 @@ IBRS.Player = function (game){
 	this.id = IBRS.getID();
 	this.name = "no name";
 	this.army = 0;
+	this.num = -1;
 
 	this.loadPlayerfromDataBase = function (playerID){
 		//cargar perfil de jugador
 	};
 
-	this.insertFromData = function (data) {
+	this.insertFromData = function (data,num) {
 		player.name = data.name;
 		player.playerID = data.playerID;
+		player.num = num;
 		var newArmy = new IBRS.Army(player);
 		newArmy.insertFromData(data.army);
 		player.army = newArmy;
@@ -464,13 +482,13 @@ IBRS.Game = function(gameID){
 	this.gameArea = new IBRS.GameArea();
 	this.events = new IBRS.GameEvents(this);
 	this.playerList = [];
-	this.container = jQuery("#inBoardElements");
+	this.container = [jQuery("#left_army_container"),jQuery("#right_army_container")];
 
 	this.updateHtml = function(){
 		//game.container.empty();
 		for (var i = 0 ; i<2;i++){
 			var army = game.playerList[i].army;
-			game.container.append(army.container);
+			game.container[i].empty().append(army.container);
 			army.updateHtml();
 		}
 	}
@@ -483,7 +501,7 @@ IBRS.Game = function(gameID){
 			game.name = data.name;
 			for (var i = 0;i<2;i++){
 				var newPlayer = new IBRS.Player(game);
-				newPlayer.insertFromData(data.playerList[i]);
+				newPlayer.insertFromData(data.playerList[i],i);
 				game.playerList.push(newPlayer);
 			}
 			game.events.loadGameEventsFromDataBase(data.gameEventsID);

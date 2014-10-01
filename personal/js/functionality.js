@@ -21,15 +21,15 @@ jQuery(function(){
 			//	GraphicEnviroment.playGame(currentGame.events);
 				
 
-				jQuery(GraphicEnviroment.render.domElement).attr("id","render").addClass(" canvas-look col-md-12 col-sm-12 col-xs-12");
+				//jQuery(GraphicEnviroment.render.domElement).attr("id","render").addClass(" canvas-look col-md-12 col-sm-12 col-xs-12");
 				jQuery("#canvas").append(jQuery(GraphicEnviroment.render.domElement));
 				
 				//boton comenzar reproduccion "play"
-				jQuery("#playGame").click(function(){
+				jQuery("#play_button").click(function(){
 					GraphicEnviroment.playGame();
 					return false;
 				});	
-				jQuery("#pauseGame").click(function(){
+				jQuery("#pause_button").click(function(){
 					GraphicEnviroment.pauseGame();
 					return false;
 				});		

@@ -9,9 +9,13 @@ IBRS.Graphics = function(){
     this.render = new THREE.WebGLRenderer({premultipliedAlpha:false, alpha:true, antialias: true });
     this.render.autoClear = false;
     this.render.setClearColor(new THREE.Color(0xff0000),0);
-    this.canvasWidth = 1280;
-    this.canvasHeight = 720;
+
+
+    this.canvasWidth = jQuery("#canvas").width();
+    this.canvasHeight = jQuery("#canvas").height();
     this.render.setSize(this.canvasWidth, this.canvasHeight);
+
+   
 
     this.scene = new THREE.Scene();
 
@@ -24,6 +28,24 @@ IBRS.Graphics = function(){
     this.scene.add(this.camera);
     this.reproductor = new IBRS.Reproductor(this);
     
+
+     window.addEventListener("resize", function(){
+         IBRS.actualGraphics.canvasWidth = jQuery("#canvas").width();
+         IBRS.actualGraphics.canvasHeight = jQuery("#canvas").height();
+         IBRS.actualGraphics.render.setSize( IBRS.actualGraphics.canvasWidth,  IBRS.actualGraphics.canvasHeight);
+         IBRS.actualGraphics.camera.aspect   = IBRS.actualGraphics.canvasWidth/ IBRS.actualGraphics.canvasHeight;
+         IBRS.actualGraphics.camera.updateProjectionMatrix();
+         IBRS.actualGraphics.cameraOrtho.left   = -IBRS.actualGraphics.canvasWidth/2;
+         IBRS.actualGraphics.cameraOrtho.right   = IBRS.actualGraphics.canvasWidth/2;
+         IBRS.actualGraphics.cameraOrtho.top  = IBRS.actualGraphics.canvasHeight/2;
+         IBRS.actualGraphics.cameraOrtho.bottom   = -IBRS.actualGraphics.canvasHeight/2;
+         IBRS.actualGraphics.cameraOrtho.updateProjectionMatrix();
+        
+         console.log("resized");
+    });
+
+
+
     //luces
     var light = new THREE.PointLight(0xffffff);
     light.position.set(40,10,40);
@@ -77,7 +99,7 @@ IBRS.Graphics = function(){
 
     this.startScene = function(){
         graphics.SetupUpMouseInteraction(graphics.render.domElement);
-        graphics.SetupUpLeapInteraction();
+        //graphics.SetupUpLeapInteraction();
         graphics.CameraReposition(0,0,0);
     };
     this.renderScene = function(){
@@ -139,7 +161,7 @@ IBRS.Graphics = function(){
             graphics.camera_target = targetObject = targetObject !== undefined ? targetObject : graphics.camera_target;
                    
 
-            graphics.camera_Distance = Math.max(graphics.camera_Distance+distance_inc,0.2);
+            graphics.camera_Distance = Math.max(graphics.camera_Distance+distance_inc,10);
             graphics.camera_Horizonatl_Angle += hoizontalAngle_inc;
             graphics.camera_Vertical_Angle += verticalAngle_inc;
             graphics.camera_Vertical_Angle = Math.max(Math.PI/4,Math.min(Math.PI*3/7,graphics.camera_Vertical_Angle));
@@ -415,7 +437,7 @@ var fullScreen = false;
                 //turn camera
                 graphics.CameraReposition(0,
                     0.03*(evt.pageX - mouseDownPosition.x),
-                    0.03*(evt.pageY - mouseDownPosition.y)
+                    0.02*(evt.pageY - mouseDownPosition.y)
                 );
             mouseDownPosition.x = evt.pageX;
             mouseDownPosition.y = evt.pageY;
@@ -437,8 +459,8 @@ var fullScreen = false;
         canvasStat.Offset = jQuery(scope).offset();
         canvasStat.width =jQuery(scope).width(); 
         canvasStat.height =jQuery(scope).height();
-        canvasStat.paddingtop = 5;
-        canvasStat.paddingleft = 15;
+        canvasStat.paddingtop = 0;
+        canvasStat.paddingleft = 0;
         return canvasStat; 
     }   
     this.findObjectByProyection = function(evt,scope){
