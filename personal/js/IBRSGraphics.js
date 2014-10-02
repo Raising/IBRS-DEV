@@ -769,30 +769,30 @@ IBRS.ContextMenu = function(graphics){
     this.sceneOrtho  = new THREE.Scene();
     this.sceneOrtho.add(this.cameraOrtho);
 
+////////////////////////////// TRy it
+    //
+    ////////////////////////////
+ 
 
 
-    var myTexture = new THREE.WebGLRenderTarget( 100, 100, {format: THREE.RGBFormat }  );
 
 
 
 
-
-
-/*
-    this.texture = new THREE.Texture(this.render.domElement);
-    this.texture.needsUpdate = true;
+    
+    var finalRenderTarget = new THREE.WebGLRenderTarget( 512, 512, { format: THREE.RGBAFormat } );
+    this.spriteMaterial = new THREE.SpriteMaterial( {map:new THREE.ImageUtils.loadTexture("img/CA.png") ,transparent:true});
    
-    this.spriteMaterial = new THREE.SpriteMaterial( { map: myTexture , transparent:true ,opacity:1 } );
     this.sprite = new THREE.Sprite(this.spriteMaterial);
-    this.sprite.scale.set(20,20,1.0);
-  */  
 
+    this.sprite.scale.set(20,20,1.0);
+   
+/*
     var planeGeometry = new THREE.CubeGeometry( 25, 20, 1, 1 );
     var finalRenderTarget = new THREE.WebGLRenderTarget( 512, 512, { format: THREE.RGBAFormat } );
     var planeMaterial = new THREE.MeshBasicMaterial( { map: finalRenderTarget ,transparent:true} );
     this.plane = new THREE.Mesh( planeGeometry, planeMaterial );
-
-
+*/
 
     this.scaleMenu = function (x,y,z){
         contextmenu.sprite.scale.set(5*x,5*y,z);
@@ -805,9 +805,9 @@ IBRS.ContextMenu = function(graphics){
     this.update = function(){
       //  graphics.render.render(contextMenu.sceneOrtho, contextMenu.cameraOrtho );
          
-         graphics.render.render(contextMenu.sceneOrtho, contextMenu.cameraOrtho, finalRenderTarget,true );
-         //graphics.render.render(graphics.scene,graphics.camera, finalRenderTarget,true );
-        
+         //graphics.render.render(contextMenu.sceneOrtho, contextMenu.cameraOrtho, finalRenderTarget,true );
+         graphics.render.render(graphics.scene,graphics.camera, finalRenderTarget,true );
+         contextMenu.spriteMaterial.map.__webglTexture = finalRenderTarget.__webglTexture;
        
     };
 
@@ -817,7 +817,7 @@ IBRS.ContextMenu = function(graphics){
 
     this.getMenu = function(){
         //return contextMenu.sprite;
-        return contextMenu.plane;
+        return contextMenu.sprite;
     };
    
     this.addToMenu = function(element){
