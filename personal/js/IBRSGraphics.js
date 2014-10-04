@@ -40,7 +40,7 @@ IBRS.Graphics = function(){
          IBRS.actualGraphics.cameraOrtho.top  = IBRS.actualGraphics.canvasHeight/2;
          IBRS.actualGraphics.cameraOrtho.bottom   = -IBRS.actualGraphics.canvasHeight/2;
          IBRS.actualGraphics.cameraOrtho.updateProjectionMatrix();
-        
+        IBRS.actualGraphics.spriteSelector.position.set(-IBRS.actualGraphics.canvasWidth*4/10,-IBRS.actualGraphics.canvasHeight*4/10,0);
          console.log("resized");
     });
 
@@ -64,6 +64,15 @@ IBRS.Graphics = function(){
     this.scene.add(globalLight);
     this.referenceTime = 0;
 
+    this.selectorCamera = new IBRS.SelectorCamera(this);
+    this.spriteSelector = this.selectorCamera.getImage();
+    this.spriteSelector.position.set(-IBRS.actualGraphics.canvasWidth*3/8,-IBRS.actualGraphics.canvasHeight*4/10,0);
+    this.sceneOrtho.add( this.spriteSelector);
+
+
+
+
+
     this.contextualMenu = new IBRS.ContextMenu(this);
 
 
@@ -83,7 +92,7 @@ IBRS.Graphics = function(){
     this.scene.add(selector);*/
    this.contextualMenu.addToMenu(sprite); 
    //this.contextualMenu.addToMenu(selector); 
-    this.contextualMenu.getMenu().position.set(20,20,0);
+    this.contextualMenu.getMenu().position.set(100,20,0);
     this.scene.add(this.contextualMenu.getMenu());
    
 
@@ -131,6 +140,7 @@ IBRS.Graphics = function(){
         graphics.contextualMenu.start();
         //graphics.SetupUpLeapInteraction();
         graphics.CameraReposition(0,0,0);
+        graphics.selectorCamera.CameraReposition(0,0,0);
 
     };
     this.renderScene = function(){
@@ -146,7 +156,8 @@ IBRS.Graphics = function(){
         //var delta=(Date.now()- this.referenceTime )/1000;
         // this.referenceTime =Date.now();
         graphics.reproductor.update();
-         graphics.contextualMenu.update();
+        graphics.selectorCamera.update();
+        graphics.contextualMenu.update();
         graphics.renderScene();
        
         requestAnimationFrame(graphics.animateScene);
@@ -209,6 +220,8 @@ IBRS.Graphics = function(){
             current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
             current_target_position.y +=3;
             graphics.camera.lookAt(current_target_position);
+
+
     }
     this.CameraPosition = function(distance,hoizontalAngle,verticalAngle,targetObject){
             graphics.camera_target = targetObject = targetObject !== undefined ? targetObject : graphics.camera_target;
@@ -231,6 +244,11 @@ IBRS.Graphics = function(){
             current_target_position.y +=3;
             graphics.camera.lookAt(current_target_position);
     }
+
+
+
+
+
     this.GetClosestTargeteableElement = function(position){
         var closest = graphics.tageteableElementsList[0];
         var bestDistance = 800;
@@ -271,11 +289,11 @@ var menuArray = ["#menu_search","#menu_initial","#menu_events","#reproductor"];
 var tabArray =["#tab0","#tab1","#tab2","#tab3"];
 var actualMenu = 0;
 var fullScreen = false;
- /*    Lctrl = Leap.loop(options, function(frame) {
+     Lctrl = Leap.loop(options, function(frame) {
             /*if (lastTimeSelection === undefined){
                 var lastTimeSelection = -100;   
             }*/
-   /*         izqPresente = false;
+            izqPresente = false;
             derPresente = false;
 
 
@@ -321,7 +339,7 @@ var fullScreen = false;
                /* if (playTreshold == undefined || playTreshold < 0){
                     var playTreshold = -100;   
                 }*/
-/*                if (playTreshold < Lctrl.frame(0).id-50){
+                if (playTreshold < Lctrl.frame(0).id-50){
                     frame0 = Lctrl.frame(0);
                       if (frame0.hands.length == 2 &&  Lctrl.frame(10).hands.length == 2){
                         
@@ -425,7 +443,7 @@ var fullScreen = false;
                                     }
                                 }
 */
-/*
+
                         }            
                 }
                 if(!izqPresente){
@@ -437,7 +455,7 @@ var fullScreen = false;
             }
 
               // Showcase some new V2 features
-        });*/
+        });
     }
     this.SetupUpMouseInteraction = function(currentRenderDomElement){
         var mouseIsDown = 0;
@@ -469,6 +487,10 @@ var fullScreen = false;
             if (mouseIsDown==3){
                 //turn camera
                 graphics.CameraReposition(0,
+                    0.03*(evt.pageX - mouseDownPosition.x),
+                    0.02*(evt.pageY - mouseDownPosition.y)
+                );
+                graphics.selectorCamera.CameraReposition(0,
                     0.03*(evt.pageX - mouseDownPosition.x),
                     0.02*(evt.pageY - mouseDownPosition.y)
                 );
@@ -512,7 +534,7 @@ var fullScreen = false;
         if (intersects.length) {
             var target = intersects[0].object.parent; 
             target.onElementClick();
-            graphics.CameraReposition(0,0,0,target)  ;
+            graphics.selectorCamera.CameraReposition(0,0,0,target)  ;
         } 
     }
     this.MouseWheelHandler = function(e) {
@@ -769,16 +791,6 @@ IBRS.ContextMenu = function(graphics){
     this.sceneOrtho  = new THREE.Scene();
     this.sceneOrtho.add(this.cameraOrtho);
 
-////////////////////////////// TRy it
-    //
-    ////////////////////////////
- 
-
-
-
-
-
-
     
     var finalRenderTarget = new THREE.WebGLRenderTarget( 512, 512, { format: THREE.RGBAFormat } );
     this.spriteMaterial = new THREE.SpriteMaterial( {map:new THREE.ImageUtils.loadTexture("img/CA.png") ,transparent:true});
@@ -788,7 +800,7 @@ IBRS.ContextMenu = function(graphics){
     this.sprite.scale.set(20,20,1.0);
    
 /*
-    var planeGeometry = new THREE.CubeGeometry( 25, 20, 1, 1 );
+    var planeGeometry = new THREE.PlaneGeometry( 10, 20, 1, 1 );
     var finalRenderTarget = new THREE.WebGLRenderTarget( 512, 512, { format: THREE.RGBAFormat } );
     var planeMaterial = new THREE.MeshBasicMaterial( { map: finalRenderTarget ,transparent:true} );
     this.plane = new THREE.Mesh( planeGeometry, planeMaterial );
@@ -827,41 +839,129 @@ IBRS.ContextMenu = function(graphics){
 
 };
 
-/*// new render-to-texture scene
-myScene = new THREE.Scene();
 
-// you may need to modify these parameters
-var renderTargetParams = {
-      minFilter:THREE.LinearFilter,
-      stencilBuffer:false,
-      depthBuffer:false
+IBRS.SelectorCamera = function(graphics){
+
+
+    var selectorCamera = this;
+   // this.render = new THREE.WebGLRenderer({premultipliedAlpha:true, alpha:true });
+   // this.render.setClearColor(new THREE.Color(0x008800),0);
+    this.canvasWidth = 50;
+    this.canvasHeight = 50;
+   // this.render.setSize(this.canvasWidth, this.canvasHeight);
+
+
+    //this.scene.fog = new THREE.Fog( 0x000000, 1500, 2100 );
+    this.camera= new THREE.PerspectiveCamera(45, this.canvasWidth / this.canvasHeight, 0.1, 1000);
+    
+    this.scene = graphics.scene;
+    this.scene.add(this.camera);
+
+    
+    var finalRenderTarget = new THREE.WebGLRenderTarget( 512, 512, { format: THREE.RGBAFormat } );
+    this.spriteMaterial = new THREE.SpriteMaterial( {map:new THREE.ImageUtils.loadTexture("img/CA.png") ,transparent:true});
+   
+    this.sprite = new THREE.Sprite(this.spriteMaterial);
+
+    this.sprite.scale.set(130,130,1.0);
+   
+
+    this.camera_Distance =0.5;
+    this.camera_Horizonatl_Angle = 0;
+    this.camera_Vertical_Angle = Math.PI/3;
+    this.camera_target = graphics.scene;
+/*
+    var planeGeometry = new THREE.PlaneGeometry( 10, 20, 1, 1 );
+    var finalRenderTarget = new THREE.WebGLRenderTarget( 512, 512, { format: THREE.RGBAFormat } );
+    var planeMaterial = new THREE.MeshBasicMaterial( { map: finalRenderTarget ,transparent:true} );
+    this.plane = new THREE.Mesh( planeGeometry, planeMaterial );
+*/
+
+    this.scaleMenu = function (x,y,z){
+        selectorCamera.sprite.scale.set(5*x,5*y,z);
     };
 
-myImage = THREE.ImageUtils.loadTexture( 'path/to/texture.png', new THREE.UVMapping(), function() { myCallbackFunction(); } );
+    this.start = function(){
+         selectorCamera.SetupUpMouseInteraction();
+    };
 
-imageWidth = myImage.image.width;
-imageHeight = myImage.image.height;
+    this.update = function(){
+      //  graphics.render.render(contextMenu.sceneOrtho, contextMenu.cameraOrtho );
+         
+         //graphics.render.render(contextMenu.sceneOrtho, contextMenu.cameraOrtho, finalRenderTarget,true );
+         selectorCamera.CameraReposition(0,0,0);
+         graphics.render.render(this.scene,selectorCamera.camera, finalRenderTarget,true );
+         selectorCamera.spriteMaterial.map.__webglTexture = finalRenderTarget.__webglTexture;
+       
+    };
 
-// create buffer
-myTexture = new THREE.WebGLRenderTarget( width, height, renderTargetParams );       
+    this.SetupUpMouseInteraction = function () {
+        // body...
+    };
 
-// custom RTT materials
-myUniforms = {
-  colorMap: { type: "t", value: myImage },
-};
-myTextureMat = new THREE.ShaderMaterial({
-  uniforms: myUniforms,
-  vertexShader: document.getElementById( 'my_custom_vs' ).textContent,
-  fragmentShader: document.getElementById( 'my_custom_fs' ).textContent
-});       
+    this.getImage = function(){
+        //return contextMenu.sprite;
+        return selectorCamera.sprite;
+    };
+   
+       this.getCamera = function(){
+        //return contextMenu.sprite;
+        return selectorCamera.camera;
+    };
+   
+    this.addToMenu = function(element){
+        selectorCamera.scene.add(element);
+        
+    };
 
-// Setup render-to-texture scene
-myCamera = new THREE.OrthographicCamera( imageWidth / - 2, imageWidth / 2, imageHeight / 2, imageHeight / - 2, -10000, 10000 );
+    this.CameraReposition = function(distance_inc,hoizontalAngle_inc,verticalAngle_inc,targetObject){
+            selectorCamera.camera_target = targetObject = targetObject !== undefined ? targetObject : selectorCamera.camera_target;
+                   
 
-var myTextureGeo = new THREE.PlaneGeometry( imageWidth, imageHeight );
-myTextureMesh = new THREE.Mesh( myTextureGeo, myTextureMat );
-myTextureMesh.position.z = -100;
-myScene.add( myTextureMesh );
+            selectorCamera.camera_Distance = Math.max(selectorCamera.camera_Distance+distance_inc,7);
+            selectorCamera.camera_Horizonatl_Angle += hoizontalAngle_inc;
+            selectorCamera.camera_Vertical_Angle += verticalAngle_inc;
+            selectorCamera.camera_Vertical_Angle = Math.max(Math.PI/4,Math.min(Math.PI*3/7,selectorCamera.camera_Vertical_Angle));
+            var current_target_position = new THREE.Vector3();
+            current_target_position.setFromMatrixPosition( selectorCamera.camera_target.matrixWorld );
+            selectorCamera.camera.position.set(
+                current_target_position.x + selectorCamera.camera_Distance*Math.cos(selectorCamera.camera_Horizonatl_Angle)*Math.sin(selectorCamera.camera_Vertical_Angle),
+                current_target_position.y + 3 + selectorCamera.camera_Distance*Math.cos(selectorCamera.camera_Vertical_Angle),
+                current_target_position.z + selectorCamera.camera_Distance*Math.sin(selectorCamera.camera_Horizonatl_Angle)*Math.sin(selectorCamera.camera_Vertical_Angle)
+            );
+            var current_target_position = new THREE.Vector3();
+            current_target_position.setFromMatrixPosition( selectorCamera.camera_target.matrixWorld );
+            current_target_position.y +=3;
+            selectorCamera.camera.lookAt(current_target_position);
+            
 
-renderer.render( myScene, myCamera, myTexture, true );
-*/
+    }
+    this.CameraPosition = function(distance,hoizontalAngle,verticalAngle,targetObject){
+            selectorCamera.camera_target = targetObject = targetObject !== undefined ? targetObject : selectorCamera.camera_target;
+                   
+
+            selectorCamera.camera_Distance = Math.max(distance,7);
+            selectorCamera.camera_Horizonatl_Angle = hoizontalAngle;
+            selectorCamera.camera_Vertical_Angle = verticalAngle;
+            selectorCamera.camera_Vertical_Angle = Math.max(0.1,Math.min(Math.PI,selectorCamera.camera_Vertical_Angle));
+            
+            var current_target_position = new THREE.Vector3();
+            current_target_position.setFromMatrixPosition( selectorCamera.camera_target.matrixWorld );
+            selectorCamera.camera.position.set(
+                current_target_position.x + selectorCamera.camera_Distance*Math.cos(selectorCamera.camera_Horizonatl_Angle)*Math.sin(selectorCamera.camera_Vertical_Angle),
+                current_target_position.y + 3 + selectorCamera.camera_Distance*Math.cos(selectorCamera.camera_Vertical_Angle),
+                current_target_position.z + selectorCamera.camera_Distance*Math.sin(selectorCamera.camera_Horizonatl_Angle)*Math.sin(selectorCamera.camera_Vertical_Angle)
+            );
+            var current_target_position = new THREE.Vector3();
+            current_target_position.setFromMatrixPosition( selectorCamera.camera_target.matrixWorld );
+            current_target_position.y +=3;
+            selectorCamera.camera.lookAt(current_target_position);
+    }
+  
+    this.reFocus = function(){
+        var current_target_position = new THREE.Vector3();
+        current_target_position.setFromMatrixPosition( selectorCamera.camera_target.matrixWorld );
+        selectorCamera.camera.lookAt(current_target_position);
+    }
+
+}

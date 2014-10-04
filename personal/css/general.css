@@ -3,9 +3,7 @@ body{
    padding: 0px;
    margin: 0px;
 }
-html{
-  padding: 0px;
-}
+
 
  .noAuto {
   position: absolute;
@@ -399,3 +397,18 @@ position:absolute;
   width: 62%;
 }
 
+.sceneryContainer{
+  position:absolute;
+  width: 92%;
+  height: 46%;
+  left:4%;
+  background: #88CCFF;
+}
+
+#scenery_container1{
+  top:5%;
+}
+
+#scenery_container2{
+  top:52%;
+}
