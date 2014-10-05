@@ -91,9 +91,9 @@ jQuery(function(){
 				deployElements : function(){
 						//visibles
 					IBRS.actualStage = "deployElements";
-					jQuery("#leftTroop_tray").delay(1000).animate({left:'-14%'} ,1000);		
-					jQuery("#rightTroop_tray").delay(1000).animate({right:'-14%'} ,1000);
-					jQuery("#scenery_tray").delay(1000).animate({top:'-14%'} ,1000);
+					jQuery("#leftTroop_tray").delay(1000).animate({left:'-16%'} ,1000);		
+					jQuery("#rightTroop_tray").delay(1000).animate({right:'-16%'} ,1000);
+					jQuery("#scenery_tray").delay(1000).animate({top:'-16%'} ,1000);
 					jQuery("#top_right_corner").delay(1000).animate({top:'-1%',right:'-1%'} ,1000);
 					jQuery("#top_left_corner").delay(1000).animate({top:'-1%',left:'-1%'} ,1000);
 					jQuery("#deployTools").delay(1000).animate({bottom:'-1%'} ,1000);
@@ -117,8 +117,8 @@ jQuery(function(){
 				animateElements : function(){
 						//visibles
 					IBRS.actualStage = "animateElements";
-					jQuery("#leftTroop_tray").delay(1000).animate({left:'-14%'} ,1000);		
-					jQuery("#rightTroop_tray").delay(1000).animate({right:'-14%'} ,1000);
+					jQuery("#leftTroop_tray").delay(1000).animate({left:'-16%'} ,1000);		
+					jQuery("#rightTroop_tray").delay(1000).animate({right:'-16%'} ,1000);
 					jQuery("#top_right_corner").delay(1000).animate({top:'-1%',right:'-1%'} ,1000);
 					jQuery("#top_left_corner").delay(1000).animate({top:'-1%',left:'-1%'} ,1000);
 					jQuery("#editorTools").delay(1000).animate({bottom:'-9%'} ,1000);
@@ -142,8 +142,8 @@ jQuery(function(){
 				playGame : function(){
 						//visibles
 					IBRS.actualStage = "playGame";
-					jQuery("#leftTroop_tray").delay(1000).animate({left:'-14%'} ,1000);		
-					jQuery("#rightTroop_tray").delay(1000).animate({right:'-14%'} ,1000);
+					jQuery("#leftTroop_tray").delay(1000).animate({left:'-16%'} ,1000);		
+					jQuery("#rightTroop_tray").delay(1000).animate({right:'-16%'} ,1000);
 					jQuery("#top_left_corner").delay(1000).animate({top:'-1%',left:'-1%'} ,1000);
 					jQuery("#reproductorTools").delay(1000).animate({bottom:'-9%'} ,1000);
 					jQuery("#timeTracker").delay(1000).animate({top:'-1%'} ,1000);
@@ -166,8 +166,8 @@ jQuery(function(){
 				playEditableGame : function(){
 						//visibles
 					IBRS.actualStage = "playEditableGame";
-					jQuery("#leftTroop_tray").delay(1000).animate({left:'-14%'} ,1000);		
-					jQuery("#rightTroop_tray").delay(1000).animate({right:'-14%'} ,1000);
+					jQuery("#leftTroop_tray").delay(1000).animate({left:'-16%'} ,1000);		
+					jQuery("#rightTroop_tray").delay(1000).animate({right:'-16%'} ,1000);
 					jQuery("#top_left_corner").delay(1000).animate({top:'-1%',left:'-1%'} ,1000);
 					jQuery("#reproductorTools").delay(1000).animate({bottom:'-9%'} ,1000);
 					jQuery("#timeTracker").delay(1000).animate({top:'-1%'} ,1000);
@@ -272,7 +272,7 @@ jQuery(function(){
 						jQuery("#leftTroop_tray").animate({left:'-1%'} ,1000);
 						retracted_left = false;		
 					}else{
-						jQuery("#leftTroop_tray").animate({left:'-14%'} ,1000);		
+						jQuery("#leftTroop_tray").animate({left:'-16%'} ,1000);		
 						retracted_left = true;
 					}
 					return false;
@@ -284,7 +284,7 @@ jQuery(function(){
 						jQuery("#scenery_tray").animate({top:'-1%'} ,1000);
 						retracted_top = false;		
 					}else{
-						jQuery("#scenery_tray").animate({top:'-14%'} ,1000);		
+						jQuery("#scenery_tray").animate({top:'-16%'} ,1000);		
 						retracted_top = true;
 					}
 					return false;
@@ -295,7 +295,7 @@ jQuery(function(){
 						jQuery("#rightTroop_tray").animate({right:'-1%'} ,1000);
 						retracted_right = false;		
 					}else{
-						jQuery("#rightTroop_tray").animate({right:'-14%'} ,1000);		
+						jQuery("#rightTroop_tray").animate({right:'-16%'} ,1000);		
 						retracted_right = true;
 					}
 					return false;
