@@ -484,7 +484,15 @@ IBRS.Graphics = function(){
 
         currentRenderDomElement.addEventListener('mousemove', function (evt) {
             mouseSigleClick = false;
-            if (mouseIsDown==3){
+            if(mouseIsDown===0 && contextualMenuOpened === true){
+                var elementHover = graphics.findObjectByProyection(evt,this,graphics.contextualMenu.getClickableOptions());
+                if (elementHover != undefined){
+                    graphics.contextualMenu.highLight(elementHover.object.position.x,elementHover.object.position.y,elementHover.object.position.z);
+                }else{
+                    graphics.contextualMenu.stopHighLight();
+                }
+            }
+            else if (mouseIsDown==3){
                 //turn camera
                 graphics.CameraReposition(0,
                     0.03*(evt.pageX - mouseDownPosition.x),
@@ -513,7 +521,7 @@ IBRS.Graphics = function(){
                     //console.log(graphics.contextualMenu.getClickableOptions());
                     var elementClicked = graphics.findObjectByProyection(evt,this,graphics.contextualMenu.getClickableOptions());
                     if (elementClicked != undefined){
-                        console.log(elementClicked);
+                      
                         elementClicked.object.onClick();
                     }
                     else{
@@ -824,12 +832,24 @@ IBRS.ContextMenu = function(graphics){
     this.plane= new THREE.Object3D();
     this.planeContainer = new THREE.Object3D();
 
-   
-
+    this.optionsNumber = 0;
+    this.angularStep = Math.PI/8;
+    
+    var highMaterial = new THREE.MeshBasicMaterial({color:0xFFFF00, transparent:true,opacity:1});
+    var highGeometry = new THREE.CircleGeometry( 1.4, 16);
+    this.highLighter = new THREE.Mesh(highGeometry,highMaterial);     
   
-   
+    this.plane.add(this.highLighter);
 
+    this.highLight = function(x,y,z){
+        contextMenu.highLighter.position.set(x,y,z+0.2);
+        highMaterial.opacity = 0.5;
+    };
 
+    this.stopHighLight = function(){
+        
+        highMaterial.opacity = 0;
+    };
     this.scaleMenu = function (x,y,z){
        // contextmenu.planeGeometry.scale.set(20*x,20*y,z);
     };
@@ -872,11 +892,11 @@ IBRS.ContextMenu = function(graphics){
         console.log(contextMenu.planeContainer);
         contextMenu.targeteableOptions = [];
         contextMenu.plane.remove( contextMenu.plane.children);
+        contextMenu.optionsNumber = options.length;
         for (i = 0;i< options.length;i++){
           //  console.log( contextMenu.sceneOrtho);
-            var angularStep = Math.PI/8;
-          
-            var angle = -angularStep*(options.length-1)/2+i*angularStep;
+           
+            var angle = -contextMenu.angularStep*(options.length-1)/2+i*contextMenu.angularStep;
             options[i].setPosition(Math.sin(angle),Math.cos(angle),0,7);
 
             contextMenu.targeteableOptions.push(options[i].clickable());
@@ -941,6 +961,8 @@ IBRS.SelectorCamera = function(graphics){
     this.camera_Horizonatl_Angle = 0;
     this.camera_Vertical_Angle = Math.PI/3;
     this.camera_target = graphics.scene;
+
+
 /*
     var planeGeometry = new THREE.PlaneGeometry( 10, 20, 1, 1 );
     var finalRenderTarget = new THREE.WebGLRenderTarget( 512, 512, { format: THREE.RGBAFormat } );
@@ -1050,7 +1072,7 @@ IBRS.SelectorCamera = function(graphics){
 IBRS.CharacterOption = function(code,onOptionClick){
 
     var characterOption = this;
-    this.optionGeometry = new THREE.PlaneGeometry( 3, 3, 1, 1 );
+    this.optionGeometry = new THREE.PlaneGeometry( 2.7, 2.7, 1, 1 );
 
     switch (code){
         case 1:
@@ -1069,13 +1091,18 @@ IBRS.CharacterOption = function(code,onOptionClick){
               var image = "img/Orden_regular.png";
         break;
     }
-    this.optionMaterial = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture(image) ,transparent:true} );
+    this.optionMaterial = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture(image), color:0xFFFFFF ,transparent:true} );
     this.optionPlane = new THREE.Mesh( this.optionGeometry, this.optionMaterial );
 
 
-    this.optionPlane.name = "cuacua";
+    this.optionPlane.onMouseOn = function(){
+        characterOption.optionMaterial.color = 0xFFFFFF;
+        console.log("colochange");
+    };
 
-   
+    this.optionPlane.onMouseOff = function(){
+        characterOption.optionMaterial.color = 0xffffff;
+    };
 
      this.optionPlane.onClick = function(){
        console.log("youclicked it");
