@@ -1,5 +1,10 @@
 jQuery(function(){
 				//webGLStart();
+				window.addEventListener("keydown", function(evt){
+					if (evt.keyCode ===9 || evt.keyCode === 18){
+						evt.preventDefault();
+					}
+				}  , false); 
 				jQuery( document ).ajaxError(function() {
 					console.error("fallo de ayax");
 				});

@@ -116,6 +116,8 @@ IBRS.Graphics = function(){
 
     this.startScene = function(){
         graphics.SetupUpMouseInteraction(graphics.render.domElement);
+        graphics.setupKeyboardInteraction(graphics.render.domElement);
+        
         graphics.contextualMenu.start();
         //graphics.SetupUpLeapInteraction();
         graphics.CameraReposition(0,0,0);
@@ -287,9 +289,7 @@ IBRS.Graphics = function(){
         var actualMenu = 0;
         var fullScreen = false;
          Lctrl = Leap.loop(options, function(frame) {
-            /*if (lastTimeSelection === undefined){
-                var lastTimeSelection = -100;   
-            }*/
+       
             izqPresente = false;
             derPresente = false;
 
@@ -333,10 +333,7 @@ IBRS.Graphics = function(){
                 }
                 // Gestos
                 //plaY/pause, juntar muñecas
-               /* if (playTreshold == undefined || playTreshold < 0){
-                    var playTreshold = -100;   
-                }*/
-                if (playTreshold < Lctrl.frame(0).id-50){
+                  if (playTreshold < Lctrl.frame(0).id-50){
                     frame0 = Lctrl.frame(0);
                       if (frame0.hands.length == 2 &&  Lctrl.frame(10).hands.length == 2){
                         
@@ -430,18 +427,7 @@ IBRS.Graphics = function(){
 
                                      }
                                 }
-                                 //console.log(frame0);
-/*
-                                if (frame0.fingers[1].tipPosition[0] < frame0.fingers[6].tipPosition[0] && playTreshold< (frame0.id-50)){
-                                   
-                                    if (Lctrl.frame(10).fingers[1].tipPosition[0] > Lctrl.frame(10).fingers[6].tipPosition[0]+80){
-                                        playTreshold  = frame0;
-                                        
-                                    }
-                                }
-*/
-
-                        }            
+                    }            
                 }
                 if(!izqPresente){
                     izqDisplay.css( "background-color", "lightgrey" ).empty();
@@ -450,8 +436,6 @@ IBRS.Graphics = function(){
                    derDisplay.css( "background-color", "lightgrey" ).empty();
                 }   
             }
-
-              // Showcase some new V2 features
         });
     }
     this.SetupUpMouseInteraction = function(currentRenderDomElement){
@@ -555,6 +539,65 @@ IBRS.Graphics = function(){
             
         },false);
     }
+    this.setupKeyboardInteraction = function(currentRenderDomElement){
+       currentRenderDomElement.setAttribute('tabindex','0');
+       var keyPressed = {};
+
+       currentRenderDomElement.addEventListener("keydown",function(evt){
+           
+            switch(evt.keyCode){
+                case 9:
+                    keyPressed.tab = true;
+                    for (var i =0; i<graphics.tageteableElementsList.length;i++){
+
+                        graphics.tageteableElementsList[i].selectorOpacity(1);
+                    }
+
+
+                break;
+                case 17:
+                    keyPressed.ctrl = true;
+                break;
+                case 18:
+                    keyPressed.alt = true;
+                break;
+                default:
+                    console.log("na que ver");
+                break;
+            }
+           
+        }, false);  
+
+
+       currentRenderDomElement.addEventListener("keyup", function(evt){
+             switch(evt.keyCode){
+                case 9:
+                    keyPressed.tab = false;
+                      for (var i =0; i<graphics.tageteableElementsList.length;i++){
+                        graphics.tageteableElementsList[i].selectorOpacity(0);
+                    }
+
+                break;
+                case 17:
+                    keyPressed.ctrl = false;
+                break;
+                case 18:
+                    keyPressed.alt = false;
+                break;
+                default:
+                    console.log("na que ver");
+                break;
+            }
+            
+        }, false); 
+
+       
+    }
+
+
+
+    this.keyupEvents = 
+
     this.getCanvasStats = function(scope){
         var canvasStat = {} ;
         canvasStat.Offset = jQuery(scope).offset();
@@ -889,9 +932,8 @@ IBRS.ContextMenu = function(graphics){
     };
 
     this.setOptions = function(options){
-        console.log(contextMenu.planeContainer);
         contextMenu.targeteableOptions = [];
-        contextMenu.plane.remove( contextMenu.plane.children);
+        contextMenu.plane.remove(contextMenu.plane.children);
         contextMenu.optionsNumber = options.length;
         for (i = 0;i< options.length;i++){
           //  console.log( contextMenu.sceneOrtho);
