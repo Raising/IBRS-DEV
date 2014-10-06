@@ -105,7 +105,8 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 
 	   	//que hacer cuando se hace click en la tupla de cada miniatura
 	    unitLogic.container.click(function(){   
-	         unitLogic.unitGraphic.selectorOpacity(1);
+	    	
+	        unitLogic.unitGraphic.onElementClick();
 	    return false;});
 
 	    //que hacer cuando entra el raton en la tupla de cada miniatura

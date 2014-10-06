@@ -21,7 +21,7 @@ jQuery(function(){
 
 				setTimeout(function(){
 						GraphicEnviroment.insertGameData(currentGame);
-				},2000);
+				},4000);
 
 			//	GraphicEnviroment.playGame(currentGame.events);
 				

@@ -110,6 +110,7 @@ IBRS.Graphics = function(){
             graphics.sceneObjects.add(list[i]);
             if (targeteable){
                 graphics.tageteableElementsList.push(list[i]);
+                list[i].setEnviroment(graphics);
             }
         }
     };
@@ -496,9 +497,9 @@ IBRS.Graphics = function(){
                 if (contextualMenuOpened === false){
                     var elementClicked = graphics.findObjectByProyection(evt,this,graphics.tageteableElementsList);
                     if (elementClicked != undefined){
-                        elementClicked =elementClicked.object.parent;
+                        elementClicked = elementClicked.parent;
                         elementClicked.onElementClick();
-                        graphics.selectorCamera.CameraReposition(0,0,0,elementClicked)  ;  
+                        //graphics.selectorCamera.CameraReposition(0,0,0,elementClicked)  ;  
                     }
                 }
                 else{
@@ -506,7 +507,7 @@ IBRS.Graphics = function(){
                     var elementClicked = graphics.findObjectByProyection(evt,this,graphics.contextualMenu.getClickableOptions());
                     if (elementClicked != undefined){
                       
-                        elementClicked.object.onClick();
+                        elementClicked.onClick();
                     }
                     else{
                         console.log("click en el aire");
@@ -518,8 +519,8 @@ IBRS.Graphics = function(){
                     var elementClicked = graphics.findObjectByProyection(evt,this,graphics.tageteableElementsList);
 
                     if (elementClicked != undefined){
-                        elementClicked=elementClicked.object.parent;
-                        elementClicked.onElementClick();
+                        elementClicked=elementClicked.parent;
+                        //elementClicked.onElementClick();
                         graphics.OpenContextualMenu(elementClicked);
                         contextualMenuOpened = true;
                     }else{
@@ -622,7 +623,7 @@ IBRS.Graphics = function(){
         var intersects = ray.intersectObjects(list, true);
         if (intersects.length) {
             var target = intersects[0]; 
-            return target;
+            return target.object;
             
         } else{
             return undefined;

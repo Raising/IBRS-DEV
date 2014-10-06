@@ -289,7 +289,7 @@ BasicElement.prototype = Object.create(THREE.Object3D.prototype);
 
 var TargeteableElement = function(){
     BasicElement.call(this);
-    targeteableElement = this;
+    var targeteableElement = this;
     	//IBRS.tageteableElementsList.push(this);
 	//this.htmlRepresentation = new Object();
 	this.name = "no name";
@@ -297,6 +297,7 @@ var TargeteableElement = function(){
 	this.status = IBRS.STAT.NORMAL;
     this.statusIcon = "img/NORMAL.png";
 	this.height = 0;
+    this.enviroment = 0;
     var selectorGeometry = new THREE.CylinderGeometry(0.5,0.01,1,16); 
     //opacity: 0.8,transparent: true
     var selectorMaterial = new THREE.MeshBasicMaterial( {color: 0xFFff00,wireframe:false,opacity: 0,transparent: true} ); 
@@ -328,10 +329,15 @@ var TargeteableElement = function(){
          this.container.empty().append('<td>'+this.name+
 		'</td><td>'+parseInt(this.position.x)+':'+parseInt(this.position.y)+':'+parseInt(this.position.z)+
 		'</td><td>'+'<img src="'+this.statusIcon+'" alt="" border=3 height=20 width=20></img>'+'</td>');
-	};
-*/
+	};*/
+    this.setEnviroment = function(enviroment){
+        targeteableElement.enviroment = enviroment;
+
+    };
 	this.onElementClick = function(){
-		//this.updateHtml();
+
+       
+        targeteableElement.enviroment.selectorCamera.CameraReposition(0,0,0,targeteableElement)  ; 
 	};
 	
 	
@@ -376,5 +382,6 @@ var Building = function(frontalTexture,tipo){
 	this.add(MeshEdificio);
 }
 Building.prototype = Object.create(BasicElement.prototype);
+
 
 
