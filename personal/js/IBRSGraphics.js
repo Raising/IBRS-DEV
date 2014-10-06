@@ -95,6 +95,7 @@ IBRS.Graphics = function(){
     this.camera_target = this.scene;
     this.sceneObjects = new THREE.Object3D();
     this.scene.add(this.sceneObjects);
+    this.keyPresed = {tab:false,ctrl:false,alt:false};
 
     this.refreshSceneObjects = function(game){
         graphics.scene.remove(graphics.sceneObjects);
@@ -195,6 +196,7 @@ IBRS.Graphics = function(){
         var testOptions =[option1,option2,option3,option4];
          graphics.contextualMenu.setOptions(testOptions);
      };
+
     this.CloseContextualMenu = function(){
          graphics.contextualMenu.hide();
 
@@ -479,14 +481,17 @@ IBRS.Graphics = function(){
             }
             else if (mouseIsDown==3){
                 //turn camera
-                graphics.CameraReposition(0,
-                    0.03*(evt.pageX - mouseDownPosition.x),
-                    0.02*(evt.pageY - mouseDownPosition.y)
-                );
-                graphics.selectorCamera.CameraReposition(0,
-                    0.03*(evt.pageX - mouseDownPosition.x),
-                    0.02*(evt.pageY - mouseDownPosition.y)
-                );
+                if (graphics.keyPresed.ctrl === false){
+                    graphics.CameraReposition(0,
+                        0.03*(evt.pageX - mouseDownPosition.x),
+                        0.02*(evt.pageY - mouseDownPosition.y)
+                    );
+                }else{
+                    graphics.selectorCamera.CameraReposition(0,
+                        0.03*(evt.pageX - mouseDownPosition.x),
+                        0.02*(evt.pageY - mouseDownPosition.y)
+                    );
+                }
             mouseDownPosition.x = evt.pageX;
             mouseDownPosition.y = evt.pageY;
             }
@@ -542,13 +547,13 @@ IBRS.Graphics = function(){
     }
     this.setupKeyboardInteraction = function(currentRenderDomElement){
        currentRenderDomElement.setAttribute('tabindex','0');
-       var keyPressed = {};
+      
 
        currentRenderDomElement.addEventListener("keydown",function(evt){
            
             switch(evt.keyCode){
                 case 9:
-                    keyPressed.tab = true;
+                    graphics.keyPresed.tab = true;
                     for (var i =0; i<graphics.tageteableElementsList.length;i++){
 
                         graphics.tageteableElementsList[i].selectorOpacity(1);
@@ -557,10 +562,10 @@ IBRS.Graphics = function(){
 
                 break;
                 case 17:
-                    keyPressed.ctrl = true;
+                    graphics.keyPresed.ctrl = true;
                 break;
                 case 18:
-                    keyPressed.alt = true;
+                    graphics.keyPresed.alt = true;
                 break;
                 default:
                     console.log("na que ver");
@@ -573,17 +578,17 @@ IBRS.Graphics = function(){
        currentRenderDomElement.addEventListener("keyup", function(evt){
              switch(evt.keyCode){
                 case 9:
-                    keyPressed.tab = false;
+                    graphics.keyPresed.tab = false;
                       for (var i =0; i<graphics.tageteableElementsList.length;i++){
                         graphics.tageteableElementsList[i].selectorOpacity(0);
                     }
 
                 break;
                 case 17:
-                    keyPressed.ctrl = false;
+                    graphics.keyPresed.ctrl = false;
                 break;
                 case 18:
-                    keyPressed.alt = false;
+                    graphics.keyPresed.alt = false;
                 break;
                 default:
                     console.log("na que ver");
