@@ -125,10 +125,11 @@ IBRS.UnitLogic =  function (tacticalGroup) {
      
  		unitLogic.container.empty().append('<div class="troopElement troopIcon"><img src="'+unitLogic.unitIcon+
  			'" border=0 height=20 width=20></img></div>'+
- 			'<div class="troopElement troopText">'+
- 				'<div class="troopElement troopName">'+ unitLogic.name+'</div>'+
- 				'<div class="troopElement troopEquip">EQUIP_HERE</div>'+
- 			'</div>');
+ 			//'<div class="troopElement troopText">'+
+ 				'<div class="troopElement troopName">'+ unitLogic.name+'</div>'
+ 		//		'<div class="troopElement troopEquip">EQUIP_HERE</div>'+
+ 			//'</div>'
+ 			);
 
  		
 
@@ -239,10 +240,10 @@ IBRS.TacticalGroup =  function (army) {
 	this.irregularAmount = 0;
 	this.furyAmount = 0;
 	
-	this.container = jQuery('<div id="'+ this.id+'" class="tacticalGroup "></div>');
+	this.container = jQuery('<div class="tacticalGroup "></div>');
 	this.army.container.append(this.container);
-	//jQuery('#inBoardElements').append(this.container);
 	this.groupHeader = jQuery('<div class="tacticalGroupHeader ">Group '+this.groupNumber+'</div>');
+	this.troopTray = jQuery('<div class="tacticalGroupTroop "></div>');
 
 	this.deleteButton = jQuery('<span class="pull-right glyphicon glyphicon-remove-sign">del</span>');
 	this.addTroopButton = jQuery('<span class="pull-right glyphicon glyphicon-remove-sign">add</span>');
@@ -251,10 +252,10 @@ IBRS.TacticalGroup =  function (army) {
 			tacticalGroup.container.empty();
 			tacticalGroup.groupHeader = jQuery('<div class="tacticalGroupHeader ">Group '+this.groupNumber+'</div>');
 			tacticalGroup.groupHeader.append(tacticalGroup.deleteButton);
-			tacticalGroup.container.append(tacticalGroup.groupHeader);
+			tacticalGroup.container.append(tacticalGroup.groupHeader).append(tacticalGroup.troopTray).css("height",25+(tacticalGroup.unitList.length+1)*22); ;
 			for (var j = 0 ; j<tacticalGroup.unitList.length;j++){
 				var unit = tacticalGroup.unitList[j];
-				tacticalGroup.container.append(unit.container);
+				tacticalGroup.troopTray.append(unit.container);
 				unit.updateHtml();
 			}
 			tacticalGroup.setHtmlInteractions();
@@ -384,6 +385,7 @@ IBRS.Army = function(player){
 	}else{
     	this.side = "right";
     }
+    this.header = jQuery('<div class="armyHeader '+this.side+'">'+ this.faction +' '+ this.player.name+'</div>');
 	this.container = jQuery('<div id="'+ this.id+'" class="army '+this.side+'"></div>');
 	
 	//this.player.game.container.append(this.container);
@@ -397,6 +399,7 @@ IBRS.Army = function(player){
 	//	army.container.empty().append('<div class="panel-heading">'+army.player.name+'   '+army.faction+'</div>');
 			for (var j = 0 ; j<army.tacticalGroupList.length;j++){
 				var group = army.tacticalGroupList[j];
+
 				army.container.append(group.container);
 				group.updateHtml();
 			}
@@ -511,7 +514,7 @@ IBRS.Game = function(gameID){
 		//game.container.empty();
 		for (var i = 0 ; i<2;i++){
 			var army = game.playerList[i].army;
-			game.container[i].empty().append(army.container);
+			game.container[i].empty().append(army.header).append(army.container);
 			army.updateHtml();
 		}
 	}

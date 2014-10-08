@@ -1,10 +1,10 @@
 jQuery(function(){
 				//webGLStart();
-				window.addEventListener("keydown", function(evt){
-					if (evt.keyCode ===9 || evt.keyCode === 18){
-						evt.preventDefault();
-					}
-				}  , false); 
+					window.addEventListener("keydown", function(evt){
+						if (evt.keyCode ===9 || evt.keyCode === 18){
+							evt.preventDefault();
+						}
+					}  , false); 
 				jQuery( document ).ajaxError(function() {
 					console.error("fallo de ayax");
 				});
@@ -15,7 +15,7 @@ jQuery(function(){
 				
 				var currentGame = new IBRS.Game();
 				// esa instrucccion debe ser llamada usando los menus del sistema
-				currentGame.loadGameFromDataBase("game02");
+				currentGame.loadGameFromDataBase("game01");
 
 				
 
@@ -266,14 +266,17 @@ jQuery(function(){
 				
 				jQuery("#buton_search").click(function(){IBRS.stage.searchGame();});
 
+				
 				jQuery("#buton_create_new").click(function(){IBRS.stage.selectElements();});
+				
 
 				
 
 				jQuery("#back_button").click(function(){
 					switch(IBRS.actualStage){
 						case "playEditableGame":
-							IBRS.stage.animateElements();
+							//IBRS.stage.animateElements();
+							IBRS.stage.startMenu();
 						break;
 						
 						case "playGame":
