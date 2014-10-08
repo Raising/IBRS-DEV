@@ -99,10 +99,10 @@ jQuery(function(){
 					
 
 
-					tl.to(jQuery("#frontalSelector"),2,{top:'30%'},"-=1" );		
+					tl.to(jQuery("#frontalSelector"),2,{top:'20%'},"-=1" );		
 					tl.to(jQuery("#leftTroop_tray"),1,{left:'-1%'} );	
 					tl.to(jQuery("#rightTroop_tray"),1,{right:'-1%'},"-=1" );
-					tl.to(jQuery("#scenery_tray"),1,{top:'-1%'} ,"-=1");
+					tl.to(jQuery("#scenery_tray"),1,{top:'-1%'} ,"-=0");
 						
 					tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=0.5");
 					tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-=1" );
@@ -130,7 +130,7 @@ jQuery(function(){
 					tl.to(jQuery("#leftTroop_tray"),1,{left:'-16%'} );		
 					tl.to(jQuery("#rightTroop_tray"),1,{right:'-16%'},"-=1" );
 					tl.to(jQuery("#scenery_tray"),1,{top:'-16%'} ,"-=1");
-					tl.to(jQuery("#deployTools"),1,{bottom:'-1%'},"-=1");
+					tl.to(jQuery("#deployTools"),1,{bottom:'-1%'} );
 					tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-=0.5");
 					tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1" );
 					
