@@ -445,7 +445,7 @@ position:absolute;
 }
 
 .army{
-
+  overflow: scroll;
   border-radius: 7px;
    height: -moz-calc(100% - 25px);
    height: -webkit-calc(100% - 25px);

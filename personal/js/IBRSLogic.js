@@ -351,10 +351,9 @@ IBRS.TacticalGroup =  function (army) {
 
 	    tacticalGroup.troopTray.bind("drop" , function(event){
 	 	event.preventDefault();
-		console.log(IBRS.dragCatcher);
+		
 		switch (IBRS.dragCatcher.kind){
 			case "TroopThumb":
-			console.log("caso thumb");
 					var newUnit = new IBRS.UnitLogic(tacticalGroup);
 					newUnit.insertNewModel(IBRS.dragCatcher.name);
 					tacticalGroup.unitList.push(newUnit);
@@ -363,11 +362,14 @@ IBRS.TacticalGroup =  function (army) {
 			default:
 			break;
 			}
+			return false;
 		});
+
+
 	    tacticalGroup.troopTray.bind("dragover", function(event){
 			  event.preventDefault();
 			console.log("intento de hovering en grupo");
-			
+			return false;
 		});
 
 
@@ -454,17 +456,37 @@ IBRS.Army = function(player){
 	this.container = jQuery('<div id="'+ this.id+'" class="army '+this.side+'"></div>');
 	
 
-	/*
+	
 	this.container.bind("drop" ,function(event){
 		event.preventDefault();
-		console.log("intento de droping");
+		
+		switch (IBRS.dragCatcher.kind){
+			case "TroopThumb":
+					
+					
+					var newGroup = new IBRS.TacticalGroup(army);
+					var newUnit = new IBRS.UnitLogic(newGroup);
+					newUnit.insertNewModel(IBRS.dragCatcher.name);
+					newGroup.groupNumber = army.tacticalGroupList.length;
+					newGroup.unitList.push(newUnit);
+					army.addGroup(newGroup);
+					army.updateHtml();
+					
+			break;
+			default:
+			break;
+			}
+			return false;
 	});
+
+
+
 	this.container.bind("dragover",function(event){
 		event.preventDefault();
 		console.log("intento de hovering");
 	});
 
-*/
+
 
 
 
