@@ -186,24 +186,82 @@ body{
 
 .leftExpandButton{
   position:absolute;
-  border-radius:0px 9px 0px 0px;
-  width: 20%;
-  height: 100%;
-  background: #80aa45;
-  top:0%;
-  right: 0%;
+   border-top: 1px solid #A7CCE8;
+  border-right: 1px none #A7CCE8;
+  border-left: 1px none #A7CCE8;
+  border-bottom: 1px solid #A7CCE8;
+ 
+  width:25px;
+  height: 50px;
+  background: #0E4759;
+  top:11%;
+  right: -25px;
+}
+
+.leftExpandButtonAux1{
+  
+  position:absolute;
+  border-radius:0px 0px 0px 0px;
+  
+  width: 35.35px;
+  height:35.35px;
+ 
+  transform: scale(0.707,1) rotate(-45deg) ;
+
+  background: #0E4759;
+   top: 7px;
+ 
+  right: -17.675px;
+   border-top: 1px none #A7CCE8;
+  border-right: 1px solid #A7CCE8;
+  border-left: 1px none #A7CCE8;
+  border-bottom: 1px solid #A7CCE8;
 
 }
+
+
+
+
+
+
+
+
+
 .rightExpandButton{
   position:absolute;
-  border-radius:9px 0px 0px 0px;
-  width: 20%;
-  height: 100%;
-  background: #80aa45;
-  top:0%;
-  left: 0%;
+   border-top: 1px solid #A7CCE8;
+  border-right: 1px none #A7CCE8;
+  border-left: 1px none #A7CCE8;
+  border-bottom: 1px solid #A7CCE8;
+ 
+  width:25px;
+  height: 50px;
+  background: #0E4759;
+  top:11%;
+  left: -25px;
+}
+
+.rightExpandButtonAux1{
+  
+  position:absolute;
+  border-radius:0px 0px 0px 0px;
+  
+  width: 35.35px;
+  height:35.35px;
+ 
+  transform: scale(0.707,1) rotate(-45deg) ;
+
+  background: #0E4759;
+   top: 7px;
+ 
+  left: -17.675px;
+   border-top: 1px solid #A7CCE8;
+  border-right: 1px none #A7CCE8;
+  border-left: 1px solid #A7CCE8;
+  border-bottom: 1px none #A7CCE8;
 
 }
+
 
 .topExpandButton{
   position:absolute;
@@ -216,23 +274,23 @@ body{
   width:30px;
   height: 26px;
   background: #0E4759;
-  bottom:-26px;
-  right: 45px;
+  bottom:-27px;
+  right: 35px;
 }
 
 .topExpandButtonAux{
   position:absolute;
-  transform: skew(-30deg, 0deg) ;
-   border-top: 1px none #A7CCE8;
+  transform: skew(-52deg, 0deg) ;
+  border-top: 1px none #A7CCE8;
   border-right: 1px solid #A7CCE8;
   border-left: 1px none #A7CCE8;
   border-bottom: 1px solid #A7CCE8;
  
-  width:30px;
+  width:32px;
   height: 26px;
   background: #0E4759;
-  bottom:-26px;
-  right: 30px;
+  bottom:-1px;
+  right: -17px;
 }
 
 .topExpandButtonShadow{
@@ -245,11 +303,12 @@ body{
 }
 
 #element_tray{
-
+  
   border-radius: 7px;
+
   width: -moz-calc(100% - 16px);
   width: -webkit-calc(100% - 16px);
-  width: -o-calc(100% - 16px);
+
   width: calc(100% - 16px);
   height: 15%;
   background: #043D42;
@@ -261,7 +320,7 @@ body{
 
 #element_filter{
   border-radius: 15px;
-  overflow: hidden;
+ 
   width: 99.5%;
   height: 12%;
   
@@ -409,9 +468,10 @@ top:0%;
   float:inherit;
   display: block;
   border-radius: 5px;
-   width: -moz-calc(100% - 4px);
-   width: -webkit-calc(100% - 4px);
-   width: calc(100% - 4px);
+   width: -moz-calc(100% - 6px);
+   width: -webkit-calc(100% - 6px);
+   width: calc(100% - 6px);
+   border: 1px solid #a6f6f5;
   height: 300px;
   margin-left:2px;
   margin-right:2px;
@@ -533,4 +593,32 @@ top:0%;
 #scenery_container2{
   border-radius: 0px 0px 7px 7px;
   bottom: 8px;
+}
+
+#troopKindSwitch{
+  position: absolute;
+  top:-20%;
+  left:5%;
+  height: 17%;
+  width: 15%;
+ 
+}
+
+#sceneryKindSwitch{
+  position: absolute;
+  top:-20%;
+  right:5%;
+  height: 17%;
+  width: 15%;
+ 
+}
+
+.thumb{
+  display:inline;
+  border-radius: 5px;
+  height: 50px;
+  width: 50px;
+  margin: 4px;
+  background-size: contain;
+  background-repeat:no-repeat;
 }

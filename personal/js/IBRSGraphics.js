@@ -474,7 +474,7 @@ IBRS.Graphics = function(){
             if(mouseIsDown===0 && contextualMenuOpened === true){
                 var elementHover = graphics.findObjectByProyection(evt,this,graphics.contextualMenu.getClickableOptions());
                 if (elementHover != undefined){
-                    graphics.contextualMenu.highLight(elementHover.object.position.x,elementHover.object.position.y,elementHover.object.position.z);
+                    graphics.contextualMenu.highLight(elementHover.position.x,elementHover.position.y,elementHover.position.z);
                 }else{
                     graphics.contextualMenu.stopHighLight();
                 }

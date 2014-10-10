@@ -15,7 +15,7 @@ jQuery(function(){
 				
 				var currentGame = new IBRS.Game();
 				// esa instrucccion debe ser llamada usando los menus del sistema
-				currentGame.loadGameFromDataBase("game01");
+				currentGame.loadGameFromDataBase("game02");
 
 				
 
@@ -42,10 +42,13 @@ jQuery(function(){
 				//boton ampliar canvas	
 
 
+				
+
 			
 				var retracted_right = false;
 				var retracted_left = false;
 				var retracted_top = false;
+
 				IBRS.actualStage = "startMenu";
 				var tl = new TimelineLite();
 				IBRS.stage = {
@@ -58,12 +61,12 @@ jQuery(function(){
 
 					tl.set(jQuery("#canvas"),{visibility:'hidden'});
 					tl.to(jQuery("#canvas"),1,{opacity:'0'},"+=0");
-					tl.to(jQuery("#leftTroop_tray"),1,{left:'-25%'},"-=1" );		
-					tl.to(jQuery("#rightTroop_tray"),1,{right:'-25%'},"-=1" );
-					tl.to(jQuery("#scenery_tray"),1,{top:'-25%'} ,"-=1");
-					tl.to(jQuery("#editorTools"),1,{bottom:'-25%'} ,"-=1");
-					tl.to(jQuery("#reproductorTools"),1,{bottom:'-25%'} ,"-=1");
-					tl.to(jQuery("#deployTools"),1,{bottom:'-25%'},"-=1");
+					tl.to(jQuery("#leftTroop_tray"),1,{left:'-30%'},"-=1" );		
+					tl.to(jQuery("#rightTroop_tray"),1,{right:'-30%'},"-=1" );
+					tl.to(jQuery("#scenery_tray"),1,{top:'-30%'} ,"-=1");
+					tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} ,"-=1");
+					tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'} ,"-=1");
+					tl.to(jQuery("#deployTools"),1,{bottom:'-30%'},"-=1");
 					tl.to(jQuery("#timeTracker"),1,{top:'-15%'},"-=1" );
 					
 
@@ -88,12 +91,12 @@ jQuery(function(){
 					
 					tl.set(jQuery("#canvas"),{visibility:'hidden'});
 					tl.to(jQuery("#canvas"),1,{opacity:'0'},"+=0");
-					tl.to(jQuery("#leftGameFilter"),1,{left:'-25%'},"-=1" );		
-					tl.to(jQuery("#rightGameFilter"),1,{right:'-25%'},"-=1" );
-					tl.to(jQuery("#searchTools"),1,{bottom:'-25%'},"-=1" );
-					tl.to(jQuery("#editorTools"),1,{bottom:'-25%'} ,"-=1");
-					tl.to(jQuery("#reproductorTools"),1,{bottom:'-25%'} ,"-=1");
-					tl.to(jQuery("#deployTools"),1,{bottom:'-25%'} ,"-=1");
+					tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'},"-=1" );		
+					tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'},"-=1" );
+					tl.to(jQuery("#searchTools"),1,{bottom:'-30%'},"-=1" );
+					tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} ,"-=1");
+					tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'} ,"-=1");
+					tl.to(jQuery("#deployTools"),1,{bottom:'-30%'} ,"-=1");
 					tl.to(jQuery("#timeTracker"),1,{top:'-15%'} ,"-=1");
 					
 					
@@ -118,11 +121,11 @@ jQuery(function(){
 					IBRS.actualStage = "deployElements";
 					
 
-					tl.to(jQuery("#editorTools"),1,{bottom:'-25%'} );
-					tl.to(jQuery("#leftGameFilter"),1,{left:'-25%'},"-=1" );		
-					tl.to(jQuery("#rightGameFilter"),1,{right:'-25%'},"-=1" );
-					tl.to(jQuery("#searchTools"),1,{bottom:'-25%'},"-=1" );
-					tl.to(jQuery("#reproductorTools"),1,{bottom:'-25%'},"-=1" );
+					tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} );
+					tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'},"-=1" );		
+					tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'},"-=1" );
+					tl.to(jQuery("#searchTools"),1,{bottom:'-30%'},"-=1" );
+					tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'},"-=1" );
 					tl.to(jQuery("#timeTracker"),1,{top:'-15%'} ,"-=1");
 					tl.to(jQuery("#frontalSelector"),1,{top:'130%'},"-=1" );	
 
@@ -150,13 +153,13 @@ jQuery(function(){
 					IBRS.actualStage = "animateElements";
 					
 						//quitadas de en medio
-						tl.to(jQuery("#deployTools"),1,{bottom:'-25%'});
-						tl.to(jQuery("#scenery_tray"),1,{top:'-25%'} ,"-=1" );
+						tl.to(jQuery("#deployTools"),1,{bottom:'-30%'});
+						tl.to(jQuery("#scenery_tray"),1,{top:'-30%'} ,"-=1" );
 						tl.to(jQuery("#frontalSelector"),1,{top:'130%'},"-=1" );		
-						tl.to(jQuery("#leftGameFilter"),1,{left:'-25%'} ,"-=1" );		
-						tl.to(jQuery("#rightGameFilter"),1,{right:'-25%'} ,"-=1" );
-						tl.to(jQuery("#searchTools"),1,{bottom:'-25%'},"-=1"  );
-						tl.to(jQuery("#reproductorTools"),1,{bottom:'-25%'},"-=1"  );
+						tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'} ,"-=1" );		
+						tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'} ,"-=1" );
+						tl.to(jQuery("#searchTools"),1,{bottom:'-30%'},"-=1"  );
+						tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'},"-=1"  );
 
 						//visibles
 
@@ -182,14 +185,14 @@ jQuery(function(){
 						
 
 						//quitadas de en medio
-					tl.to(jQuery("#top_right_corner"),1,{top:'-25%',right:'-25%'});
-					tl.to(jQuery("#deployTools"),1,{bottom:'-25%'},"-=1"  );
-					tl.to(jQuery("#scenery_tray"),1,{top:'-25%'},"-=1"  );
+					tl.to(jQuery("#top_right_corner"),1,{top:'-30%',right:'-30%'});
+					tl.to(jQuery("#deployTools"),1,{bottom:'-30%'},"-=1"  );
+					tl.to(jQuery("#scenery_tray"),1,{top:'-30%'},"-=1"  );
 					tl.to(jQuery("#frontalSelector"),1,{top:'-310%'} ,"-=1" );		
-					tl.to(jQuery("#leftGameFilter"),1,{left:'-25%'} ,"-=1" );		
-					tl.to(jQuery("#rightGameFilter"),1,{right:'-25%'} ,"-=1" );
-					tl.to(jQuery("#searchTools"),1,{bottom:'-25%'} ,"-=1" );
-					tl.to(jQuery("#editorTools"),1,{bottom:'-25%'} ,"-=1" );
+					tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'} ,"-=1" );		
+					tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'} ,"-=1" );
+					tl.to(jQuery("#searchTools"),1,{bottom:'-30%'} ,"-=1" );
+					tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} ,"-=1" );
 
 
 					//visibles
@@ -210,14 +213,14 @@ jQuery(function(){
 						//visibles
 					IBRS.actualStage = "playEditableGame";
 						
-					tl.to(jQuery("#top_right_corner"),1,{top:'-25%',right:'-25%'});
-					tl.to(jQuery("#deployTools"),1,{bottom:'-25%'},"-=1"  );
-					tl.to(jQuery("#scenery_tray"),1,{top:'-25%'},"-=1"  );
+					tl.to(jQuery("#top_right_corner"),1,{top:'-30%',right:'-30%'});
+					tl.to(jQuery("#deployTools"),1,{bottom:'-30%'},"-=1"  );
+					tl.to(jQuery("#scenery_tray"),1,{top:'-30%'},"-=1"  );
 					tl.to(jQuery("#frontalSelector"),1,{top:'130%'} ,"-=1" );		
-					tl.to(jQuery("#leftGameFilter"),1,{left:'-25%'} ,"-=1" );		
-					tl.to(jQuery("#rightGameFilter"),1,{right:'-25%'} ,"-=1" );
-					tl.to(jQuery("#searchTools"),1,{bottom:'-25%'} ,"-=1" );
-					tl.to(jQuery("#editorTools"),1,{bottom:'-25%'} ,"-=1" );
+					tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'} ,"-=1" );		
+					tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'} ,"-=1" );
+					tl.to(jQuery("#searchTools"),1,{bottom:'-30%'} ,"-=1" );
+					tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} ,"-=1" );
 
 
 					//visibles
@@ -241,19 +244,19 @@ jQuery(function(){
 						//no visibles
 					tl.set(jQuery("#canvas"),{visibility:'visible'});
 					tl.to(jQuery("#canvas"),1,{opacity:'0'},"+=0");
-					tl.to(jQuery("#leftTroop_tray"),1,{left:'-25%'}, "-=1" );		
-					tl.to(jQuery("#rightTroop_tray"),1,{right:'-25%'},"-=1" );
-					tl.to(jQuery("#scenery_tray"),1,{top:'-25%'},"-=1" );
-					tl.to(jQuery("#top_right_corner"),1,{top:'-25%',right:'-25%'} ,"-=1" );
-					tl.to(jQuery("#top_left_corner"),1,{top:'-25%',left:'-25%'},"-=1"  );
-					tl.to(jQuery("#editorTools"),1,{bottom:'-25%'},"-=1"  );
-					tl.to(jQuery("#deployTools"),1,{bottom:'-25%'} ,"-=1" );
+					tl.to(jQuery("#leftTroop_tray"),1,{left:'-30%º'}, "-=1" );		
+					tl.to(jQuery("#rightTroop_tray"),1,{right:'-30%'},"-=1" );
+					tl.to(jQuery("#scenery_tray"),1,{top:'-30%'},"-=1" );
+					tl.to(jQuery("#top_right_corner"),1,{top:'-30%',right:'-30%'} ,"-=1" );
+					tl.to(jQuery("#top_left_corner"),1,{top:'-30%',left:'-30%'},"-=1"  );
+					tl.to(jQuery("#editorTools"),1,{bottom:'-30%'},"-=1"  );
+					tl.to(jQuery("#deployTools"),1,{bottom:'-30%'} ,"-=1" );
 					
 						
-					tl.to(jQuery("#leftGameFilter"),1,{left:'-25%'} ,"-=1" );		
-					tl.to(jQuery("#rightGameFilter"),1,{right:'-25%'} ,"-=1" );
-					tl.to(jQuery("#searchTools"),1,{bottom:'-25%'} ,"-=1" );
-					tl.to(jQuery("#reproductorTools"),1,{bottom:'-25%'} ,"-=1" );
+					tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'} ,"-=1" );		
+					tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'} ,"-=1" );
+					tl.to(jQuery("#searchTools"),1,{bottom:'-30%'} ,"-=1" );
+					tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'} ,"-=1" );
 					tl.to(jQuery("#timeTracker"),1,{top:'-10%'},"-=1"  );
 					tl.to(jQuery("#canvas"),1,{opacity:'0'},"-=1" );
 					
@@ -275,8 +278,8 @@ jQuery(function(){
 				jQuery("#back_button").click(function(){
 					switch(IBRS.actualStage){
 						case "playEditableGame":
-							//IBRS.stage.animateElements();
-							IBRS.stage.startMenu();
+							IBRS.stage.animateElements();
+							
 						break;
 						
 						case "playGame":
@@ -351,6 +354,23 @@ jQuery(function(){
 						tl.to(jQuery("#rightTroop_tray"),1,{right:'-16%'} );		
 						retracted_right = true;
 					}
+					return false;
+				});
+
+
+				jQuery("#troopKindSwitch").click(function(){		
+					var searcher = new IBRS.TroopSearcher();
+					searcher.loadAvaiableTroops();
+					
+					
+					return false;
+				});
+
+				jQuery("#sceneryKindSwitch").click(function(){		
+					jQuery.getJSON("DataBase/Model/Geko.json",function(data){    
+				        var htmlVersion =  jQuery('<div id="'+IBRS.getID()+'" onDrag="IBRS.drag(event)"  class="thumb"  style="background-image: url('+data.bodyTexture +')"></div>');                 
+				  		jQuery("#element_tray").append(htmlVersion);
+				    });
 					return false;
 				});
 

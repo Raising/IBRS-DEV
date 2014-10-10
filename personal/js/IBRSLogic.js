@@ -1,3 +1,6 @@
+
+
+
 var IBRS = { VERSION: '1' };
 //Enum declaraciones
 
@@ -240,9 +243,10 @@ IBRS.TacticalGroup =  function (army) {
 	this.irregularAmount = 0;
 	this.furyAmount = 0;
 	
-	this.container = jQuery('<div class="tacticalGroup "></div>');
+	this.container = jQuery('<div id="'+ this.id+'" class="tacticalGroup "   draggable="true" ondragstart="IBRS.drag(event)"></div>');
 	this.army.container.append(this.container);
-	this.groupHeader = jQuery('<div class="tacticalGroupHeader ">Group '+this.groupNumber+'</div>');
+	this.groupHeader = jQuery('<div class="tacticalGroupHeader" >Group '+this.groupNumber+'</div>');
+	
 	this.troopTray = jQuery('<div class="tacticalGroupTroop "></div>');
 
 	this.deleteButton = jQuery('<span class="pull-right glyphicon glyphicon-remove-sign">del</span>');
@@ -290,10 +294,10 @@ IBRS.TacticalGroup =  function (army) {
 
 
 
-	   tacticalGroup.container.click(function(){   
+	 /*  tacticalGroup.container.click(function(){   
 	        // unitLogic.unitGraphic.selectorOpacity(1);
 	    return false;});
-
+*/
 	    //que hacer cuando entra el raton en la tupla de cada miniatura
 	    tacticalGroup.groupHeader.mouseenter(function(){
 	    	for (var i = tacticalGroup.unitList.length - 1; i >= 0; i--) {
@@ -386,7 +390,7 @@ IBRS.Army = function(player){
     	this.side = "right";
     }
     this.header = jQuery('<div class="armyHeader '+this.side+'">'+ this.faction +' '+ this.player.name+'</div>');
-	this.container = jQuery('<div id="'+ this.id+'" class="army '+this.side+'"></div>');
+	this.container = jQuery('<div id="'+ this.id+'"ondrop="drop(event)" ondragover="allowDrop(event)" class="army '+this.side+'"></div>');
 	
 	//this.player.game.container.append(this.container);
 
@@ -690,3 +694,73 @@ IBRS.TableLogic = function(TableModelID){
 	}
 };
 
+IBRS.TroopThumb = function(troopID){
+
+    var troopThumb = this;
+    this.id = IBRS.getID();
+    this.htmlVersion = 0;
+   	this.name = troopID;
+   	this.kind = "TroopThumb";
+    
+
+}
+
+IBRS.TroopSearcher = function(){
+	var troopSearcher = this;
+	this.troops = [];
+	
+
+	this.loadAvaiableTroops = function(){
+		jQuery.getJSON("DataBase/dataAvaiable.json",function(data){  
+		   jQuery("#element_tray").empty();
+			for (var i =0;i<data.ModelAvaiable.length;i++){
+				troopSearcher.troops.push(new IBRS.TroopThumb(data.ModelAvaiable[i]));
+
+				var troop = troopSearcher.troops[i];
+				console.log(troopSearcher.troops[i]);
+				jQuery.getJSON("DataBase/Model/"+troop.name+".json",function(data){  
+				  console.log(i);
+				 console.log(troopSearcher.troops);
+					var htmlVersion = jQuery('<img id="'+IBRS.getID()+'" href="'+troop.name+'" class="thumb"  src="'+data.bodyTexture +'" draggable="true"></img>');
+					htmlVersion.bind("dragstart" ,function(event){
+						console.log(troopSearcher.troops[i]);
+						IBRS.dragCatcher = troopSearcher.troops[i];					
+					});
+	       			jQuery("#element_tray").append(htmlVersion);                 
+	   			});
+			}
+			
+			
+	    });
+	};
+
+	this.insertTroops = function(){
+		var container = jQuery("#element_tray");
+	
+		for (var i = 0; i<troopSearcher.troops.length;i++){
+			container.append(troopSearcher.troops[i].getHTML);
+		}
+	}
+
+
+}
+
+
+IBRS.allowDrop =function(ev) {
+	console.log("allowDrop");
+    ev.preventDefault();
+	};
+
+IBRS.drag =function(ev) {
+	//	console.log("drag");
+		IBRS.dragCatcher = ev.target.element;
+		console.log(IBRS.dragCatcher);
+	    ev.dataTransfer.setData("text/html", ev.target.id);
+	};
+
+IBRS.drop=function(ev) {
+		console.log("drop");
+	    ev.preventDefault();
+	    var data = ev.dataTransfer.getData("text/html");
+	    ev.target.appendChild(document.getElementById(data));
+	};

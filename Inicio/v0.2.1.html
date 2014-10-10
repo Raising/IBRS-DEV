@@ -46,12 +46,13 @@
     		<div id="frontalSelector" class="noAuto frontalSlider">
 
 
-                <div id="element_tray" class="generalMenu">
+                <div id="element_tray"  ondrop="IBRS.drop(event)" ondragover="IBRS.allowDrop(event)" class="generalMenu">
                     
                 </div>
 
     			<div id="element_filter"  class="generalMenu">
-    			
+    			     <button id="troopKindSwitch" tipe="button">Troops</button>
+                      <button id="sceneryKindSwitch" tipe="button">Scenery</button>
                 </div>
     			<div id= "menu_inicial" class="generalMenu" >
 					<button id="buton_create_new" type="button" > Crear Partida nueva
@@ -77,27 +78,30 @@
 
     		<div id="scenery_tray"   class="noAuto topSlider" >
     			
-    			<div id="left_Scenery_Buttons" class="topButtonContainer">
+    		<!--	<div id="left_Scenery_Buttons" class="topButtonContainer">
     					<button id="buttonLEFT_scenery" type="button" class="centeredVerticalButton"> < 
  	 					</button>
     			</div>
 
+                    <div id="right_Scenery_Buttons" class="topButtonContainer">
+                    <button id="buttonRIGHT_scenery" type="button" class="centeredVerticalButton"> > 
+                        </button>
+
+                </div>
+            -->
+
                 <div id="scenery_container1" class="sceneryContainer"></div>
                 <div id="scenery_container2" class="sceneryContainer"></div>
 
-    			<div id="right_Scenery_Buttons" class="topButtonContainer">
-    				<button id="buttonRIGHT_scenery" type="button" class="centeredVerticalButton"> > 
- 	 					</button>
- 	 				
- 	 					
-    			</div>
+    				
+ 	 			
                
 
 
-                <button   class="topExpandButtonAux"> 
-                        </button>
-                <button id="retract_scenery" type="button" class="topExpandButton"> +
-                        </button>
+                <div id="retract_scenery" class="topExpandButton"> 
+                    <div   class="topExpandButtonAux"> 
+                        </div>
+                        </div>
 
     		</div>
 
@@ -142,9 +146,15 @@
     					<button id="buttonUP_troop_left" type="button" class="centeredHorizontalButton"> A 
  	 					</button>
  	 				
- 	 					<button id="retract_troop_left" type="button" class="leftExpandButton"> 
- 	 					</button>
+ 	 					
     				</div>-->
+                     
+                 
+              
+                    <div id="retract_troop_left" type="button" class="leftExpandButton"> 
+                        <div   class="leftExpandButtonAux1"> 
+                        </div>
+                        </div>
     				<div id="left_army_container" class="sideBody leftBody"></div>
  					
  					<!--<div id="left_Troop_Bottom" class="leftBottomButtons sideButtons">
@@ -155,17 +165,26 @@
 
 
     		<div id="rightTroop_tray" class="noAuto rightSlider">
-    				 <div id="right_Troop_Head" class="rightTopButtons sideButtons">
+    				 <!--
+                        <div id="right_Troop_Head" class="rightTopButtons sideButtons">
     				 	<button id="buttonUP_troop_right" type="button" class="centeredHorizontalButton"> A 
  	 					</button>
+                        
  	 				
- 	 					<button id="retract_troop_right" type="button" class="rightExpandButton"> <-->
- 	 					</button>
-    				 </div>
+ 	 					
+    				 </div>-->
+                    
+                 
+                     <div id="retract_troop_right" class="rightExpandButton"> 
+                          <div   class="rightExpandButtonAux1"> 
+                        </div>
+                        </div>
     				 <div id="right_army_container" class="sideBody rightBody"></div>
-    				  <div id="right_Troop_Bottom" class="rightBottomButtons sideButtons">
+    				  <!--
+                      <div id="right_Troop_Bottom" class="rightBottomButtons sideButtons">
     				  		<button id="buttonDOWN_troop_right" type="button" class="centeredHorizontalButton"> V
     				  </div>
+                    -->
     		</div>
 
 
