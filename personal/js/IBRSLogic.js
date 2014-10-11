@@ -78,14 +78,18 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	this.name = "no name";
 	this.unitIcon =  "img/NORMAL.png"
 	this.statusIcon = "img/NORMAL.png";
-
-	this.container = jQuery('<div id="'+this.id+'" class="troop"></div>');
+	this.kind= "UnitLogic";
+	this.container = jQuery('<div id="'+this.id+'" class="troop" draggable="true"></div>');
 
 	//this.deleteButton = jQuery('<td><button type="button" class="btn btn-default"><span class="pull-right glyphicon glyphicon-remove-sign"></span></button></td>');
 	this.deleteButton = jQuery('<span >B</span>');
 	//cambiar el glyficon
 	this.modifyButton = jQuery('<span> E</span>');
-		
+
+
+
+
+	
 	this.delete = function(){
 		unitLogic.tacticalGroup.removeUnit(unitLogic);
 		unitLogic.tacticalGroup.updateHtml();
@@ -94,6 +98,15 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	this.setHtmlInteractions = function(){
 
 		//click en el boton de eliminar
+		unitLogic.container.bind("dragstart" ,function(event){
+			event.stopPropagation();
+			event.originalEvent.dataTransfer.setData("text/html", event.target.id);
+			IBRS.dragCatcher = unitLogic;					
+			console.log(IBRS.dragCatcher);
+			event.stopPropagation();
+		
+		});
+
 		unitLogic.deleteButton.click(function(){
 			unitLogic.delete();
 			IBRS.refreshObjects();
@@ -248,32 +261,14 @@ IBRS.TacticalGroup =  function (army) {
 	this.irregularAmount = 0;
 	this.furyAmount = 0;
 	
-	this.container = jQuery('<div id="'+ this.id+'" class="tacticalGroup "   draggable="true" ondragstart="IBRS.drag(event)"></div>');
+	this.container = jQuery('<div id="'+ this.id+'" class="tacticalGroup"   draggable="true" ></div>');
 	this.army.container.append(this.container);
 	this.groupHeader = jQuery('<div class="tacticalGroupHeader" >Group '+this.groupNumber+'</div>');
 	
 	this.troopTray = jQuery('<div class="tacticalGroupTroop "></div>');
-	
+	this.kind ="TacticalGroup";
 
-	this.troopTray.bind("drop" , function(event){
-	 	event.preventDefault();
-		console.log("intento de droping en grupo");
-		switch (IBRS.dragCatcher.kind){
-			case "troopThumb":
-					var newUnit = new IBRS.UnitLogic(tacticalGroup);
-					newUnit.insertNewModel(IBRS.dragCatcher.name);
-					tacticalGroup.unitList.push(newUnit);
-					tacticalGroup.updateHtml();
-			break;
-			default:
-			break;
-		}
-	});
-    this.troopTray.bind("dragover", function(event){
-		  event.preventDefault();
-		console.log("intento de hovering en grupo");
-		
-	});
+	
 
 
 
@@ -283,14 +278,12 @@ IBRS.TacticalGroup =  function (army) {
 
 	this.updateHtml = function(){
 			tacticalGroup.container.empty();
+		
+
 			tacticalGroup.groupHeader = jQuery('<div class="tacticalGroupHeader ">Group '+this.groupNumber+'</div>');
-			tacticalGroup.groupHeader.append(tacticalGroup.deleteButton);
+			//tacticalGroup.groupHeader.append(tacticalGroup.deleteButton);
 			tacticalGroup.container.append(tacticalGroup.groupHeader).append(tacticalGroup.troopTray).css("height",25+(tacticalGroup.unitList.length+1)*22); ;
 			
-
-
-
-
 
 			for (var j = 0 ; j<tacticalGroup.unitList.length;j++){
 				var unit = tacticalGroup.unitList[j];
@@ -310,6 +303,17 @@ IBRS.TacticalGroup =  function (army) {
 			tacticalGroup.army.removeGroup(tacticalGroup);
 			tacticalGroup.army.updateHtml();
 	}	
+	
+	this.container.bind("dragstart" ,function(event){
+		
+			event.originalEvent.dataTransfer.setData("text/html", event.target.id);
+			IBRS.dragCatcher = tacticalGroup;					
+			console.log(IBRS.dragCatcher);
+	});
+
+
+
+
 
 	this.setHtmlInteractions = function(){
 
@@ -326,13 +330,6 @@ IBRS.TacticalGroup =  function (army) {
 			//TODO
 		return false});
 
-
-
-
-	 /*  tacticalGroup.container.click(function(){   
-	        // unitLogic.unitGraphic.selectorOpacity(1);
-	    return false;});
-*/
 	    //que hacer cuando entra el raton en la tupla de cada miniatura
 	    tacticalGroup.groupHeader.mouseenter(function(){
 	    	for (var i = tacticalGroup.unitList.length - 1; i >= 0; i--) {
@@ -351,13 +348,21 @@ IBRS.TacticalGroup =  function (army) {
 
 	    tacticalGroup.troopTray.bind("drop" , function(event){
 	 	event.preventDefault();
-		
+		console.log(event);
 		switch (IBRS.dragCatcher.kind){
 			case "TroopThumb":
 					var newUnit = new IBRS.UnitLogic(tacticalGroup);
 					newUnit.insertNewModel(IBRS.dragCatcher.name);
 					tacticalGroup.unitList.push(newUnit);
 					tacticalGroup.updateHtml();
+			break;
+			case "UnitLogic":
+					
+					IBRS.dragCatcher.tacticalGroup.removeUnit( IBRS.dragCatcher);
+					IBRS.dragCatcher.tacticalGroup = tacticalGroup;
+					tacticalGroup.unitList.push(IBRS.dragCatcher);
+					army.updateHtml();
+
 			break;
 			default:
 			break;
@@ -372,6 +377,8 @@ IBRS.TacticalGroup =  function (army) {
 			return false;
 		});
 
+
+		
 
 
 
@@ -459,7 +466,7 @@ IBRS.Army = function(player){
 	
 	this.container.bind("drop" ,function(event){
 		event.preventDefault();
-		
+		console.log(IBRS.dragCatcher.kind);
 		switch (IBRS.dragCatcher.kind){
 			case "TroopThumb":
 					
@@ -467,11 +474,22 @@ IBRS.Army = function(player){
 					var newGroup = new IBRS.TacticalGroup(army);
 					var newUnit = new IBRS.UnitLogic(newGroup);
 					newUnit.insertNewModel(IBRS.dragCatcher.name);
-					newGroup.groupNumber = army.tacticalGroupList.length;
+					newGroup.groupNumber = army.tacticalGroupList.length+1;
 					newGroup.unitList.push(newUnit);
 					army.addGroup(newGroup);
 					army.updateHtml();
 					
+			break;
+			case  "UnitLogic":
+		
+					var newGroup = new IBRS.TacticalGroup(army);
+					
+					IBRS.dragCatcher.tacticalGroup.removeUnit( IBRS.dragCatcher);
+					IBRS.dragCatcher.tacticalGroup = newGroup;
+					newGroup.groupNumber = army.tacticalGroupList.length+1;
+					newGroup.unitList.push(IBRS.dragCatcher);
+					army.addGroup(newGroup);
+					army.updateHtml();
 			break;
 			default:
 			break;
@@ -842,12 +860,13 @@ IBRS.allowDrop =function(ev) {
     ev.preventDefault();
 	};
 
-IBRS.drag =function(ev) {
+IBRS.drag =function(event) {
 		console.log("drag");
-		  ev.preventDefault();
-		IBRS.dragCatcher = ev.target.element;
-		console.log(IBRS.dragCatcher);
-	    ev.dataTransfer.setData("text/html", ev.target.id);
+		event.dataTransfer.setData("text/html", event.target.id);
+		
+		//IBRS.dragCatcher = ev.target.element;
+		//console.log(IBRS.dragCatcher);
+	 
 	};
 
 IBRS.drop=function(ev) {
@@ -858,4 +877,11 @@ IBRS.drop=function(ev) {
 	    ev.preventDefault();
 	    var data = ev.dataTransfer.getData("text/html");
 	    ev.target.appendChild(document.getElementById(data));
+	};
+
+
+drag =function(ev) {
+		console.log("drag");
+		
+	    ev.dataTransfer.setData("text/html", ev.target.id);
 	};

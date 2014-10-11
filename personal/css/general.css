@@ -41,7 +41,7 @@ body{
   border-radius:0px 15px 15px 0px;
   width: 19%;
   height: 85%;
-  left: -20%;
+  left: -30%;
   top: 10%;
   
 }
@@ -51,7 +51,7 @@ body{
    border-radius:15px 0px 0px 15px;
   width: 19%;
   height: 85%;
-  right: -20%;
+  right: -30%;
   top: 10%;
  
   
@@ -445,7 +445,7 @@ position:absolute;
 }
 
 .army{
-  overflow: scroll;
+  overflow: hidden;
   border-radius: 7px;
    height: -moz-calc(100% - 25px);
    height: -webkit-calc(100% - 25px);

@@ -27,7 +27,8 @@ IBRS.Graphics = function(){
 
     this.scene.add(this.camera);
     this.reproductor = new IBRS.Reproductor(this);
-    
+    this.htmlHandler = new IBRS.CanvasHtml(this);
+    this.htmlHandler.setDrop(); 
 
      window.addEventListener("resize", function(){
          IBRS.actualGraphics.canvasWidth = jQuery("#canvas").width();
@@ -605,6 +606,7 @@ IBRS.Graphics = function(){
     this.keyupEvents = 
 
     this.getCanvasStats = function(scope){
+        console.log(scope);
         var canvasStat = {} ;
         canvasStat.Offset = jQuery(scope).offset();
         canvasStat.width =jQuery(scope).width(); 
@@ -637,6 +639,7 @@ IBRS.Graphics = function(){
     this.MouseWheelHandler = function(e) {
         var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
         graphics.CameraReposition(delta*(-5),0,0)  ;
+        return false;
     } 
 
 

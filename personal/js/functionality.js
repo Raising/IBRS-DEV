@@ -244,7 +244,7 @@ jQuery(function(){
 						//no visibles
 					tl.set(jQuery("#canvas"),{visibility:'visible'});
 					tl.to(jQuery("#canvas"),1,{opacity:'0'},"+=0");
-					tl.to(jQuery("#leftTroop_tray"),1,{left:'-30%º'}, "-=1" );		
+					tl.to(jQuery("#leftTroop_tray"),1,{left:'-30%'}, "-=1" );		
 					tl.to(jQuery("#rightTroop_tray"),1,{right:'-30%'},"-=1" );
 					tl.to(jQuery("#scenery_tray"),1,{top:'-30%'},"-=1" );
 					tl.to(jQuery("#top_right_corner"),1,{top:'-30%',right:'-30%'} ,"-=1" );
@@ -367,10 +367,7 @@ jQuery(function(){
 				});
 
 				jQuery("#sceneryKindSwitch").click(function(){		
-					jQuery.getJSON("DataBase/Model/Geko.json",function(data){    
-				        var htmlVersion =  jQuery('<div id="'+IBRS.getID()+'" onDrag="IBRS.drag(event)"  class="thumb"  style="background-image: url('+data.bodyTexture +')"></div>');                 
-				  		jQuery("#element_tray").append(htmlVersion);
-				    });
+					
 					return false;
 				});
 
