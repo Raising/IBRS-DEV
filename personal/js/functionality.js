@@ -2,58 +2,58 @@
 
 jQuery(function(){
 				//webGLStart();
-					window.addEventListener("keydown", function(evt){
-						if (evt.keyCode ===9 || evt.keyCode === 18){
-							evt.preventDefault();
-						}
-					}  , false); 
-				jQuery( document ).ajaxError(function() {
-					console.error("fallo de ayax");
-				});
+		window.addEventListener("keydown", function(evt){
+			if (evt.keyCode ===9 || evt.keyCode === 18){
+				evt.preventDefault();
+			}
+		}  , false); 
+	jQuery( document ).ajaxError(function() {
+		console.error("fallo de ayax");
+	});
 
 
-				var GraphicEnviroment = new IBRS.Graphics();
-				GraphicEnviroment.webGLStart();
-				
-				var currentGame = new IBRS.Game();
-				// esa instrucccion debe ser llamada usando los menus del sistema
-				currentGame.loadGameFromDataBase("game02");
+	var GraphicEnviroment = new IBRS.Graphics();
+	GraphicEnviroment.webGLStart();
+	
+	var currentGame = new IBRS.Game();
+	// esa instrucccion debe ser llamada usando los menus del sistema
+	currentGame.loadGameFromDataBase("game02");
 
-				
+	
 
-				setTimeout(function(){
-						GraphicEnviroment.insertGameData(currentGame);
-				},4000);
+	setTimeout(function(){
+			GraphicEnviroment.insertGameData(currentGame);
+	},4000);
 
-			//	GraphicEnviroment.playGame(currentGame.events);
-				
+//	GraphicEnviroment.playGame(currentGame.events);
+	
 
-				//jQuery(GraphicEnviroment.render.domElement).attr("id","render").addClass(" canvas-look col-md-12 col-sm-12 col-xs-12");
-				jQuery("#canvas").append(jQuery(GraphicEnviroment.render.domElement));
-				
-				//boton comenzar reproduccion "play"
-				jQuery("#play_button").click(function(){
-					GraphicEnviroment.playGame();
-					return false;
-				});	
-				jQuery("#pause_button").click(function(){
-					GraphicEnviroment.pauseGame();
-					return false;
-				});		
-					
-				//boton ampliar canvas	
+	//jQuery(GraphicEnviroment.render.domElement).attr("id","render").addClass(" canvas-look col-md-12 col-sm-12 col-xs-12");
+	jQuery("#canvas").append(jQuery(GraphicEnviroment.render.domElement));
+	
+	//boton comenzar reproduccion "play"
+	jQuery("#play_button").click(function(){
+		GraphicEnviroment.playGame();
+		return false;
+	});	
+	jQuery("#pause_button").click(function(){
+		GraphicEnviroment.pauseGame();
+		return false;
+	});		
+		
+	//boton ampliar canvas	
 
 
-				
+	
 
-			
-				var retracted_right = false;
-				var retracted_left = false;
-				var retracted_top = false;
 
-				IBRS.actualStage = "startMenu";
-				var tl = new TimelineLite();
-				IBRS.stage = {
+	var retracted_right = false;
+	var retracted_left = false;
+	var retracted_top = false;
+
+	IBRS.actualStage = "startMenu";
+	var tl = new TimelineLite();
+	IBRS.stage = {
 				searchGame :function(){
 					//visibles
 
@@ -266,7 +266,18 @@ jQuery(function(){
 					}
 				}
 
+				jQuery("div").addClass("noShadow");
 
+				jQuery("#checkSombras").click(function(){
+					console.log("hi");
+					if(jQuery("#checkSombras").prop('checked')){
+						jQuery("div").removeClass("noShadow");
+					}else{
+						jQuery("div").addClass("noShadow");
+					}
+				});
+
+				
 				// Relacion html con los elementos en el canvas 
 				
 				jQuery("#buton_search").click(function(){IBRS.stage.searchGame();});

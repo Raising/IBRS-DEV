@@ -1,4 +1,4 @@
-IBRS Copyright (C) 2014  Ignacio Medina Castillo
+/*IBRS Copyright (C) 2014  Ignacio Medina Castillo*/
 
 body{
    overflow:hidden;
@@ -294,10 +294,8 @@ body{
   right: -17px;
 }
 
-.topExpandButtonShadow{
-  box-shadow:  0px 0px 10px #a6f6f5;
-  height: 15px;
-}
+
+
 .generalMenu{
   position:absolute;
   background: #0E4151;
@@ -478,8 +476,8 @@ position:absolute;
   width: 100%;
   background: #043D42;
  
-   box-shadow:  inset 0px 0px 7px #a6f6f5;
-  -webkit-box-shadow: inset 0px 0px 7px #a6f6f5;
+  
+
 }
 
 .armyHeader{
@@ -533,8 +531,7 @@ top:0%;
   margin-right:5px;
    margin-right-bottom:5px;
     background: #043D42;
-   box-shadow:  inset 0px 0px 5px #a6f6f5;
-  -webkit-box-shadow: inset 0px 0px 5px #a6f6f5;
+  
 
 }
 
@@ -645,4 +642,14 @@ top:0%;
   margin: 4px;
   background-size: contain;
   background-repeat:no-repeat;
+}
+
+.noShadow{
+  box-shadow: none;
+}
+
+#checkSombras{
+  position: absolute;
+  bottom:2px;
+  left: 2px;
 }
