@@ -78,7 +78,7 @@ jQuery(function(){
 
 					tl.to(jQuery("#rightGameFilter"),1,{right:'-1%'} ,"-=1");
 					tl.to(jQuery("#searchTools"),1,{bottom:'-1%'} ,"-=0");	
-					tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=0.5");
+					tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1");
 					tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'} ,"-=1");
 					
 						//no visibles
@@ -107,7 +107,7 @@ jQuery(function(){
 					tl.to(jQuery("#rightTroop_tray"),1,{right:'-1%'},"-=1" );
 					tl.to(jQuery("#scenery_tray"),1,{top:'-1%'} ,"-=1");
 						
-					tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=0.5");
+					tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1");
 					tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-=1" );
 				
 						//quitadas de en medio
@@ -134,7 +134,7 @@ jQuery(function(){
 					tl.to(jQuery("#rightTroop_tray"),1,{right:'-16%'},"-=1" );
 					tl.to(jQuery("#scenery_tray"),1,{top:'-16%'} ,"-=1");
 					tl.to(jQuery("#deployTools"),1,{bottom:'-1%'},"-=1");
-					tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-=0.5");
+					tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-=1");
 					tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1" );
 					
 					tl.set(jQuery("#canvas"),{visibility:'visible'});
@@ -167,7 +167,7 @@ jQuery(function(){
 						tl.to(jQuery("#rightTroop_tray"),1,{right:'-16%'},"-=1"  );
 						tl.to(jQuery("#editorTools"),1,{bottom:'-9%'}, "-=1");
 						tl.to(jQuery("#timeTracker"),1,{top:'-1%'},"-=1"  );
-						tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-=0.5" );
+						tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-1" );
 						tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1" );
 						tl.set(jQuery("#canvas"),{visibility:'visible'});
 						tl.to(jQuery("#canvas"),1,{opacity:'1'},"+=0");
@@ -273,7 +273,7 @@ jQuery(function(){
 				jQuery("#buton_create_new").click(function(){IBRS.stage.selectElements();});
 				
 
-				
+				jQuery("#home_button").click(function(){IBRS.stage.startMenu();	});
 
 				jQuery("#back_button").click(function(){
 					switch(IBRS.actualStage){

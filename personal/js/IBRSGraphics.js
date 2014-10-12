@@ -28,7 +28,8 @@ IBRS.Graphics = function(){
     this.scene.add(this.camera);
     this.reproductor = new IBRS.Reproductor(this);
     this.htmlHandler = new IBRS.CanvasHtml(this);
-    this.htmlHandler.setDragAndDrop(); 
+    this.htmlHandler.setDragAndDrop();
+    this.elementSelected = this.camera; 
 
      window.addEventListener("resize", function(){
          IBRS.actualGraphics.canvasWidth = jQuery("#canvas").width();
@@ -45,7 +46,7 @@ IBRS.Graphics = function(){
     
          console.log("resized");
     });
-
+    
 
 
     //luces
@@ -451,7 +452,7 @@ IBRS.Graphics = function(){
         var mouseDownPosition = new THREE.Vector3(0,0,0);
         var mouseSigleClick = false;
         var contextualMenuOpened = false; 
-        var elementSelected = 0; 
+      
         var mouseDragable = false;
         currentRenderDomElement.addEventListener("mousewheel", graphics.MouseWheelHandler, false);// IE9, Chrome, Safari, Opera  
         currentRenderDomElement.addEventListener("DOMMouseScroll", graphics.MouseWheelHandler, false);// Firefox
@@ -468,7 +469,7 @@ IBRS.Graphics = function(){
                      var elementClicked = graphics.findObjectByProyection(evt,this,graphics.tageteableElementsList);
                      if (elementClicked != undefined){
                         elementClicked = elementClicked.parent;
-                        elementSelected = elementClicked.logicModel;
+                        graphics.elementSelected = elementClicked.logicModel;
                         elementClicked.onElementClick();
                          mouseDragable = true;
                         //graphics.selectorCamera.CameraReposition(0,0,0,elementClicked)  ;  
@@ -522,7 +523,7 @@ IBRS.Graphics = function(){
                 //intime reposition miniature
                  var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
                      if (position != undefined){
-                        elementSelected.setPosition(position.x,position.y,position.z);
+                        graphics.elementSelected.setPosition(position.x,position.y,position.z);
                         mouseDragable = true;
                     }
             }
@@ -573,7 +574,7 @@ IBRS.Graphics = function(){
                 if (mouseIsDown===1  && mouseDragable===true){
                     var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
                      if (position != undefined){
-                        elementSelected.setPosition(position.x,position.y,position.z);
+                        graphics.elementSelected.setPosition(position.x,position.y,position.z);
                         mouseDragable = false;
                     }
                 }
@@ -594,10 +595,12 @@ IBRS.Graphics = function(){
             switch(evt.keyCode){
                 case 9:
                     graphics.keyPresed.tab = true;
+
+                    /*
                     for (var i =0; i<graphics.tageteableElementsList.length;i++){
 
                         graphics.tageteableElementsList[i].selectorOpacity(1);
-                    }
+                    }*/
 
 
                 break;
