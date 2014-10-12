@@ -98,8 +98,9 @@ IBRS.Graphics = function(){
     this.camera_Horizonatl_Angle = 0;
     this.camera_Vertical_Angle = Math.PI/3;
     this.camera_target = new THREE.Object3D();
-    this.camera_target.position.set(0,0,0); 
-    console.log(graphics.camera_target.position);
+    this.camera_target.position.set(0,0,0);
+    this.scene.add( this.camera_target); 
+    
     this.sceneObjects = new THREE.Object3D();
     this.scene.add(this.sceneObjects);
     this.keyPresed = {tab:false,ctrl:false,alt:false,F1:false,F2:false,F3:false,F4:false};
@@ -216,16 +217,17 @@ IBRS.Graphics = function(){
 
     this.CameraReposition = function(distance_inc,hoizontalAngle_inc,verticalAngle_inc,targetObject){
             graphics.camera_target = targetObject = targetObject !== undefined ? targetObject : graphics.camera_target;
-              console.log(graphics.camera_target.position);     
+             
+
 
             graphics.camera_Distance = Math.max(graphics.camera_Distance+distance_inc,10);
             graphics.camera_Horizonatl_Angle += hoizontalAngle_inc;
             graphics.camera_Vertical_Angle += verticalAngle_inc;
             graphics.camera_Vertical_Angle = Math.max(Math.PI/4,Math.min(Math.PI*3/7,graphics.camera_Vertical_Angle));
             
-            //var current_target_position = new THREE.Vector3();
-            //current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
-            var current_target_position =  graphics.camera_target.position;
+            var current_target_position = new THREE.Vector3();
+            current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
+            
 
             console.log(current_target_position);
             graphics.camera.position.set(
@@ -639,9 +641,9 @@ IBRS.Graphics = function(){
                     var sinA =  Math.sin(graphics.camera_Horizonatl_Angle);
                     var cosA =  Math.cos(graphics.camera_Horizonatl_Angle);
                      graphics.camera_target.position.set(
-                        graphics.camera_target.position.x+cosA*0+sinA*3,
+                        graphics.camera_target.position.x+cosA*0+sinA*(-1),
                         graphics.camera_target.position.y,
-                        graphics.camera_target.position.z-(cosA*3-sinA*0));
+                        graphics.camera_target.position.z-(cosA*(-1)-sinA*0));
                      console.log(graphics.camera_target.position);
                      graphics.CameraReposition(0,0,0,graphics.camera_target);
                         
