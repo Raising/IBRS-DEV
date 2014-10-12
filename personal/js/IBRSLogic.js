@@ -87,9 +87,21 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	this.modifyButton = jQuery('<span> E</span>');
 
 
+	this.select =function(){
+		unitLogic.unitGraphic.selected=true;
+		unitLogic.unitGraphic.selector.material.color.set(0x33FF33);
+		unitLogic.unitGraphic.selectorOpacity(1);
+		
+	}
+
+	this.unSelect =function(){
+		unitLogic.unitGraphic.selected=false;
+		unitLogic.unitGraphic.selector.material.color.set(0xFFFF00);
+
+		unitLogic.unitGraphic.selectorOpacity(0);
+	}
 
 
-	
 	this.delete = function(){
 		unitLogic.tacticalGroup.removeUnit(unitLogic);
 		unitLogic.tacticalGroup.updateHtml();
@@ -849,6 +861,19 @@ IBRS.TroopSearcher = function(){
 }
 
 
+
+IBRS.elementSelected = {};
+IBRS.elementSelected.unSelect=function(){}
+
+
+
+
+
+
+
+
+
+
 IBRS.allowDrop =function(ev) {
 	console.log("allowDrop");
     ev.preventDefault();
@@ -879,3 +904,5 @@ drag =function(ev) {
 		
 	    ev.dataTransfer.setData("text/html", ev.target.id);
 	};
+
+

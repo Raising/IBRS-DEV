@@ -1,4 +1,8 @@
 ///
+
+
+
+
 IBRS.refreshObjects = function (){
         IBRS.actualGraphics.refreshSceneObjects(IBRS.actualGame);
 }
@@ -29,8 +33,7 @@ IBRS.Graphics = function(){
     this.reproductor = new IBRS.Reproductor(this);
     this.htmlHandler = new IBRS.CanvasHtml(this);
     this.htmlHandler.setDragAndDrop();
-    this.elementSelected = this.camera; 
-
+   
      window.addEventListener("resize", function(){
          IBRS.actualGraphics.canvasWidth = jQuery("#canvas").width();
          IBRS.actualGraphics.canvasHeight = jQuery("#canvas").height();
@@ -332,10 +335,10 @@ IBRS.Graphics = function(){
                             graphics.pointer.position.set((cosA*indicePos[2]+sinA*(indicePos[0]-80))*0.005*graphics.camera_Distance,indicePos[1]*0.2-20,-(cosA*(indicePos[0]-80)-sinA*indicePos[2])*0.005*graphics.camera_Distance);
                         
                         if (hand.confidence > 0.4 && hand.pinchStrength>0.9 && lastTimeSelection < (frame.id-20)){
-                            var elementSelected = graphics.GetClosestTargeteableElement(graphics.pointer.position);
-                            elementSelected.onElementClick();
+                            IBRS.elementSelected = graphics.GetClosestTargeteableElement(graphics.pointer.position).logicModel;
+                            IBRS.elementSelected.onElementClick();
                             console.log("eligiendo elemento")
-                            graphics.CameraReposition(0,0,0,elementSelected);
+                            graphics.CameraReposition(0,0,0,IBRS.elementSelected.unitGraphic);
                             lastTimeSelection = frame.id;
                         }
                     }
@@ -469,8 +472,9 @@ IBRS.Graphics = function(){
                      var elementClicked = graphics.findObjectByProyection(evt,this,graphics.tageteableElementsList);
                      if (elementClicked != undefined){
                         elementClicked = elementClicked.parent;
-                        graphics.elementSelected = elementClicked.logicModel;
-                        elementClicked.onElementClick();
+                        IBRS.elementSelected.unSelect();
+                        IBRS.elementSelected = elementClicked.logicModel;
+                        IBRS.elementSelected.select();
                          mouseDragable = true;
                         //graphics.selectorCamera.CameraReposition(0,0,0,elementClicked)  ;  
                      }
@@ -523,7 +527,7 @@ IBRS.Graphics = function(){
                 //intime reposition miniature
                  var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
                      if (position != undefined){
-                        graphics.elementSelected.setPosition(position.x,position.y,position.z);
+                        IBRS.elementSelected.setPosition(position.x,position.y,position.z);
                         mouseDragable = true;
                     }
             }
@@ -574,7 +578,7 @@ IBRS.Graphics = function(){
                 if (mouseIsDown===1  && mouseDragable===true){
                     var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
                      if (position != undefined){
-                        graphics.elementSelected.setPosition(position.x,position.y,position.z);
+                        IBRS.elementSelected.setPosition(position.x,position.y,position.z);
                         mouseDragable = false;
                     }
                 }
@@ -622,10 +626,11 @@ IBRS.Graphics = function(){
              switch(evt.keyCode){
                 case 9:
                     graphics.keyPresed.tab = false;
+                    /*
                       for (var i =0; i<graphics.tageteableElementsList.length;i++){
                         graphics.tageteableElementsList[i].selectorOpacity(0);
                     }
-
+                    */
                 break;
                 case 17:
                     graphics.keyPresed.ctrl = false;

@@ -290,6 +290,7 @@ BasicElement.prototype = Object.create(THREE.Object3D.prototype);
 var TargeteableElement = function(){
     BasicElement.call(this);
     var targeteableElement = this;
+    this.selected =false;
     	//IBRS.tageteableElementsList.push(this);
 	//this.htmlRepresentation = new Object();
 	this.name = "no name";
@@ -300,36 +301,20 @@ var TargeteableElement = function(){
     this.enviroment = 0;
     var selectorGeometry = new THREE.CylinderGeometry(0.5,0.01,1,16); 
     //opacity: 0.8,transparent: true
-    var selectorMaterial = new THREE.MeshBasicMaterial( {color: 0xFFff00,wireframe:false,opacity: 0,transparent: true} ); 
-    this.selector = new THREE.Mesh( selectorGeometry, selectorMaterial );
+    this.selectorMaterial = new THREE.MeshBasicMaterial( {color: 0xFFff00,wireframe:false,opacity: 0,transparent: true} ); 
+    this.selector = new THREE.Mesh( selectorGeometry, this.selectorMaterial );
     
     this.add(this.selector);
+
     this.selectorOpacity = function(opacity){
-         selectorMaterial.opacity = opacity;
-    }
-    //this.add(this.selector);
-/*	this.container = jQuery('<tr id="'+this.id+'"></tr>');
-    this.container.click(function(){   
-      //  selectorMaterial.opacity = 1;
-    //que hacer cuando se hace click en la tupla de cada miniatura
-    return false;});
+        if (targeteableElement.selected){
+             targeteableElement.selectorMaterial.opacity = 1; 
+        }
+        else{ 
+            targeteableElement.selectorMaterial.opacity = opacity; 
+        }
+    };
 
-    this.container.mouseenter(function(){   
-        selectorMaterial.opacity = 0.5;
-    //que hacer cuando se hace click en la tupla de cada miniatura
-    return false;});
-
-    this.container.mouseleave(function(){   
-        selectorMaterial.opacity =0;
-    //que hacer cuando se hace click en la tupla de cada miniatura
-    return false;});
-    
-
-	this.updateHtml = function (){
-         this.container.empty().append('<td>'+this.name+
-		'</td><td>'+parseInt(this.position.x)+':'+parseInt(this.position.y)+':'+parseInt(this.position.z)+
-		'</td><td>'+'<img src="'+this.statusIcon+'" alt="" border=3 height=20 width=20></img>'+'</td>');
-	};*/
     this.setEnviroment = function(enviroment){
         targeteableElement.enviroment = enviroment;
 
