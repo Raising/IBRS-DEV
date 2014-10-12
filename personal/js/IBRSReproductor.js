@@ -1,3 +1,5 @@
+// IBRS Copyright (C) 2014  Ignacio Medina Castillo
+
 IBRS.Reproductor = function(graphicEnviroment){
 	var reproductor = this;
 	this.graphicEnviroment = graphicEnviroment;

@@ -1,3 +1,5 @@
+// IBRS Copyright (C) 2014  Ignacio Medina Castillo
+
 jQuery(function(){
 				//webGLStart();
 					window.addEventListener("keydown", function(evt){

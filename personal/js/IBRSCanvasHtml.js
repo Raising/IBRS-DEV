@@ -1,3 +1,5 @@
+// IBRS Copyright (C) 2014  Ignacio Medina Castillo
+
 IBRS.CanvasHtml = function(graphics){
 	var canvasHtml = this;
 	this.graphics = graphics;

@@ -1,3 +1,5 @@
+// IBRS Copyright (C) 2014  Ignacio Medina Castillo
+
 THREE.LapidaGeometry = function (weigth,height,deep,radiusTopCornerProportion) {
 
         THREE.Geometry.call( this );

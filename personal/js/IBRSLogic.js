@@ -1,4 +1,4 @@
-
+// IBRS Copyright (C) 2014  Ignacio Medina Castillo
 
 
 var IBRS = { VERSION: '1' };
@@ -181,7 +181,7 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 			unitLogic.updateStatusIcon();
 			unitLogic.updateHtml();
 		};
-
+		
 /*		this.updateHtml = function(){
 			unitLogic.unitGraphic.updateHtml();
 		}
