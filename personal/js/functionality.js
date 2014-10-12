@@ -1,9 +1,12 @@
 // IBRS Copyright (C) 2014  Ignacio Medina Castillo
+// ignacio.medina.castillo@gmail.com
+
+
 
 jQuery(function(){
 				//webGLStart();
 		window.addEventListener("keydown", function(evt){
-			if (evt.keyCode ===9 || evt.keyCode === 18){
+			if (evt.keyCode ===9 || evt.keyCode === 18|| evt.keyCode === 37|| evt.keyCode === 38|| evt.keyCode === 39|| evt.keyCode === 40){
 				evt.preventDefault();
 			}
 		}  , false); 
@@ -266,18 +269,16 @@ jQuery(function(){
 					}
 				}
 
-				jQuery("div").addClass("noShadow");
 
-				jQuery("#checkSombras").click(function(){
-					console.log("hi");
+				var toggleShadows = function(){
 					if(jQuery("#checkSombras").prop('checked')){
 						jQuery("div").removeClass("noShadow");
 					}else{
 						jQuery("div").addClass("noShadow");
 					}
-				});
-
-				
+				}
+				jQuery("#checkSombras").click(toggleShadows);
+				toggleShadows();
 				// Relacion html con los elementos en el canvas 
 				
 				jQuery("#buton_search").click(function(){IBRS.stage.searchGame();});

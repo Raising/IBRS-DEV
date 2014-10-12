@@ -1,4 +1,5 @@
 // IBRS Copyright (C) 2014  Ignacio Medina Castillo
+// ignacio.medina.castillo@gmail.com
 
 
 var IBRS = { VERSION: '1' };
@@ -6,7 +7,7 @@ var IBRS = { VERSION: '1' };
 
 IBRS.depurarAyax = false;
 IBRS.IDAcount = 0;
-IBRS.HTMLShadows = false;
+
 IBRS.getID = function(){
 	IBRS.IDAcount +=1;
 	return IBRS.IDAcount;
@@ -267,7 +268,7 @@ IBRS.TacticalGroup =  function (army) {
 	this.irregularAmount = 0;
 	this.furyAmount = 0;
 	
-	this.container = jQuery('<div id="'+ this.id+'" class="tacticalGroup"   draggable="true" ></div>');
+	this.container = jQuery('<div id="'+ this.id+'" class="tacticalGroup inerShadow"   draggable="true" ></div>');
 
 	this.army.container.append(this.container);
 	this.groupHeader = jQuery('<div class="tacticalGroupHeader" >Group '+this.groupNumber+'</div>');
@@ -286,12 +287,7 @@ IBRS.TacticalGroup =  function (army) {
 
 	this.updateHtml = function(){
 			tacticalGroup.container.empty();
-			if (IBRS.HTMLShadows){
-				tacticalGroup.troopTray.addClass("inerShadow");
-			}else{
-				tacticalGroup.troopTray.removeClass("inerShadow");
-			}
-
+			
 			tacticalGroup.groupHeader = jQuery('<div class="tacticalGroupHeader ">Group '+this.groupNumber+'</div>');
 			//tacticalGroup.groupHeader.append(tacticalGroup.deleteButton);
 			tacticalGroup.container.append(tacticalGroup.groupHeader).append(tacticalGroup.troopTray).css("height",25+(tacticalGroup.unitList.length+1)*22); ;
@@ -472,7 +468,7 @@ IBRS.Army = function(player){
     	this.side = "right";
     }
     this.header = jQuery('<div class="armyHeader '+this.side+'">'+ this.faction +' '+ this.player.name+'</div>');
-	this.container = jQuery('<div id="'+ this.id+'" class="army '+this.side+'"></div>');
+	this.container = jQuery('<div id="'+ this.id+'" class="army '+this.side+' inerShadow"></div>');
 	
 
 	
@@ -523,14 +519,9 @@ IBRS.Army = function(player){
 
 
 	this.updateHtml = function(){
-			if (IBRS.HTMLShadows){
-				army.container.addClass("inerShadow");
-			}else{
-				army.container.removeClass("inerShadow");
-			}
+			
 			for (var j = 0 ; j<army.tacticalGroupList.length;j++){
 				var group = army.tacticalGroupList[j];
-
 				army.container.append(group.container);
 				group.updateHtml();
 			}

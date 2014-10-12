@@ -1,5 +1,5 @@
 // IBRS Copyright (C) 2014  Ignacio Medina Castillo
-
+// ignacio.medina.castillo@gmail.com
 
 
 
@@ -97,7 +97,9 @@ IBRS.Graphics = function(){
     this.camera_Distance = 150;
     this.camera_Horizonatl_Angle = 0;
     this.camera_Vertical_Angle = Math.PI/3;
-    this.camera_target = this.scene;
+    this.camera_target = new THREE.Object3D();
+    this.camera_target.position.set(0,0,0); 
+    console.log(graphics.camera_target.position);
     this.sceneObjects = new THREE.Object3D();
     this.scene.add(this.sceneObjects);
     this.keyPresed = {tab:false,ctrl:false,alt:false,F1:false,F2:false,F3:false,F4:false};
@@ -214,14 +216,18 @@ IBRS.Graphics = function(){
 
     this.CameraReposition = function(distance_inc,hoizontalAngle_inc,verticalAngle_inc,targetObject){
             graphics.camera_target = targetObject = targetObject !== undefined ? targetObject : graphics.camera_target;
-                   
+              console.log(graphics.camera_target.position);     
 
             graphics.camera_Distance = Math.max(graphics.camera_Distance+distance_inc,10);
             graphics.camera_Horizonatl_Angle += hoizontalAngle_inc;
             graphics.camera_Vertical_Angle += verticalAngle_inc;
             graphics.camera_Vertical_Angle = Math.max(Math.PI/4,Math.min(Math.PI*3/7,graphics.camera_Vertical_Angle));
-            var current_target_position = new THREE.Vector3();
-            current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
+            
+            //var current_target_position = new THREE.Vector3();
+            //current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
+            var current_target_position =  graphics.camera_target.position;
+
+            console.log(current_target_position);
             graphics.camera.position.set(
                 current_target_position.x + graphics.camera_Distance*Math.cos(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle),
                 current_target_position.y + 3 + graphics.camera_Distance*Math.cos(graphics.camera_Vertical_Angle),
@@ -628,6 +634,27 @@ IBRS.Graphics = function(){
                     graphics.keyPresed.F4 = true;
                     graphics.selectorCamera.putInScene(graphics.sceneOrtho);
                 break;
+                case 37:
+                    graphics.arrowLEFT = true;
+                    var sinA =  Math.sin(graphics.camera_Horizonatl_Angle);
+                    var cosA =  Math.cos(graphics.camera_Horizonatl_Angle);
+                     graphics.camera_target.position.set(
+                        graphics.camera_target.position.x+cosA*0+sinA*3,
+                        graphics.camera_target.position.y,
+                        graphics.camera_target.position.z-(cosA*3-sinA*0));
+                     console.log(graphics.camera_target.position);
+                     graphics.CameraReposition(0,0,0,graphics.camera_target);
+                        
+                break;
+                case 38:
+                    graphics.arrowUP = true;
+                break;
+                case 39:
+                    graphics.arrowRIGHT = true;
+                break;
+                case 40:
+                    graphics.arrowDOWN = true;
+                break;
                 default:
                     console.log("na que ver");
                 break;
@@ -654,7 +681,20 @@ IBRS.Graphics = function(){
                 break;
                  case 115://F4
                     graphics.keyPresed.F4 = false;
+                    
                     graphics.selectorCamera.removeFromScene(graphics.sceneOrtho);
+                break;
+                 case 37:
+                    graphics.arrowLEFT = false;
+                break;
+                case 38:
+                    graphics.arrowUP = false;
+                break;
+                case 39:
+                    graphics.arrowRIGHT =false;
+                break;
+                case 40:
+                    graphics.arrowDOWN = false;
                 break;
                 default:
                     console.log("na que ver");
@@ -1080,15 +1120,10 @@ IBRS.SelectorCamera = function(graphics){
 
 
     var selectorCamera = this;
-   // this.render = new THREE.WebGLRenderer({premultipliedAlpha:true, alpha:true });
-   // this.render.setClearColor(new THREE.Color(0x008800),0);
     this.canvasWidth = 460;
     this.canvasHeight = 230;
-   // this.render.setSize(this.canvasWidth, this.canvasHeight);
 
-
-    //this.scene.fog = new THREE.Fog( 0x000000, 1500, 2100 );
-    this.camera= new THREE.PerspectiveCamera(90, this.canvasWidth / this.canvasHeight, 0.1, 1000);
+    this.camera= new THREE.PerspectiveCamera(60, this.canvasWidth / this.canvasHeight, 0.1, 1000);
     
     this.scene = graphics.scene;
     this.scene.add(this.camera);
@@ -1110,12 +1145,6 @@ IBRS.SelectorCamera = function(graphics){
     this.camera_target = graphics.scene;
 
 
-/*
-    var planeGeometry = new THREE.PlaneGeometry( 10, 20, 1, 1 );
-    var finalRenderTarget = new THREE.WebGLRenderTarget( 512, 512, { format: THREE.RGBAFormat } );
-    var planeMaterial = new THREE.MeshBasicMaterial( { map: finalRenderTarget ,transparent:true} );
-    this.plane = new THREE.Mesh( planeGeometry, planeMaterial );
-*/  
     this.setPosition = function(x,y){
         selectorCamera.sprite.position.set(x,y,1);
         selectorCamera.border.position.set(x,y,0);
