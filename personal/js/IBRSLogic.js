@@ -98,6 +98,10 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	this.setHtmlInteractions = function(){
 
 		//click en el boton de eliminar
+		unitLogic.container.unbind("dragstart" );
+		unitLogic.container.unbind("click" );
+		unitLogic.container.unbind("mouseleave" );
+		unitLogic.container.unbind("mouseenter" );
 		unitLogic.container.bind("dragstart" ,function(event){
 			event.stopPropagation();
 			event.originalEvent.dataTransfer.setData("text/html", event.target.id);
@@ -141,18 +145,8 @@ IBRS.UnitLogic =  function (tacticalGroup) {
      
  		unitLogic.container.empty().append('<div class="troopElement troopIcon"><img src="'+unitLogic.unitIcon+
  			'" border=0 height=20 width=20></img></div>'+
- 			//'<div class="troopElement troopText">'+
- 				'<div class="troopElement troopName">'+ unitLogic.name+'</div>'
- 		//		'<div class="troopElement troopEquip">EQUIP_HERE</div>'+
- 			//'</div>'
- 			);
-
- 		
-
-     /*   unitLogic.container.empty().append('<td>'+unitLogic.name+
-		'</td><td>'+parseInt(unitLogic.position.x)+':'+parseInt(unitLogic.position.y)+':'+parseInt(unitLogic.position.z)+
-		'</td><td>'+'<img src="'+unitLogic.statusIcon+'" alt="" border=3 height=20 width=20></img>'+'</td>').append(unitLogic.deleteButton);
-		*/
+ 			'<div class="troopElement troopName">'+ unitLogic.name+'</div>'
+ 			 );
 		unitLogic.setHtmlInteractions();
 	};
 

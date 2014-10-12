@@ -119,7 +119,7 @@ jQuery(function(){
 				deployElements : function(){
 						//visibles
 					IBRS.actualStage = "deployElements";
-					
+					IBRS.refreshObjects();
 
 					tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} );
 					tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'},"-=1" );		

@@ -28,7 +28,7 @@ IBRS.Graphics = function(){
     this.scene.add(this.camera);
     this.reproductor = new IBRS.Reproductor(this);
     this.htmlHandler = new IBRS.CanvasHtml(this);
-    this.htmlHandler.setDrop(); 
+    this.htmlHandler.setDragAndDrop(); 
 
      window.addEventListener("resize", function(){
          IBRS.actualGraphics.canvasWidth = jQuery("#canvas").width();
@@ -88,7 +88,7 @@ IBRS.Graphics = function(){
     */    
 
     this.tageteableElementsList = [];//tienen uqe ser objetos 3d de THREE
-
+    this.sceneryElementsList = [];
 
     this.camera_Distance = 150;
     this.camera_Horizonatl_Angle = 0;
@@ -114,6 +114,10 @@ IBRS.Graphics = function(){
                 graphics.tageteableElementsList.push(list[i]);
                 list[i].setEnviroment(graphics);
             }
+            else{
+                graphics.sceneryElementsList.push(list[i]);
+            }
+
         }
     };
 
@@ -447,17 +451,28 @@ IBRS.Graphics = function(){
         var mouseDownPosition = new THREE.Vector3(0,0,0);
         var mouseSigleClick = false;
         var contextualMenuOpened = false; 
+        var elementSelected = 0; 
+        var mouseDragable = false;
         currentRenderDomElement.addEventListener("mousewheel", graphics.MouseWheelHandler, false);// IE9, Chrome, Safari, Opera  
         currentRenderDomElement.addEventListener("DOMMouseScroll", graphics.MouseWheelHandler, false);// Firefox
         currentRenderDomElement.addEventListener('contextmenu', function (evt){evt.preventDefault();}, false);
         currentRenderDomElement.addEventListener('mousedown', function (evt) {
-            mouseIsDown=evt.which;
-            mouseSigleClick = true;
-            mouseDownPosition.x = evt.pageX;
-            mouseDownPosition.y = evt.pageY;        
+        mouseIsDown=evt.which;
+        mouseSigleClick = true;
+        mouseDragable = false;
+        mouseDownPosition.x = evt.pageX;
+        mouseDownPosition.y = evt.pageY;       
+      
             switch (evt.which) {
                 case 1://left mouse
-                    
+                     var elementClicked = graphics.findObjectByProyection(evt,this,graphics.tageteableElementsList);
+                     if (elementClicked != undefined){
+                        elementClicked = elementClicked.parent;
+                        elementSelected = elementClicked.logicModel;
+                        elementClicked.onElementClick();
+                         mouseDragable = true;
+                        //graphics.selectorCamera.CameraReposition(0,0,0,elementClicked)  ;  
+                     }
                     break;
                 case 2://middle mouse
                     
@@ -470,8 +485,14 @@ IBRS.Graphics = function(){
             }
         },false);
 
+
+
+
+
         currentRenderDomElement.addEventListener('mousemove', function (evt) {
+
             mouseSigleClick = false;
+            //hover sobre opciones
             if(mouseIsDown===0 && contextualMenuOpened === true){
                 var elementHover = graphics.findObjectByProyection(evt,this,graphics.contextualMenu.getClickableOptions());
                 if (elementHover != undefined){
@@ -480,6 +501,7 @@ IBRS.Graphics = function(){
                     graphics.contextualMenu.stopHighLight();
                 }
             }
+            //giro de camara
             else if (mouseIsDown==3){
                 //turn camera
                 if (graphics.keyPresed.ctrl === false){
@@ -496,17 +518,23 @@ IBRS.Graphics = function(){
             mouseDownPosition.x = evt.pageX;
             mouseDownPosition.y = evt.pageY;
             }
+             else if (mouseIsDown===1 && mouseDragable===true){
+                //intime reposition miniature
+                 var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
+                     if (position != undefined){
+                        elementSelected.setPosition(position.x,position.y,position.z);
+                        mouseDragable = true;
+                    }
+            }
         },false);
+
+
+
 
         currentRenderDomElement.addEventListener('mouseup', function (evt) {
             if (mouseIsDown==1 && mouseSigleClick==true){ 
                 if (contextualMenuOpened === false){
-                    var elementClicked = graphics.findObjectByProyection(evt,this,graphics.tageteableElementsList);
-                    if (elementClicked != undefined){
-                        elementClicked = elementClicked.parent;
-                        elementClicked.onElementClick();
-                        //graphics.selectorCamera.CameraReposition(0,0,0,elementClicked)  ;  
-                    }
+                   
                 }
                 else{
                     //console.log(graphics.contextualMenu.getClickableOptions());
@@ -520,6 +548,7 @@ IBRS.Graphics = function(){
                     }
                 }
             }
+            
             else if(mouseIsDown==3 && mouseSigleClick==true){
                 if (contextualMenuOpened ===false){
                     var elementClicked = graphics.findObjectByProyection(evt,this,graphics.tageteableElementsList);
@@ -538,6 +567,16 @@ IBRS.Graphics = function(){
                         graphics.CloseContextualMenu();
                          contextualMenuOpened = false;
                     }
+            }
+            else if(mouseSigleClick===false ){
+                //arrastrar miniatura
+                if (mouseIsDown===1  && mouseDragable===true){
+                    var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
+                     if (position != undefined){
+                        elementSelected.setPosition(position.x,position.y,position.z);
+                        mouseDragable = false;
+                    }
+                }
             }
             mouseSigleClick = false;
             mouseIsDown=0;
@@ -606,7 +645,7 @@ IBRS.Graphics = function(){
     this.keyupEvents = 
 
     this.getCanvasStats = function(scope){
-        console.log(scope);
+        
         var canvasStat = {} ;
         canvasStat.Offset = jQuery(scope).offset();
         canvasStat.width =jQuery(scope).width(); 
@@ -631,6 +670,34 @@ IBRS.Graphics = function(){
         if (intersects.length) {
             var target = intersects[0]; 
             return target.object;
+            
+        } else{
+            return undefined;
+        }
+    }
+    this.MouseWheelHandler = function(e) {
+        var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+        graphics.CameraReposition(delta*(-5),0,0)  ;
+        return false;
+    } 
+
+
+    this.findPointByProyection = function(evt,scope,list){
+
+        var projector = new THREE.Projector();
+        var directionVector = new THREE.Vector3();
+        var CanvasStats = graphics.getCanvasStats(scope);
+
+        var clickx = evt.pageX - CanvasStats.Offset.left - CanvasStats.paddingleft;
+        var clicky = evt.pageY - CanvasStats.Offset.top - CanvasStats.paddingtop ;
+        directionVector.x = ( clickx / CanvasStats.width ) * 2 - 1;
+        directionVector.y = -( clicky / CanvasStats.height ) * 2 + 1;
+
+        var ray = projector.pickingRay(directionVector,graphics.camera);
+        var intersects = ray.intersectObjects(list, true);
+        if (intersects.length) {
+            var target = intersects[0]; 
+            return target.point;
             
         } else{
             return undefined;

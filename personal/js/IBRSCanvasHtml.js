@@ -14,13 +14,16 @@ IBRS.CanvasHtml = function(graphics){
         directionVector.y = -( clicky / CanvasStats.height ) * 2 + 1;
 
         var ray = projector.pickingRay(directionVector,graphics.camera);
-        var intersects = ray.intersectObjects(IBRS.actualGame.getSceneryElementList()[0], true);
-        console.log(intersects);
+        //console.log(IBRS.actualGame.getSceneryElementList()[0]);
+        graphics.tageteableElementsList
+        var intersects = ray.intersectObjects( graphics.sceneryElementsList, true);
+        //var intersects = ray.intersectObjects(IBRS.actualGame.getSceneryElementList()[0], true);
+       
         if (intersects.length) {
         	
             var target = intersects[0];
-            console.log(target); 
-            return target.object;
+          
+            return target.point;
             
         } else{
             return undefined;
@@ -32,11 +35,31 @@ IBRS.CanvasHtml = function(graphics){
 	
 
 
-	this.setDrop = function(){
+	this.setDragAndDrop = function(){
+
+
 		jQuery(canvasHtml.graphics.render.domElement).bind("dragover",function(event){
-		event.preventDefault();
-		console.log("intento de hovering");
+			event.preventDefault();
+			switch (IBRS.dragCatcher.kind){
+
+				case "UnitLogic":
+						var position = canvasHtml.getPoint(event);
+						if (position != undefined){
+						IBRS.dragCatcher.setPosition(position.x,position.y,position.z);
+						}
+						//IBRS.dragCatcher.tacticalGroup.removeUnit( IBRS.dragCatcher);
+						//IBRS.dragCatcher.tacticalGroup = tacticalGroup;
+						//tacticalGroup.unitList.push(IBRS.dragCatcher);
+						//army.updateHtml();
+
+				break;
+				default:
+				break;
+			}
+			//console.log("intento de hovering");
 		});
+
+
 
 
 		jQuery(canvasHtml.graphics.render.domElement).bind("drop" , function(event){
@@ -46,7 +69,9 @@ IBRS.CanvasHtml = function(graphics){
 
 			case "UnitLogic":
 					var position = canvasHtml.getPoint(event);
-					//IBRS.dragCatcher.tacticalGroup.removeUnit( IBRS.dragCatcher);
+					if (position != undefined){
+						IBRS.dragCatcher.setPosition(position.x,position.y,position.z);
+					}//IBRS.dragCatcher.tacticalGroup.removeUnit( IBRS.dragCatcher);
 					//IBRS.dragCatcher.tacticalGroup = tacticalGroup;
 					//tacticalGroup.unitList.push(IBRS.dragCatcher);
 					//army.updateHtml();
@@ -54,8 +79,8 @@ IBRS.CanvasHtml = function(graphics){
 			break;
 			default:
 			break;
-			}
-			return false;
+		}
+		return false;
 		});
 	}
  }
