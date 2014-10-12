@@ -311,8 +311,6 @@ body{
   width: calc(100% - 16px);
   height: 15%;
   background: #043D42;
-  box-shadow:  inset 0px 0px 15px #a6f6f5;
-  -webkit-box-shadow: inset 0px 0px 15px #a6f6f5;
   top: 8px;
   left: 8px;
 }
@@ -464,6 +462,10 @@ position:absolute;
 .left{
   float: left;
 }
+.inerShadow{
+   box-shadow:  inset 0px 0px 7px #a6f6f5;
+  -webkit-box-shadow: inset 0px 0px 7px #a6f6f5;
+}
 
 .army{
   overflow: hidden;
@@ -590,8 +592,7 @@ top:0%;
   width: calc(100% - 16px);
   height: 17%;
   background: #043D42;
-  box-shadow:  inset 0px 0px 15px #a6f6f5;
-  -webkit-box-shadow: inset 0px 0px 15px #a6f6f5;
+ 
   left:8px;
 
 

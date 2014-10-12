@@ -45,7 +45,7 @@ IBRS.Graphics = function(){
          IBRS.actualGraphics.cameraOrtho.top  = IBRS.actualGraphics.canvasHeight/2;
          IBRS.actualGraphics.cameraOrtho.bottom   = -IBRS.actualGraphics.canvasHeight/2;
          IBRS.actualGraphics.cameraOrtho.updateProjectionMatrix();
-        IBRS.actualGraphics.selectorCamera.setPosition(-IBRS.actualGraphics.canvasWidth*3/8,-IBRS.actualGraphics.canvasHeight*4/10);
+        IBRS.actualGraphics.selectorCamera.setPosition(0,0);
     
          console.log("resized");
     });
@@ -71,8 +71,8 @@ IBRS.Graphics = function(){
     this.referenceTime = 0;
 
     this.selectorCamera = new IBRS.SelectorCamera(this);
-    this.selectorCamera.setPosition(-IBRS.actualGraphics.canvasWidth*3/8,-IBRS.actualGraphics.canvasHeight*4/10);
-    this.selectorCamera.putInScene(this.sceneOrtho);
+    this.selectorCamera.setPosition(0,0);
+    //this.selectorCamera.putInScene(this.sceneOrtho);
 
 
 
@@ -474,6 +474,7 @@ IBRS.Graphics = function(){
                         elementClicked = elementClicked.parent;
                         IBRS.elementSelected.unSelect();
                         IBRS.elementSelected = elementClicked.logicModel;
+                        graphics.actualiceSelection();
                         IBRS.elementSelected.select();
                          mouseDragable = true;
                         //graphics.selectorCamera.CameraReposition(0,0,0,elementClicked)  ;  
@@ -509,7 +510,7 @@ IBRS.Graphics = function(){
             //giro de camara
             else if (mouseIsDown==3){
                 //turn camera
-                if (graphics.keyPresed.ctrl === false){
+                if (graphics.keyPresed.F4 === false){
                     graphics.CameraReposition(0,
                         0.03*(evt.pageX - mouseDownPosition.x),
                         0.02*(evt.pageY - mouseDownPosition.y)
@@ -604,7 +605,7 @@ IBRS.Graphics = function(){
       
 
        currentRenderDomElement.addEventListener("keydown",function(evt){
-           
+           console.log(evt.keyCode);
             switch(evt.keyCode){
                 case 9:
                     graphics.keyPresed.tab = true;
@@ -622,6 +623,10 @@ IBRS.Graphics = function(){
                 break;
                 case 18:
                     graphics.keyPresed.alt = true;
+                break;
+                case 115://F4
+                    graphics.keyPresed.F4 = true;
+                    graphics.selectorCamera.putInScene(graphics.sceneOrtho);
                 break;
                 default:
                     console.log("na que ver");
@@ -647,6 +652,10 @@ IBRS.Graphics = function(){
                 case 18:
                     graphics.keyPresed.alt = false;
                 break;
+                 case 115://F4
+                    graphics.keyPresed.F4 = false;
+                    graphics.selectorCamera.removeFromScene(graphics.sceneOrtho);
+                break;
                 default:
                     console.log("na que ver");
                 break;
@@ -658,8 +667,11 @@ IBRS.Graphics = function(){
     }
 
 
+    this.actualiceSelection = function(){
 
-    this.keyupEvents = 
+        graphics.selectorCamera.CameraReposition(0,0,0,IBRS.elementSelected.unitGraphic);
+    }
+   
 
     this.getCanvasStats = function(scope){
         
@@ -692,12 +704,7 @@ IBRS.Graphics = function(){
             return undefined;
         }
     }
-    this.MouseWheelHandler = function(e) {
-        var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-        graphics.CameraReposition(delta*(-5),0,0)  ;
-        return false;
-    } 
-
+    
 
     this.findPointByProyection = function(evt,scope,list){
 
@@ -721,8 +728,13 @@ IBRS.Graphics = function(){
         }
     }
     this.MouseWheelHandler = function(e) {
-        var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+         var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+        if (graphics.keyPresed.F4 === true){
+        
+        }
+        else{
         graphics.CameraReposition(delta*(-5),0,0)  ;
+        }
         return false;
     } 
 
@@ -1070,13 +1082,13 @@ IBRS.SelectorCamera = function(graphics){
     var selectorCamera = this;
    // this.render = new THREE.WebGLRenderer({premultipliedAlpha:true, alpha:true });
    // this.render.setClearColor(new THREE.Color(0x008800),0);
-    this.canvasWidth = 50;
-    this.canvasHeight = 50;
+    this.canvasWidth = 460;
+    this.canvasHeight = 230;
    // this.render.setSize(this.canvasWidth, this.canvasHeight);
 
 
     //this.scene.fog = new THREE.Fog( 0x000000, 1500, 2100 );
-    this.camera= new THREE.PerspectiveCamera(45, this.canvasWidth / this.canvasHeight, 0.1, 1000);
+    this.camera= new THREE.PerspectiveCamera(90, this.canvasWidth / this.canvasHeight, 0.1, 1000);
     
     this.scene = graphics.scene;
     this.scene.add(this.camera);
@@ -1084,15 +1096,15 @@ IBRS.SelectorCamera = function(graphics){
     
     var finalRenderTarget = new THREE.WebGLRenderTarget( 512, 512, { format: THREE.RGBAFormat } );
     this.spriteMaterial = new THREE.SpriteMaterial( {map:new THREE.ImageUtils.loadTexture("img/CA.png") });
-    this.borderMaterial = new THREE.SpriteMaterial( {color:0x1133CC});
+    this.borderMaterial = new THREE.SpriteMaterial( {color:0xA7CCE8});
    
     this.sprite = new THREE.Sprite(this.spriteMaterial);
     this.border = new THREE.Sprite(this.borderMaterial);
-    this.sprite.scale.set(130,130,1.0);
-    this.border.scale.set(140,140,1.0);
+    this.sprite.scale.set(460,230,1.0);
+    this.border.scale.set(466,236,1.0);
    
 
-    this.camera_Distance =0.5;
+    this.camera_Distance =-0.05;
     this.camera_Horizonatl_Angle = 0;
     this.camera_Vertical_Angle = Math.PI/3;
     this.camera_target = graphics.scene;
@@ -1112,6 +1124,11 @@ IBRS.SelectorCamera = function(graphics){
     this.putInScene = function(scene){
         scene.add( selectorCamera.sprite);
         scene.add( selectorCamera.border);
+    }
+
+    this.removeFromScene = function(scene){
+        scene.remove( selectorCamera.sprite);
+        scene.remove( selectorCamera.border);
     }
 
     this.scaleMenu = function (x,y,z){
@@ -1155,10 +1172,10 @@ IBRS.SelectorCamera = function(graphics){
             selectorCamera.camera_target = targetObject = targetObject !== undefined ? targetObject : selectorCamera.camera_target;
                    
 
-            selectorCamera.camera_Distance = Math.max(selectorCamera.camera_Distance+distance_inc,7);
+            selectorCamera.camera_Distance = Math.min(selectorCamera.camera_Distance+distance_inc,5);
             selectorCamera.camera_Horizonatl_Angle += hoizontalAngle_inc;
             selectorCamera.camera_Vertical_Angle += verticalAngle_inc;
-            selectorCamera.camera_Vertical_Angle = Math.max(Math.PI/4,Math.min(Math.PI*3/7,selectorCamera.camera_Vertical_Angle));
+            selectorCamera.camera_Vertical_Angle = Math.max(0.05,Math.min(Math.PI*99/100,selectorCamera.camera_Vertical_Angle));
             var current_target_position = new THREE.Vector3();
             current_target_position.setFromMatrixPosition( selectorCamera.camera_target.matrixWorld );
             selectorCamera.camera.position.set(
