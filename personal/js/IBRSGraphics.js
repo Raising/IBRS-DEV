@@ -100,7 +100,7 @@ IBRS.Graphics = function(){
     this.camera_target = this.scene;
     this.sceneObjects = new THREE.Object3D();
     this.scene.add(this.sceneObjects);
-    this.keyPresed = {tab:false,ctrl:false,alt:false};
+    this.keyPresed = {tab:false,ctrl:false,alt:false,F1:false,F2:false,F3:false,F4:false};
 
     this.refreshSceneObjects = function(game){
         graphics.scene.remove(graphics.sceneObjects);
@@ -523,13 +523,22 @@ IBRS.Graphics = function(){
             mouseDownPosition.x = evt.pageX;
             mouseDownPosition.y = evt.pageY;
             }
-             else if (mouseIsDown===1 && mouseDragable===true){
+             else if (mouseIsDown===1 ){
+                if (graphics.keyPresed.alt){
+                    var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
+                    if (position != undefined){
+                        var angle = Math.atan2(position.x- IBRS.elementSelected.position.x,position.z-IBRS.elementSelected.position.z);
+                        IBRS.elementSelected.setRotation(0,angle,0);
+                        mouseDragable = false;
+                    }
+                }else if (mouseDragable===true){
                 //intime reposition miniature
                  var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
                      if (position != undefined){
                         IBRS.elementSelected.setPosition(position.x,position.y,position.z);
                         mouseDragable = true;
                     }
+                }
             }
         },false);
 
