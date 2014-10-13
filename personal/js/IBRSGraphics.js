@@ -229,7 +229,7 @@ IBRS.Graphics = function(){
             current_target_position.setFromMatrixPosition( graphics.camera_target.matrixWorld );
             
 
-            console.log(current_target_position);
+           
             graphics.camera.position.set(
                 current_target_position.x + graphics.camera_Distance*Math.cos(graphics.camera_Horizonatl_Angle)*Math.sin(graphics.camera_Vertical_Angle),
                 current_target_position.y + 3 + graphics.camera_Distance*Math.cos(graphics.camera_Vertical_Angle),
@@ -650,12 +650,36 @@ IBRS.Graphics = function(){
                 break;
                 case 38:
                     graphics.arrowUP = true;
+                    var sinA =  Math.sin(graphics.camera_Horizonatl_Angle);
+                    var cosA =  Math.cos(graphics.camera_Horizonatl_Angle);
+                     graphics.camera_target.position.set(
+                        graphics.camera_target.position.x+cosA*(-1)+sinA*(0),
+                        graphics.camera_target.position.y,
+                        graphics.camera_target.position.z-(cosA*(0)-sinA*(-1)));
+                     console.log(graphics.camera_target.position);
+                     graphics.CameraReposition(0,0,0,graphics.camera_target);
                 break;
                 case 39:
                     graphics.arrowRIGHT = true;
+                    var sinA =  Math.sin(graphics.camera_Horizonatl_Angle);
+                    var cosA =  Math.cos(graphics.camera_Horizonatl_Angle);
+                     graphics.camera_target.position.set(
+                        graphics.camera_target.position.x+cosA*0+sinA*(1),
+                        graphics.camera_target.position.y,
+                        graphics.camera_target.position.z-(cosA*(1)-sinA*0));
+                     console.log(graphics.camera_target.position);
+                     graphics.CameraReposition(0,0,0,graphics.camera_target);
                 break;
                 case 40:
                     graphics.arrowDOWN = true;
+                    var sinA =  Math.sin(graphics.camera_Horizonatl_Angle);
+                    var cosA =  Math.cos(graphics.camera_Horizonatl_Angle);
+                     graphics.camera_target.position.set(
+                        graphics.camera_target.position.x+cosA*(1)+sinA*(0),
+                        graphics.camera_target.position.y,
+                        graphics.camera_target.position.z-(cosA*(0)-sinA*(1)));
+                     console.log(graphics.camera_target.position);
+                     graphics.CameraReposition(0,0,0,graphics.camera_target);
                 break;
                 default:
                     console.log("na que ver");
