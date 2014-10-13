@@ -281,7 +281,7 @@ jQuery(function(){
 				toggleShadows();
 
 				jQuery('#atajo').click(function(){IBRS.stage.animateElements();});
-				IBRS.stage.animateElements();
+				//IBRS.stage.animateElements();
 
 				// Relacion html con los elementos en el canvas 
 				
