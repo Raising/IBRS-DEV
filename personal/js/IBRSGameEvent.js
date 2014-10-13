@@ -1,3 +1,7 @@
+// IBRS Copyright (C) 2014  Ignacio Medina Castillo
+// ignacio.medina.castillo@gmail.com
+
+
 IBRS.DEC = {ENUM : 'tipo de ordenes'};
 IBRS.DEC.MOVE = 0;
 IBRS.DEC.DODGE = 1;
@@ -167,7 +171,22 @@ IBRS.Order =  function(turn){
 	this.resolutions = [];// TODO
 	this.turn = turn;
 	this.groupNumber = -1;
-	this.orderType = -1; //0 = regular, 1 = irregular, 2 = impetuosa.
+	this.orderType = 0; //0 = regular, 1 = irregular, 2 = impetuosa.
+	this.icon ="img/Orden_regular.png";
+	this.container = jQuery('<img class="order" src="img/Orden_regular.png"></img>');
+
+
+	this.updateHtml = function(){
+		order.container.attr("src", turn.icon);
+		order.setHtmlInteractions();
+	}
+
+	this.setHtmlInteractions = function(){
+
+	}
+
+
+
 	this.addFirstDeclaration= function( declaration){
 		order.firstDeclaration.push(declaration);
 	};
@@ -192,6 +211,17 @@ IBRS.Order =  function(turn){
 	
 		order.groupNumber = data.groupNumber;
 		order.orderType = data.orderType;
+		switch (order.orderType) {
+			case 0:
+				order.icon = "img/Orden_regular.png";
+			break;
+			case 1:
+				order.icon = "img/Orden_irregular.png";
+			break;
+			case 2:
+				order.icon = "img/Orden_impetuosa.png";
+			break;
+		}
 		
 		for (var i = 0; i < data.firstDeclaration.length; i++) {
 			var newDeclaration = new IBRS.Declaration(order);
@@ -266,14 +296,43 @@ IBRS.Turn =  function(gameEvents){
 	this.gameEvents= gameEvents;
 	this.playerID = 0;
 	this.orderList=[];
+	this.color = "#005700";
+	this.container = jQuery('<div class="turn "></div>');
+	
 
 	this.addOrder = function (newOrder) {
 		turn.orderList.push(newOrder);
+		turn.updateHtml();
 	};
+
+	this.updateHtml = function(){
+		
+
+
+
+		turn.container.empty().css("width",turn.orderList.length*30).css("background",turn.color);
+		
+		for (var i = 0;i<turn.orderList.length;i++){
+			turn.orderList[i].updateHtml();
+			turn.container.append(turn.orderList[i].container);
+		}
+		turn.setHtmlInteractions();
+	}
+
+	this.setHtmlInteractions = function(){
+
+	}
+
+
 
 	this.insertFromData = function(data) {
 		
 		turn.playerID = data.playerID;
+		if (turn.playerID%2 == 0){
+			turn.color ="linear-gradient(to bottom, #308630 0%,#005600 70%,#005600 80%)";
+		}else{
+			turn.color = "linear-gradient(to bottom, #963030 0%,#560000 75%,#560000 80%)";	
+		}
 		for (var i = 0; i < data.orderList.length; i++) {
 			var newOrder = new IBRS.Order(turn);
 			newOrder.insertFromData(data.orderList[i]);
@@ -299,25 +358,42 @@ IBRS.GameEvents =  function(game){
 	var gameEvents = this;
 	this.turnList=[];
 	this.game = game;
+	this.turnContainer = jQuery('<div id="00900" class="turn_container"></div>');
+	this.declarationContainer = jQuery('<div id="declaration_container" class="event_container"></div>');
+
 	this.addTurn = function (newTurn) {
 		gameEvents.turnList.push(newTurn);
 	};
 	
 	this.loadGameEventsFromDataBase = function(gameEventsID){
-		
-		
-		
 		jQuery.getJSON("DataBase/GameEvents/"+gameEventsID+".json",function(data){
 			if(IBRS.depurarAyax){console.info("Ajax Cargando DataBase/GameEvents/"+gameEventsID+".json");}
 			for (var i = 0;i<data.turnList.length;i++){
-				
 				var newTurn = new IBRS.Turn(gameEvents);
 				newTurn.insertFromData(data.turnList[i]);
 				gameEvents.addTurn(newTurn);
 			}
-
+			gameEvents.updateHtml();
 		});
+
 	};
+
+
+	this.updateHtml = function(){
+		jQuery("#turn_container").empty().append(gameEvents.turnContainer);//.append(gameEvents.declarationContainer);
+		
+		gameEvents.declarationContainer.empty();
+		for (var i = 0;i<gameEvents.turnList.length;i++){
+			gameEvents.turnList[i].updateHtml();
+			gameEvents.turnContainer.append(gameEvents.turnList[i].container);
+		}
+		gameEvents.setHtmlInteractions();
+	}
+
+	this.setHtmlInteractions = function(){
+
+	}
+
 
 	this.toJSON = function(key){
 		var salida = {};

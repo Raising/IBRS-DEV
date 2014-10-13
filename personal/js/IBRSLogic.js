@@ -356,7 +356,7 @@ IBRS.TacticalGroup =  function (army) {
 
 	    tacticalGroup.troopTray.bind("drop" , function(event){
 	 	event.preventDefault();
-		console.log(event);
+		
 		switch (IBRS.dragCatcher.kind){
 			case "TroopThumb":
 					var newUnit = new IBRS.UnitLogic(tacticalGroup);
@@ -381,7 +381,7 @@ IBRS.TacticalGroup =  function (army) {
 
 	    tacticalGroup.troopTray.bind("dragover", function(event){
 			  event.preventDefault();
-			console.log("intento de hovering en grupo");
+			
 			return false;
 		});
 

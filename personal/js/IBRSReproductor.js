@@ -21,7 +21,7 @@ IBRS.Reproductor = function(graphicEnviroment){
 	this.playing = false;
 	this.timePerAction =3000; //velocidad, a mas pequeño ms rapido.
 	this.declarationInterval = 1.2;
-	this.insertEvents = function(data){
+	this.setEvents = function(data){
 		//TODO Aqui la magia
 		var timeFilled = 0;
 		//poner la declaración y deepus las acciones

@@ -6,7 +6,7 @@
 jQuery(function(){
 				//webGLStart();
 		window.addEventListener("keydown", function(evt){
-			if (evt.keyCode ===9 || evt.keyCode === 18|| evt.keyCode === 37|| evt.keyCode === 38|| evt.keyCode === 39|| evt.keyCode === 40){
+			if (evt.keyCode ===9 || evt.keyCode === 18|| evt.keyCode === 37|| evt.keyCode === 38|| evt.keyCode === 39|| evt.keyCode === 40 ){
 				evt.preventDefault();
 			}
 		}  , false); 
@@ -72,7 +72,7 @@ jQuery(function(){
 					tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} ,"-=1");
 					tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'} ,"-=1");
 					tl.to(jQuery("#deployTools"),1,{bottom:'-30%'},"-=1");
-					tl.to(jQuery("#timeTracker"),1,{top:'-15%'},"-=1" );
+					tl.to(jQuery("#timeTracker"),1,{top:'-30%'},"-=1" );
 					
 
 					tl.to(jQuery("#frontalSelector"),2,{top:'-180%'},"-=1");
@@ -102,7 +102,7 @@ jQuery(function(){
 					tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} ,"-=1");
 					tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'} ,"-=1");
 					tl.to(jQuery("#deployTools"),1,{bottom:'-30%'} ,"-=1");
-					tl.to(jQuery("#timeTracker"),1,{top:'-15%'} ,"-=1");
+					tl.to(jQuery("#timeTracker"),1,{top:'-30%'} ,"-=1");
 					
 					
 
@@ -131,7 +131,7 @@ jQuery(function(){
 					tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'},"-=1" );
 					tl.to(jQuery("#searchTools"),1,{bottom:'-30%'},"-=1" );
 					tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'},"-=1" );
-					tl.to(jQuery("#timeTracker"),1,{top:'-15%'} ,"-=1");
+					tl.to(jQuery("#timeTracker"),1,{top:'-30%'} ,"-=1");
 					tl.to(jQuery("#frontalSelector"),1,{top:'130%'},"-=1" );	
 
 
@@ -262,7 +262,7 @@ jQuery(function(){
 					tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'} ,"-=1" );
 					tl.to(jQuery("#searchTools"),1,{bottom:'-30%'} ,"-=1" );
 					tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'} ,"-=1" );
-					tl.to(jQuery("#timeTracker"),1,{top:'-10%'},"-=1"  );
+					tl.to(jQuery("#timeTracker"),1,{top:'-30%'},"-=1"  );
 					tl.to(jQuery("#canvas"),1,{opacity:'0'},"-=1" );
 					
 					tl.to(jQuery("#frontalSelector"),1,{top:'-80%'} );	
@@ -279,6 +279,10 @@ jQuery(function(){
 				}
 				jQuery("#checkSombras").click(toggleShadows);
 				toggleShadows();
+
+				jQuery('#atajo').click(function(){IBRS.stage.animateElements();});
+				IBRS.stage.animateElements();
+
 				// Relacion html con los elementos en el canvas 
 				
 				jQuery("#buton_search").click(function(){IBRS.stage.searchGame();});

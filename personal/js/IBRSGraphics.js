@@ -30,6 +30,7 @@ IBRS.Graphics = function(){
     this.sceneOrtho  = new THREE.Scene();
 
     this.scene.add(this.camera);
+    this.recorder = new IBRS.Recorder(this);
     this.reproductor = new IBRS.Reproductor(this);
     this.htmlHandler = new IBRS.CanvasHtml(this);
     this.htmlHandler.setDragAndDrop();
@@ -166,7 +167,8 @@ IBRS.Graphics = function(){
        graphics.refreshSceneObjects(newGame);
        // graphics.addListToScene(newGame.getMiniatures(),true);
        // graphics.addListToScene(newGame.getSceneryElementList(),false);
-        graphics.reproductor.insertEvents(newGame.events);
+        graphics.reproductor.setEvents(newGame.events);
+        graphics.recorder.setEvents(newGame.events);
         var stringJson = JSON.stringify(newGame.events,null,'\t');
         var blob = new Blob([stringJson], {type: "application/json"});
         var urll  = URL.createObjectURL(blob);
@@ -618,11 +620,11 @@ IBRS.Graphics = function(){
                 case 9:
                     graphics.keyPresed.tab = true;
 
-                    /*
+                    
                     for (var i =0; i<graphics.tageteableElementsList.length;i++){
 
                         graphics.tageteableElementsList[i].selectorOpacity(1);
-                    }*/
+                    }
 
 
                 break;
@@ -693,11 +695,11 @@ IBRS.Graphics = function(){
              switch(evt.keyCode){
                 case 9:
                     graphics.keyPresed.tab = false;
-                    /*
+                    
                       for (var i =0; i<graphics.tageteableElementsList.length;i++){
                         graphics.tageteableElementsList[i].selectorOpacity(0);
                     }
-                    */
+                    
                 break;
                 case 17:
                     graphics.keyPresed.ctrl = false;
