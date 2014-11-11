@@ -638,6 +638,23 @@ IBRS.Graphics = function(){
                     graphics.keyPresed.F4 = true;
                     graphics.selectorCamera.putInScene(graphics.sceneOrtho);
                 break;
+
+                 case 112://F1
+                    graphics.keyPresed.F4 = true;
+                     for (var i =0; i<graphics.tageteableElementsList.length;i++){
+                        var highLight = graphics.tageteableElementsList[i]
+                        if (true){
+                            highLight.selectorOpacity(1);
+                        }
+                        
+                    }
+                   
+                break;
+                case 113://F2
+                    graphics.keyPresed.F4 = true;
+                    
+                    graphics.selectorCamera.removeFromScene(graphics.sceneOrtho);
+                break;
                 case 37:
                     graphics.arrowLEFT = true;
                     var sinA =  Math.sin(graphics.camera_Horizonatl_Angle);
@@ -708,6 +725,16 @@ IBRS.Graphics = function(){
                     graphics.keyPresed.alt = false;
                 break;
                  case 115://F4
+                    graphics.keyPresed.F4 = false;
+                    
+                    graphics.selectorCamera.removeFromScene(graphics.sceneOrtho);
+                break;
+                 case 112://F1
+                    graphics.keyPresed.F4 = false;
+                    
+                    graphics.selectorCamera.removeFromScene(graphics.sceneOrtho);
+                break;
+                case 113://F2
                     graphics.keyPresed.F4 = false;
                     
                     graphics.selectorCamera.removeFromScene(graphics.sceneOrtho);
