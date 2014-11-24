@@ -194,9 +194,8 @@ IBRS.Animation = function(reproductor,target,type,startTime,endTime,startValue,e
 		case IBRS.ANIM.MOVE: //silueta en movmimento
 			this.long = true;
 			this.efx = reproductor.effectsContainer.createEffect(IBRS.EFX.MOVE,this.target,this.startTime,this.endTime);
-			console.log(this.target);
-			TweenMax.to(this.target.unitGraphic.position, 1.6, {y:20,repeat:-1,yoyo:true  , ease:Sine.easeOut});
-
+		
+			
 			break;
 		case IBRS.ANIM.SHOOT://disparo
 			this.efx = reproductor.effectsContainer.createEffect(IBRS.EFX.SHOOT,this.target,this.startTime,this.endTime);

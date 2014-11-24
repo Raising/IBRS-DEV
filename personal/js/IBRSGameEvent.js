@@ -88,7 +88,65 @@ IBRS.ANIM.PERMSTATUS = 98;
 
 
 
+IBRS.Action = function(declaration){
+	var action = this;
+	this.declaration = declaration;
+	this.type= 0;
+	this.startTime = 0;
+	this.endTime = 1;
+	this.startPosition = {x:0,y:0,z:0};
+	this.endPosition = {x:0,y:0,z:0};
+	this.insertFromData = function(data){
+		action.type= data.type;
+		action.startTime = data.startTime;
+		action.endTime = data.endTime;
+		action.startPosition = data.startPosition;
+		action.endPosition = data.endPosition;
+	}
 
+	this.animation = function(){
+		var tlAction = new TimelineMax();
+
+
+		switch (action.type){
+			case IBRS.ANIM.DECLARATION: //icono
+			break;
+			case IBRS.ANIM.MOVE://movimiento
+				tlAction.fromTo(action.declaration.source.unitGraphic.position,action.endTime-action.startTime,action.startPosition,action.endPosition,action.startTime);
+			break;
+			case IBRS.ANIM.SHOOT: 
+			break;
+			case IBRS.ANIM.REGULAR:
+			break;
+			case IBRS.ANIM.STATUS:
+			break;
+			case 5:
+			break;
+			case 6:
+			break;
+			case 7:
+			break;
+			case 8:
+			break;
+			case 9:
+			break;
+			default:
+				console.error("animacion no reconocida, codigo de animación invalido");
+			break;
+		}
+		return tlAction;
+	}
+
+	this.toJSON = function(key){
+		var salida = {};
+		salida.type= action.type;
+		salida.startTime = action.startTime ;
+		salida.endTime = action.endTime ;
+		salida.startPosition = action.startPosition;
+		salida.endPosition = action.endPosition;
+		return salida;
+	}
+}
 
 
 
@@ -106,6 +164,10 @@ IBRS.Resolution = function(order){
 	this.locateUnit = function (data){
 		return resolution.order.turn.gameEvents.game.getUnitLogicFromArmyPosition(data);
 	}
+	 this.animation = function(){
+	 	//animaciones de cambio de estado ( muerto etc)
+	 	return "hey";
+    }
 
     this.insertFromData = function(data){
     	resolution.type = data.type;
@@ -144,8 +206,23 @@ IBRS.Declaration = function(order){
     this.insertFromData = function(data){
     	declaration.descriptor = data.descriptor;
     	declaration.source= declaration.locateUnit(data.source);
-    	declaration.actions= data.actions;
+    	for (var i = 0; i< data.actions.length; i++){
+    		var tempAction = new IBRS.Action(declaration);
+   			tempAction.insertFromData(data.actions[i]);
+   			declaration.actions.push(tempAction); 
+    	}
     }
+
+    this.animation = function(){
+    	var tlDeclaration = new TimelineMax();
+		// Añadir animacion de icono de la orden
+		for (var i=0;i < declaration.actions.length;i++){
+			tlDeclaration.add(declaration.actions[i].animation(),"Action_"+i);
+		}
+		tlDeclaration.addLabel("EndDeclaration");
+		return tlDeclaration;
+    }
+
 
     this.toJSON = function(key){
     	var salida = {};
@@ -184,7 +261,27 @@ IBRS.Order =  function(turn){
 	this.setHtmlInteractions = function(){
 
 	}
+	this.animation = function(){
+		var tlOrder = new TimelineMax();
+		for (var i=0;i < order.firstDeclaration.length;i++){
+			tlOrder.add(order.firstDeclaration[i].animation(),"firstDeclaration");
+		}
+		for (var i=0;i < order.firstAro.length;i++){
+			tlOrder.add(order.firstAro[i].animation(),"firstAro");
+		}
+		for (var i=0;i < order.secondDeclaration.length;i++){
+			tlOrder.add(order.secondDeclaration[i].animation(),"secondDeclaration");
+		}
+		for (var i=0;i < order.secondAro.length;i++){
+			tlOrder.add(order.secondAro[i].animation(),"secondAro");
+		}
+		for (var i=0;i < order.resolutions.length;i++){
+			tlOrder.add(order.resolutions[i].animation(),"resolutions");
+		}
+		tlOrder.addLabel("EndOrder");
+		return tlOrder;
 
+	}
 
 
 	this.addFirstDeclaration= function( declaration){
@@ -323,7 +420,14 @@ IBRS.Turn =  function(gameEvents){
 
 	}
 
-
+	this.animation = function(){
+		var tlTurn = new TimelineMax();
+		for (var i=0;i < turn.orderList.length;i++){
+			tlTurn.add(turn.orderList[i].animation(),"Order_"+i);
+		}
+		tlTurn.addLabel("EndTurn");
+		return tlTurn;
+	}
 
 	this.insertFromData = function(data) {
 		
@@ -377,7 +481,14 @@ IBRS.GameEvents =  function(game){
 		});
 
 	};
-
+	this.animation = function(){
+		var tlgameEvents = new TimelineMax();
+		for (var i=0;i < gameEvents.turnList.length;i++){
+			tlgameEvents.add(gameEvents.turnList[i].animation(),"Turn_"+i);
+		}
+		tlgameEvents.addLabel("EndGame");
+		return tlgameEvents;
+	}
 
 	this.updateHtml = function(){
 		jQuery("#turn_container").empty().append(gameEvents.turnContainer);//.append(gameEvents.declarationContainer);

@@ -165,15 +165,33 @@ IBRS.Graphics = function(){
 
     this.insertGameData= function(newGame){
        graphics.refreshSceneObjects(newGame);
+       graphics.initAnimations(newGame.events);
        // graphics.addListToScene(newGame.getMiniatures(),true);
        // graphics.addListToScene(newGame.getSceneryElementList(),false);
         graphics.reproductor.setEvents(newGame.events);
         graphics.recorder.setEvents(newGame.events);
+
         var stringJson = JSON.stringify(newGame.events,null,'\t');
         var blob = new Blob([stringJson], {type: "application/json"});
         var urll  = URL.createObjectURL(blob);
         jQuery("#getJson").attr("href",urll);
     };
+
+    this.initAnimations = function(events){
+        graphics.animation = events.animation();
+        graphics.animation.resume();
+      /*  jQuery("#slider").slider({
+        range: false,
+        min: 0,
+         max: 100,
+        step:0.1,
+        slide: function ( event, ui ) {
+            graphics.animation.pause();
+            //adjust the timeline's progress() based on slider value
+            graphics.animation.progress( ui.value/100 );*/
+    }
+});
+    }
 
     this.setTargeteableElements=function(newList){
         graphics.tageteableElementsList = newList;
