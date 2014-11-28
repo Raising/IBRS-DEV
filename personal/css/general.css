@@ -90,7 +90,7 @@ body{
   top: 0%;
   background:transparent;
   opacity: 0 ;
- visibility: hidden;
+  visibility: hidden;
 }
 
 
@@ -713,4 +713,10 @@ top:0%;
   height: 20px;
   margin: 5px;
   margin-top: -7px;
+}
+
+.interface2d {
+  z-index:10;
+  position : absolute;
+  pointer-events:none;
 }

@@ -34,6 +34,7 @@ IBRS.Graphics = function(){
     this.reproductor = new IBRS.Reproductor(this);
     this.htmlHandler = new IBRS.CanvasHtml(this);
     this.htmlHandler.setDragAndDrop();
+    this.cameraMoved = true;
    
      window.addEventListener("resize", function(){
          IBRS.actualGraphics.canvasWidth = jQuery("#canvas").width();
@@ -154,10 +155,10 @@ IBRS.Graphics = function(){
         //graphics.reproductor.update();
         graphics.selectorCamera.update();
         graphics.contextualMenu.update();
-        if (graphics.tageteableElementsList[0]){
-        for (var k = 0 ; k<graphics.tageteableElementsList.length;k++){
-        graphics.traceMiniature(graphics.tageteableElementsList[k]);  }
-
+        if (graphics.tageteableElementsList[0] && graphics.cameraMoved){
+    
+        graphics.traceMiniature(graphics.tageteableElementsList[0]);  
+        graphics.cameraMoved = false;
         }
         graphics.renderScene();
        
@@ -169,9 +170,10 @@ IBRS.Graphics = function(){
     };
 
     this.traceMiniature = function(element){
+        console.log("tracing");
        var pos2d =  graphics.findScreenPositionByProyection(element);
      
-        jQuery("#trace").css("top",pos2d.y-35).css("left",pos2d.x-21);
+        jQuery("#trace").css("top",pos2d.y).css("left",pos2d.x);
     }
 
     this.insertGameData= function(newGame){
@@ -563,6 +565,7 @@ IBRS.Graphics = function(){
                 }
             mouseDownPosition.x = evt.pageX;
             mouseDownPosition.y = evt.pageY;
+            graphics.cameraMoved = true;
             }
              else if (mouseIsDown===1 ){
                 if (graphics.keyPresed.alt){
@@ -878,6 +881,7 @@ IBRS.Graphics = function(){
         else{
         graphics.CameraReposition(delta*(-5),0,0)  ;
         }
+        graphics.cameraMoved = true;
         return false;
     } 
 

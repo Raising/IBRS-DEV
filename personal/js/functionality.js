@@ -33,8 +33,25 @@ jQuery(function(){
 
 	//jQuery(GraphicEnviroment.render.domElement).attr("id","render").addClass(" canvas-look col-md-12 col-sm-12 col-xs-12");
 	jQuery("#canvas").append(jQuery(GraphicEnviroment.render.domElement));
-	jQuery("body").children().append("<div id='trace' style='visibility: visible;width:40px;height:40px;border-radius:20px; border-style: dotted;border-width:2px;border-color: orange;z-index:10;position:absolute'> </div>")
-	TweenMax.to(jQuery("#trace"),4,{rotationZ:360,scale:1.2,yoyo:true,repeat:-1,ease:Linear.easeNone});
+
+
+	jQuery("body").children().append("<div id='trace' class='interface2d'> </div>");
+	jQuery("#trace").append("<img src='img/holo_green_1.png' style='position:absolute;width:64px;left:-32px;top:-48px;'>");
+	jQuery("#trace").append("<img src='img/holo_green_2.png' style='position:absolute;width:64px;left:-32px;top:-48px;'>");
+	jQuery("#trace").append("<img src='img/holo_green_3.png' style='position:absolute;width:64px;left:-32px;top:-48px;'>");
+	jQuery("#trace").append("<img src='img/holo_green_4.png' style='position:absolute;width:64px;left:-32px;top:-48px;'>");
+	jQuery("#trace").append("<img src='img/holo_green_5.png' style='position:absolute;width:64px;left:-32px;top:-48px;'>");
+	
+
+
+	TweenMax.to(jQuery("#trace").children()[0],4,{rotationZ:360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
+	TweenMax.to(jQuery("#trace").children()[1],3,{rotationZ:-360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
+	TweenMax.to(jQuery("#trace").children()[2],6,{rotationZ:-360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
+	TweenMax.to(jQuery("#trace").children()[3],5,{rotationZ:360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
+	TweenMax.to(jQuery("#trace").children()[4],3.5,{rotationZ:360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
+
+	TweenMax.staggerFromTo(jQuery("#trace").children(),4,{scale:0.8,transformOrigin:"50% 50%"},{scale:1.1,yoyo:true,transformOrigin:"50% 50%",repeat:-1,ease:Sine.easeInOut},0.8);
+	
 	//boton comenzar reproduccion "play"
 	jQuery("#play_button").click(function(){
 		GraphicEnviroment.playGame();
