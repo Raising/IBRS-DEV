@@ -33,7 +33,8 @@ jQuery(function(){
 
 	//jQuery(GraphicEnviroment.render.domElement).attr("id","render").addClass(" canvas-look col-md-12 col-sm-12 col-xs-12");
 	jQuery("#canvas").append(jQuery(GraphicEnviroment.render.domElement));
-	
+	jQuery("body").children().append("<div id='trace' style='visibility: visible;width:40px;height:40px;border-radius:20px; border-style: dotted;border-width:2px;border-color: orange;z-index:10;position:absolute'> </div>")
+	TweenMax.to(jQuery("#trace"),4,{rotationZ:360,scale:1.2,yoyo:true,repeat:-1,ease:Linear.easeNone});
 	//boton comenzar reproduccion "play"
 	jQuery("#play_button").click(function(){
 		GraphicEnviroment.playGame();

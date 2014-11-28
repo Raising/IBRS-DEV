@@ -7,8 +7,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		
 		<link href="../personal/css/general.css" rel="stylesheet">
-		
+        <link href="../libs/css/ui-darkness/jquery-ui-1.10.4.custom.css" rel="stylesheet">
 		<script type="text/javascript" src="../libs/js/jquery-1.9.1.js"></script>
+        <script type="text/javascript" src="../libs/js/jquery-ui-1.10.3.custom.min.js"></script>
+        
 		<script>jQuery.noConflict();</script>
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.13.2/TweenMax.min.js"></script>
 		<script type="text/javascript" src="../libs/js/three.js"></script>
@@ -107,7 +109,8 @@
                 <div id="retract_scenery" class="topExpandButton"> 
                     <div   class="topExpandButtonAux"> 
                         </div>
-                        </div>
+                        
+                    </div>
 
     		</div>
 
@@ -117,13 +120,16 @@
     		</div>
 
     		<div id="deployTools" class="noAuto bottomSlider" >
+               
     			DEPLOY TOOLS
     		</div>
 
     		<div id="timeTracker" class="noAuto topSlider " >
                 <div id="turn_container" class="event_container"></div>
+
+                
     			<div  class="event_container_shadow"></div>
-                <div id="slider"></div>
+                <div id="progressBar"><div id="slider"></div></div>
     		</div>
 
     		<div id="reproductorTools" class="noAuto bottomSlider reduced" >

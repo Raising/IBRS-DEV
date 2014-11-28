@@ -105,14 +105,14 @@ IBRS.Action = function(declaration){
 	}
 
 	this.animation = function(){
-		var tlAction = new TimelineMax();
+		var tlAction = new TimelineMax({paused:false});
 
 
 		switch (action.type){
 			case IBRS.ANIM.DECLARATION: //icono
 			break;
 			case IBRS.ANIM.MOVE://movimiento
-				tlAction.fromTo(action.declaration.source.unitGraphic.position,action.endTime-action.startTime,action.startPosition,action.endPosition,action.startTime);
+				tlAction.to(action.declaration.source.unitGraphic.position,action.endTime-action.startTime,action.endPosition,action.startTime);
 			break;
 			case IBRS.ANIM.SHOOT: 
 			break;
@@ -481,8 +481,8 @@ IBRS.GameEvents =  function(game){
 		});
 
 	};
-	this.animation = function(){
-		var tlgameEvents = new TimelineMax();
+	this.animation = function(onupdateCall){
+		var tlgameEvents = new TimelineMax({paused:true,onUpdate:onupdateCall});
 		for (var i=0;i < gameEvents.turnList.length;i++){
 			tlgameEvents.add(gameEvents.turnList[i].animation(),"Turn_"+i);
 		}

@@ -690,6 +690,14 @@ top:0%;
 
 }
 
+#progressBar{
+  position: absolute;
+  bottom:5%;
+  left:5%;
+  width: 90%;
+  
+}
+
 .turn{
   display:inline-block;
   height: 16px;

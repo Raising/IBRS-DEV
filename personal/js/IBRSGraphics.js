@@ -151,9 +151,14 @@ IBRS.Graphics = function(){
     this.animateScene= function(){
         //var delta=(Date.now()- this.referenceTime )/1000;
         // this.referenceTime =Date.now();
-        graphics.reproductor.update();
+        //graphics.reproductor.update();
         graphics.selectorCamera.update();
         graphics.contextualMenu.update();
+        if (graphics.tageteableElementsList[0]){
+        for (var k = 0 ; k<graphics.tageteableElementsList.length;k++){
+        graphics.traceMiniature(graphics.tageteableElementsList[k]);  }
+
+        }
         graphics.renderScene();
        
         requestAnimationFrame(graphics.animateScene);
@@ -162,6 +167,12 @@ IBRS.Graphics = function(){
         graphics.startScene();
         graphics.animateScene();        
     };
+
+    this.traceMiniature = function(element){
+       var pos2d =  graphics.findScreenPositionByProyection(element);
+     
+        jQuery("#trace").css("top",pos2d.y-35).css("left",pos2d.x-21);
+    }
 
     this.insertGameData= function(newGame){
        graphics.refreshSceneObjects(newGame);
@@ -177,20 +188,22 @@ IBRS.Graphics = function(){
         jQuery("#getJson").attr("href",urll);
     };
 
-    this.initAnimations = function(events){
-        graphics.animation = events.animation();
-        graphics.animation.resume();
-      /*  jQuery("#slider").slider({
+    var  updateSlider= function() {
+            jQuery("#slider").slider("value", graphics.animation.progress() *100);
+        }
+    jQuery("#slider").slider({
         range: false,
         min: 0,
-         max: 100,
+        max: 100,
         step:0.1,
         slide: function ( event, ui ) {
             graphics.animation.pause();
-            //adjust the timeline's progress() based on slider value
-            graphics.animation.progress( ui.value/100 );*/
-    }
-});
+            graphics.animation.progress( ui.value/100 );
+             }   
+        });
+    this.initAnimations = function(events){
+        graphics.animation = events.animation(updateSlider);
+       // graphics.animation.resume();
     }
 
     this.setTargeteableElements=function(newList){
@@ -198,7 +211,7 @@ IBRS.Graphics = function(){
     };
 
     this.playGame = function(){
-        graphics.reproductor.start();
+        graphics.animation.resume();
     };
     this.pauseGame = function(){
         if (graphics.reproductor.playing){
@@ -207,7 +220,6 @@ IBRS.Graphics = function(){
         else{
             graphics.reproductor.continue();
             }
-
     };
 
 
@@ -840,6 +852,24 @@ IBRS.Graphics = function(){
             return undefined;
         }
     }
+
+    this.findScreenPositionByProyection = function(element){
+        element.matrixWorld.getPosition().clone();
+        var projector = new THREE.Projector();
+        var CanvasStats = graphics.getCanvasStats(jQuery("#canvas").children());
+        var pos = element.matrixWorld.getPosition().clone();
+        var projScreen = projector.projectVector(pos,graphics.camera);
+
+        var percX = (projScreen.x + 1) / 2;
+        var  percY = (-projScreen.y + 1) / 2;
+        var left = percX * CanvasStats.width;
+        var top = percY * CanvasStats.height;
+      
+        return { x: left + CanvasStats.Offset.left,
+             y: top + CanvasStats.Offset.top};
+    }
+
+
     this.MouseWheelHandler = function(e) {
          var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
         if (graphics.keyPresed.F4 === true){
