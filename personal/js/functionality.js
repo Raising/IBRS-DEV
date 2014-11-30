@@ -32,7 +32,7 @@ jQuery(function(){
 	
 
 	//jQuery(GraphicEnviroment.render.domElement).attr("id","render").addClass(" canvas-look col-md-12 col-sm-12 col-xs-12");
-	jQuery("#canvas").append(jQuery(GraphicEnviroment.render.domElement));
+	jQuery("#canvas").prepend(jQuery(GraphicEnviroment.render.domElement));
 
 
 	jQuery("body").children().append("<div id='trace' class='interface2d'> </div>");

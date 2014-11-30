@@ -23,7 +23,7 @@ IBRS.Graphics = function(){
 
     this.scene = new THREE.Scene();
 
-    //this.scene.fog = new THREE.Fog( 0x000000, 1500, 2100 );
+   // this.scene.fog = new THREE.Fog( 0x000000, 200, 1200 );
     this.camera = new THREE.PerspectiveCamera(45, this.canvasWidth / this.canvasHeight, 0.1, 1000);
     this.cameraOrtho = new THREE.OrthographicCamera(-this.canvasWidth/2,this.canvasWidth/2,this.canvasHeight/2,-this.canvasHeight/2,1,10);
     this.cameraOrtho.position.z = 10;

@@ -719,7 +719,8 @@ IBRS.Game = function(gameID){
 
 
 	this.newTurn = function(){
-		game.turnList.push(new IBRS.Turn());
+		/* TODO
+		game.turnList.push(new IBRS.Turn());*/
 
 	};
 

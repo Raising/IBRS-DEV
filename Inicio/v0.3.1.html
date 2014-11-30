@@ -1,0 +1,233 @@
+<!-- IBRS Copyright (C) 2014  Ignacio Medina Castillo -->
+ 
+<html>
+    <head>
+        <title>V 0.3.1</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		<link href="../personal/css/general.css" rel="stylesheet">
+        <link href="../libs/css/ui-darkness/jquery-ui-1.10.4.custom.css" rel="stylesheet">
+		<script type="text/javascript" src="../libs/js/jquery-1.9.1.js"></script>
+        <script type="text/javascript" src="../libs/js/jquery-ui-1.10.3.custom.min.js"></script>
+        
+		<script>jQuery.noConflict();</script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.13.2/TweenMax.min.js"></script>
+		<script type="text/javascript" src="../libs/js/three.js"></script>
+<!--	
+		
+		<script type="text/javascript" src="../libs/js/leap-0.6.0-beta2.js"></script>
+-->
+		<script type="text/javascript" src="../personal/js/CustomGeometries.js"></script>
+		<script type="text/javascript" src="../personal/js/IBRSLogic.js"></script>
+	   <script type="text/javascript" src="../personal/js/IBRSGraphics.js"></script>
+        <script type="text/javascript" src="../personal/js/IBRSCanvas2DInterface.js"></script>
+
+        <script type="text/javascript" src="../personal/js/IBRSCanvasHtml.js"></script>
+		<script type="text/javascript" src="../personal/js/IBRSGameEvent.js"></script>
+		<script type="text/javascript" src="../personal/js/IBRSReproductor.js"></script>
+        <script type="text/javascript" src="../personal/js/IBRSRecorder.js"></script>
+		<script type="text/javascript" src="../personal/js/IBRSTools.js"></script>
+    
+		<script type="text/javascript" src="../personal/js/functionality.js"></script>
+		
+<!--	
+<script type="text/javascript" src="../personal/js/canvasInteraction.js"></script>
+	<script type="text/javascript" src="../personal/js/leapControler.js"></script>
+	
+-->
+
+
+    </head>
+
+
+
+
+    <body>
+
+    	<div id="main_container" class="background">
+             
+    		<div id="canvas" class="canvas">
+                <div id="#C2DI_referenceLayer" class="canvas"></div>
+            </div>
+            <input id="checkSombras" type="checkbox"></input>
+            <!--FRONTSELECTOR -->
+
+    		<div id="frontalSelector" class="noAuto frontalSlider">
+
+
+                <div id="element_tray"  class="generalMenu inerShadow">
+                    
+                </div>
+
+    			<div id="element_filter"  class="generalMenu">
+    			     <button id="troopKindSwitch" tipe="button">Troops</button>
+                      <button id="sceneryKindSwitch" tipe="button">Scenery</button>
+                </div>
+    			<div id= "menu_inicial" class="generalMenu" >
+
+					<button id="buton_create_new" type="button" > Crear Partida nueva
+ 	 					</button>
+                    <button id="atajo" type="button" > atajo </button>
+    				<div id="texto_central">
+					<h3>Infinity Battle Report System   <small>By Raising Spirit</small></h3>
+					<h6>Herramienta de creación y visualización de informes de batalla
+					</h6>
+					</div>
+					<button id="buton_search" type="button"> Buscar Partida ya existente
+ 	 				</button>
+
+    			</div>
+    			<div id="search_results" class="generalMenu" >
+    			</div>
+              
+
+    		</div>
+
+
+    		
+
+
+    		<div id="scenery_tray"   class="noAuto topSlider" >
+    			
+    		<!--	<div id="left_Scenery_Buttons" class="topButtonContainer">
+    					<button id="buttonLEFT_scenery" type="button" class="centeredVerticalButton"> < 
+ 	 					</button>
+    			</div>
+
+                    <div id="right_Scenery_Buttons" class="topButtonContainer">
+                    <button id="buttonRIGHT_scenery" type="button" class="centeredVerticalButton"> > 
+                        </button>
+
+                </div>
+            -->
+
+                <div id="scenery_container1" class="sceneryContainer inerShadow"></div>
+                <div id="scenery_container2" class="sceneryContainer inerShadow"></div>
+
+    				
+ 	 			
+               
+
+
+                <div id="retract_scenery" class="topExpandButton"> 
+                    <div   class="topExpandButtonAux"> 
+                        </div>
+                        
+                    </div>
+
+    		</div>
+
+
+    		<div id="editorTools" class="noAuto bottomSlider" >
+    			EDITOR TOOLS
+    		</div>
+
+    		<div id="deployTools" class="noAuto bottomSlider" >
+               
+    			DEPLOY TOOLS
+    		</div>
+
+    		<div id="timeTracker" class="noAuto topSlider " >
+                <div id="turn_container" class="event_container"></div>
+
+                
+    			<div  class="event_container_shadow"></div>
+                <div id="progressBar"><div id="slider"></div></div>
+    		</div>
+
+    		<div id="reproductorTools" class="noAuto bottomSlider reduced" >
+    			<div id="play_container">
+                    <button id="play_button" type="button" class="reproductorButton"> PLAY 
+                    </button>
+                    <button id="pause_button" type="button" class="reproductorButton"> PAUSE
+                    </button>
+                </div>
+
+    		</div>
+
+
+    		<div id="leftGameFilter" class="noAuto leftSlider">
+				
+    			FILTRO IZQ
+    		</div>
+
+
+    		<div id="rightGameFilter" class="noAuto rightSlider">
+    			FILTRO DER
+    		</div>
+
+
+
+    		<div id="leftTroop_tray" class="noAuto leftSlider">
+    			<!--	<div id="left_Troop_Head" class="leftTopButtons sideButtons">
+    					<button id="buttonUP_troop_left" type="button" class="centeredHorizontalButton"> A 
+ 	 					</button>
+ 	 				
+ 	 					
+    				</div>-->
+                     
+                 
+              
+                    <div id="retract_troop_left" type="button" class="leftExpandButton"> 
+                        <div   class="leftExpandButtonAux1"> 
+                        </div>
+                        </div>
+    				<div id="left_army_container" class="sideBody leftBody"></div>
+ 					
+ 					<!--<div id="left_Troop_Bottom" class="leftBottomButtons sideButtons">
+ 						<button id="buttonDOWN_troop_left" type="button" class="centeredHorizontalButton"> V
+ 	 					</button>
+ 					</div>-->
+    		</div>
+
+
+    		<div id="rightTroop_tray" class="noAuto rightSlider">
+    				 <!--
+                        <div id="right_Troop_Head" class="rightTopButtons sideButtons">
+    				 	<button id="buttonUP_troop_right" type="button" class="centeredHorizontalButton"> A 
+ 	 					</button>
+                        
+ 	 				
+ 	 					
+    				 </div>-->
+                    
+                 
+                     <div id="retract_troop_right" class="rightExpandButton"> 
+                          <div   class="rightExpandButtonAux1"> 
+                        </div>
+                        </div>
+    				 <div id="right_army_container" class="sideBody rightBody"></div>
+    				  <!--
+                      <div id="right_Troop_Bottom" class="rightBottomButtons sideButtons">
+    				  		<button id="buttonDOWN_troop_right" type="button" class="centeredHorizontalButton"> V
+    				  </div>
+                    -->
+    		</div>
+
+
+
+
+
+    		<div id="searchTools" class="noAuto bottomSlider" >
+				SEARCH TOOLS
+    		</div>
+
+    		<div id="top_left_corner" class="noAuto">
+                <button id="home_button" type="button" > H
+                </button>
+    			<button id="back_button" type="button" > BACK
+ 	 			</button>
+    		</div>
+
+
+    		<div id="top_right_corner" class="noAuto">
+    			<button id="next_button" type="button" class="control_button"> NEXT
+ 	 			</button>
+    		</div>
+    	</div>
+
+
+
+    </body>
+</html>
