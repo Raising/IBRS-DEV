@@ -8,10 +8,25 @@ var IBRS = { VERSION: '1' };
 IBRS.depurarAyax = false;
 IBRS.IDAcount = 0;
 
+
+
 IBRS.getID = function(){
 	IBRS.IDAcount +=1;
 	return IBRS.IDAcount;
 };
+
+
+IBRS.elementSelected = {};
+IBRS.elementSelected.unSelect=function(){};
+IBRS.Current = {};
+IBRS.Current.Game = {unSelect:function(){}};
+IBRS.Current.GameEvents ={unSelect:function(){}};
+IBRS.Current.Turn = {unSelect:function(){}};
+IBRS.Current.Order = {unselect:function(){}};
+
+IBRS.Current.Declaration_Resolution ={unSelect:function(){}};
+
+
 
 
 
@@ -65,6 +80,8 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	this.id = IBRS.getID();
 	this.unitNumber = -1;
 	this.isMarker = false;
+	this.traced= false;
+	this.traceNew = false;
 	this.bodyTexture = 'img/empty.jpg';
 	this.baseTexture = 'img/empty.jpg'; // por decidir el formato de almacenamiento
 	this.position = new THREE.Vector3();
@@ -90,16 +107,19 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 
 	this.select =function(){
 		unitLogic.unitGraphic.selected=true;
-		unitLogic.unitGraphic.selector.material.color.set(0x33FF33);
-		unitLogic.unitGraphic.selectorOpacity(1);
-		
+		//unitLogic.unitGraphic.selector.material.color.set(0x33FF33);
+		//unitLogic.unitGraphic.selectorOpacity(1);
+		unitLogic.traced= true;
+		unitLogic.traceNew = true;
 	}
 
 	this.unSelect =function(){
 		unitLogic.unitGraphic.selected=false;
-		unitLogic.unitGraphic.selector.material.color.set(0xFFFF00);
+		//unitLogic.unitGraphic.selector.material.color.set(0xFFFF00);
 
-		unitLogic.unitGraphic.selectorOpacity(0);
+		//unitLogic.unitGraphic.selectorOpacity(0);
+		unitLogic.traced= false;
+		unitLogic.traceNew = false;
 	}
 
 
@@ -581,12 +601,12 @@ IBRS.Army = function(player){
 };
 
 
-IBRS.Player = function (game){
+IBRS.Player = function (game,name,playerId){
 	var player = this;
-	this.playerID = 0;
+	this.playerID = playerId ? playerId : 0;
 	this.game = game;
 	this.id = IBRS.getID();
-	this.name = "no name";
+	this.name = name ? name : "no name";
 	this.army = 0;
 	this.num = -1;
 
@@ -627,9 +647,10 @@ IBRS.Game = function(gameID){
 	this.ID = 0 || gameID;
 	IBRS.actualGame = this;
 	this.name ="no name";
+	this.playerList = [new IBRS.Player(game,"player0",0),new IBRS.Player(game,"player1",1)];
 	this.gameArea = new IBRS.GameArea();
-	this.events = new IBRS.GameEvents(this);
-	this.playerList = [];
+	this.events = new IBRS.GameEvents(game);
+	
 	this.container = [jQuery("#left_army_container"),jQuery("#right_army_container")];
 
 	this.updateHtml = function(){
@@ -647,6 +668,7 @@ IBRS.Game = function(gameID){
 		jQuery.getJSON("DataBase/Game/"+gameID+".json",function(data){
 			if(IBRS.depurarAyax){console.info("Ajax Cargando DataBase/Game/"+gameID+".json");}	
 			game.name = data.name;
+			game.playerList = [];
 			for (var i = 0;i<2;i++){
 				var newPlayer = new IBRS.Player(game);
 				newPlayer.insertFromData(data.playerList[i],i);
@@ -864,9 +886,6 @@ IBRS.TroopSearcher = function(){
 }
 
 
-
-IBRS.elementSelected = {};
-IBRS.elementSelected.unSelect=function(){}
 
 
 

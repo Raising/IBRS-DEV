@@ -2,6 +2,7 @@
 // ignacio.medina.castillo@gmail.com
 
 IBRS.Recorder = function(graphics){
+	console.log("hola?");
 	var recorder = this;
 	this.graphics = graphics;
 	this.eventHolder = new IBRS.GameEvents();

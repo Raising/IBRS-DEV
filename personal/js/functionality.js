@@ -35,20 +35,20 @@ jQuery(function(){
 	jQuery("#canvas").prepend(jQuery(GraphicEnviroment.render.domElement));
 
 
-	jQuery("body").children().append("<div id='trace' class='interface2d'> </div>");
+	jQuery("#canvas").append("<div id='trace' class='interface2d'> </div>");
 	jQuery("#trace").append("<img src='img/holo_green_1.png' style='position:absolute;width:64px;left:-32px;top:-48px;'>");
-	jQuery("#trace").append("<img src='img/holo_green_2.png' style='position:absolute;width:64px;left:-32px;top:-48px;'>");
-	jQuery("#trace").append("<img src='img/holo_green_3.png' style='position:absolute;width:64px;left:-32px;top:-48px;'>");
-	jQuery("#trace").append("<img src='img/holo_green_4.png' style='position:absolute;width:64px;left:-32px;top:-48px;'>");
+	//jQuery("#trace").append("<img src='img/holo_green_2.png' style='position:absolute;width:64px;left:-32px;top:-48px;'>");
+	//jQuery("#trace").append("<img src='img/holo_green_3.png' style='position:absolute;width:64px;left:-32px;top:-48px;'>");
+	//jQuery("#trace").append("<img src='img/holo_green_4.png' style='position:absolute;width:64px;left:-32px;top:-48px;'>");
 	jQuery("#trace").append("<img src='img/holo_green_5.png' style='position:absolute;width:64px;left:-32px;top:-48px;'>");
 	
 
 
-	TweenMax.to(jQuery("#trace").children()[0],4,{rotationZ:360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
-	TweenMax.to(jQuery("#trace").children()[1],3,{rotationZ:-360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
-	TweenMax.to(jQuery("#trace").children()[2],6,{rotationZ:-360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
-	TweenMax.to(jQuery("#trace").children()[3],5,{rotationZ:360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
-	TweenMax.to(jQuery("#trace").children()[4],3.5,{rotationZ:360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
+	TweenMax.to(jQuery("#trace").children()[0],12,{rotationZ:360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
+	TweenMax.to(jQuery("#trace").children()[1],7,{rotationZ:-360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
+	//TweenMax.to(jQuery("#trace").children()[2],6,{rotationZ:-360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
+	//TweenMax.to(jQuery("#trace").children()[3],5,{rotationZ:360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
+	//TweenMax.to(jQuery("#trace").children()[4],3.5,{rotationZ:360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
 
 	TweenMax.staggerFromTo(jQuery("#trace").children(),4,{scale:0.8,transformOrigin:"50% 50%"},{scale:1.1,yoyo:true,transformOrigin:"50% 50%",repeat:-1,ease:Sine.easeInOut},0.8);
 	
@@ -188,7 +188,7 @@ jQuery(function(){
 
 						tl.to(jQuery("#leftTroop_tray"),1,{left:'-16%'} );		
 						tl.to(jQuery("#rightTroop_tray"),1,{right:'-16%'},"-=1"  );
-						tl.to(jQuery("#editorTools"),1,{bottom:'-9%'}, "-=1");
+						tl.to(jQuery("#editorTools"),1,{bottom:'-1%'}, "-=1");
 						tl.to(jQuery("#timeTracker"),1,{top:'-1%'},"-=1"  );
 						tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-1" );
 						tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1" );

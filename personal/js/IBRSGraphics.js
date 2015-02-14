@@ -30,8 +30,8 @@ IBRS.Graphics = function(){
     this.sceneOrtho  = new THREE.Scene();
 
     this.scene.add(this.camera);
-    this.recorder = new IBRS.Recorder(this);
-    this.reproductor = new IBRS.Reproductor(this);
+    //this.recorder = new IBRS.Recorder(this);
+    //this.reproductor = new IBRS.Reproductor(this);
     this.htmlHandler = new IBRS.CanvasHtml(this);
     this.htmlHandler.setDragAndDrop();
     this.cameraMoved = true;
@@ -155,11 +155,13 @@ IBRS.Graphics = function(){
         //graphics.reproductor.update();
         graphics.selectorCamera.update();
         graphics.contextualMenu.update();
-        if (graphics.tageteableElementsList[0] && graphics.cameraMoved){
-    
-        graphics.traceMiniature(graphics.tageteableElementsList[0]);  
-        graphics.cameraMoved = false;
-        }
+        
+         graphics.traceMiniature();
+      
+      //  if (graphics.tageteableElementsList[0] && graphics.cameraMoved){
+      //      graphics.traceMiniature(graphics.tageteableElementsList[0]);  
+       //     graphics.cameraMoved = false;
+       // }
         graphics.renderScene();
        
         requestAnimationFrame(graphics.animateScene);
@@ -169,20 +171,31 @@ IBRS.Graphics = function(){
         graphics.animateScene();        
     };
 
-    this.traceMiniature = function(element){
-        console.log("tracing");
-       var pos2d =  graphics.findScreenPositionByProyection(element);
+    this.traceMiniature = function(){
+        if (IBRS.elementSelected &&  IBRS.elementSelected.traced == true && (graphics.cameraMoved || IBRS.elementSelected.traceNew)){
+             console.log("tracing");
+            var pos2d =  graphics.findScreenPositionByProyection(IBRS.elementSelected.unitGraphic); 
+            jQuery("#trace").css("top",pos2d.y).css("left",pos2d.x);
+            
+            IBRS.elementSelected.traceNew = false;
+        }
+        graphics.cameraMoved = false;
+            
      
-        jQuery("#trace").css("top",pos2d.y).css("left",pos2d.x);
     }
+
+    this.hideTrace = function(){
+        jQuery("#trace").opacity(0);
+    }
+
 
     this.insertGameData= function(newGame){
        graphics.refreshSceneObjects(newGame);
        graphics.initAnimations(newGame.events);
        // graphics.addListToScene(newGame.getMiniatures(),true);
        // graphics.addListToScene(newGame.getSceneryElementList(),false);
-        graphics.reproductor.setEvents(newGame.events);
-        graphics.recorder.setEvents(newGame.events);
+        //graphics.reproductor.setEvents(newGame.events);
+       // graphics.recorder.setEvents(newGame.events);
 
         var stringJson = JSON.stringify(newGame.events,null,'\t');
         var blob = new Blob([stringJson], {type: "application/json"});
@@ -580,6 +593,7 @@ IBRS.Graphics = function(){
                  var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
                      if (position != undefined){
                         IBRS.elementSelected.setPosition(position.x,position.y,position.z);
+                        IBRS.elementSelected.traceNew = true;                        
                         mouseDragable = true;
                     }
                 }

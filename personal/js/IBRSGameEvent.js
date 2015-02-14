@@ -161,6 +161,14 @@ IBRS.Resolution = function(order){
     this.target = 0;
 	this.status = -1;
 	
+	this.select = function(){
+		
+	}
+	this.unselect = function(){
+		
+	}
+
+
 	this.locateUnit = function (data){
 		return resolution.order.turn.gameEvents.game.getUnitLogicFromArmyPosition(data);
 	}
@@ -199,6 +207,14 @@ IBRS.Declaration = function(order){
     this.source = 0;
 	this.actions = [];
 	
+	this.select = function(){
+		
+	}
+	this.unselect = function(){
+		
+	}
+
+
 	this.locateUnit = function (data){
 		return declaration.order.turn.gameEvents.game.getUnitLogicFromArmyPosition(data);
 	}
@@ -236,7 +252,45 @@ IBRS.Declaration = function(order){
     }
 
 };
+IBRS.OrderTools = function(Order){
+	var orderTools = this;
+	this.order = Order;
+	this.html = jQuery("<div class='orderToolContainer'> </div>");
+	this.buttonHolder =  jQuery("<div class='orderButtonHolder'> </div>");
+	this.actionHolder =  jQuery("<div class='orderActionHolder'> </div>");
+	this.configurationButton = jQuery("<img class='orderToolButton' src='img/Orden_regular.png'> </img>");
+	this.declarationButton =  jQuery("<img class='orderToolButton' src='img/Orden_regular.png'> </img>");
+	this.aroButton =  jQuery("<img class='orderToolButton' src='img/Orden_regular.png'> </img>");
+	this.declaration2Button = jQuery("<img class='orderToolButton' src='img/Orden_regular.png'> </img>");
+	this.aro2Button = jQuery("<img class='orderToolButton' src='img/Orden_regular.png'> </img>");
+	this.resolutionButton = jQuery("<img class='orderToolButton' src='img/Orden_regular.png'> </img>");
 
+	this.buttonHolder
+		.append(this.configurationButton)
+		.append(this.declarationButton)
+		.append(this.aroButton)
+		.append(this.declaration2Button)
+		.append(this.aro2Button)
+		.append(this.resolutionButton);
+
+	this.html
+		.append(this.buttonHolder)
+		.append(this.actionHolder);
+
+
+	this.getHtml = function(){
+		return orderTools.html;
+	}
+
+	this.updateHtml = function(){
+		orderTools.setHtmlInteractions();
+	}
+
+	this.setHtmlInteractions = function(){
+
+	}
+
+}
  
 
 IBRS.Order =  function(turn){
@@ -251,16 +305,35 @@ IBRS.Order =  function(turn){
 	this.orderType = 0; //0 = regular, 1 = irregular, 2 = impetuosa.
 	this.icon ="img/Orden_regular.png";
 	this.container = jQuery('<img class="order" src="img/Orden_regular.png"></img>');
+	this.tools = new IBRS.OrderTools(order);
+
 
 
 	this.updateHtml = function(){
-		order.container.attr("src", turn.icon);
+		order.container.attr("src", order.icon);
 		order.setHtmlInteractions();
 	}
 
-	this.setHtmlInteractions = function(){
 
+
+	this.setHtmlInteractions = function(){
+		order.container.click(function(){
+			order.select();
+		});
 	}
+
+	this.select = function(){
+		IBRS.Current.Order.unselect();
+		IBRS.Current.Order = order;
+		jQuery('#editorTools').empty().append(order.tools.getHtml());
+		order.tools.updateHtml();
+	}
+	this.unselect = function(){
+		
+	}
+
+
+
 	this.animation = function(){
 		var tlOrder = new TimelineMax();
 		for (var i=0;i < order.firstDeclaration.length;i++){
@@ -388,13 +461,20 @@ IBRS.Order =  function(turn){
 
 };
 
-IBRS.Turn =  function(gameEvents){
+IBRS.Turn =  function(gameEvents, idPlayer){
 	var turn = this;
 	this.gameEvents= gameEvents;
-	this.playerID = 0;
+	this.playerID = idPlayer ? idPlayer : 0;
 	this.orderList=[];
-	this.color = "#005700";
-	this.container = jQuery('<div class="turn "></div>');
+	if (this.playerID%2 == 0 ){
+		this.color = "#005700";
+	}else{
+			this.color = "#560000";
+	}
+	
+	this.addOrderButton  = jQuery('<div class="addOrderButton">+</div>');
+	this.container = jQuery('<div class="turn"></div>');
+	this.container.append(this.addOrderButton);
 	
 
 	this.addOrder = function (newOrder) {
@@ -402,22 +482,34 @@ IBRS.Turn =  function(gameEvents){
 		turn.updateHtml();
 	};
 
+	this.createOrder = function(){
+		var newOrder = new IBRS.Order(turn);
+		turn.orderList.push(newOrder);
+		turn.updateHtml();
+	}
+
 	this.updateHtml = function(){
 		
-
-
-
-		turn.container.empty().css("width",turn.orderList.length*30).css("background",turn.color);
+		turn.container.empty().css("width",50+(turn.orderList.length*30)).css("background",turn.color);
 		
 		for (var i = 0;i<turn.orderList.length;i++){
 			turn.orderList[i].updateHtml();
 			turn.container.append(turn.orderList[i].container);
 		}
+		turn.container.append(this.addOrderButton);
 		turn.setHtmlInteractions();
 	}
 
 	this.setHtmlInteractions = function(){
-
+		turn.addOrderButton.click(function(){
+			turn.createOrder();
+		});
+	}
+	this.select = function(){
+		
+	}
+	this.unselect = function(){
+		
 	}
 
 	this.animation = function(){
@@ -463,7 +555,13 @@ IBRS.GameEvents =  function(game){
 	this.turnList=[];
 	this.game = game;
 	this.turnContainer = jQuery('<div id="00900" class="turn_container"></div>');
+	this.addTurnButton = new IBRS.addTurnButton(this);
 	this.declarationContainer = jQuery('<div id="declaration_container" class="event_container"></div>');
+
+	this.createTurn = function(idPlayer){
+		var newTurn = new IBRS.Turn(gameEvents,idPlayer);
+		gameEvents.addTurn(newTurn);
+	}
 
 	this.addTurn = function (newTurn) {
 		gameEvents.turnList.push(newTurn);
@@ -498,11 +596,13 @@ IBRS.GameEvents =  function(game){
 			gameEvents.turnList[i].updateHtml();
 			gameEvents.turnContainer.append(gameEvents.turnList[i].container);
 		}
+
+		gameEvents.turnContainer.append(gameEvents.addTurnButton.getHtml());
 		gameEvents.setHtmlInteractions();
 	}
 
 	this.setHtmlInteractions = function(){
-
+		gameEvents.addTurnButton.setHtmlInteractions();
 	}
 
 
@@ -515,3 +615,85 @@ IBRS.GameEvents =  function(game){
 		return salida;
 	}
 };
+
+
+IBRS.addTurnButton = function(gameEvents){
+	var button = this;
+	
+	this.nextPlayer = -1;
+	this.html =  jQuery('<div class="addTurnButton"></div>');
+	this.Question = jQuery('<div class="QuestionTurn"> ¿Quien Empieza? </div>');
+	console.log(gameEvents.game);
+	this.player0 = jQuery('<div class="playerSelection">'+gameEvents.game.playerList[0].name+'</div>');
+	this.player1 = jQuery('<div class="playerSelection">'+gameEvents.game.playerList[1].name+'</div>');
+
+	this.setButtonArrange = function(player){
+		switch (player){
+			case -1:
+				
+				button.nextPlayer = -1;
+				TweenMax.to(jQuery(button.html),0.5,{width:360,ease:Linear.easeNone});
+				TweenMax.to(jQuery(button.Question),0.5,{width:110,ease:Linear.easeNone});
+				TweenMax.to(jQuery(button.player0),0.5,{width:110,x:120,ease:Linear.easeNone});
+				TweenMax.to(jQuery(button.player1),0.5,{width:110,x:240,ease:Linear.easeNone});
+		
+			break;
+			case 0:
+			
+				button.nextPlayer = 0;
+				TweenMax.to(jQuery(button.html),0.5,{width:120,ease:Linear.easeNone});
+				TweenMax.to(jQuery(button.Question),0.5,{width:0,ease:Linear.easeNone});
+				TweenMax.to(jQuery(button.player0),0.5,{width:110,x:0,ease:Linear.easeNone});
+				TweenMax.to(jQuery(button.player1),0.5,{width:0,x:0,ease:Linear.easeNone});
+		
+			break;
+			case 1:
+				
+				button.nextPlayer = 1;
+				TweenMax.to(jQuery(button.html),0.5,{width:120,ease:Linear.easeNone});
+				TweenMax.to(jQuery(button.Question),0.5,{width:0,ease:Linear.easeNone});
+				TweenMax.to(jQuery(button.player0),0.5,{width:0,x:0,ease:Linear.easeNone});
+				TweenMax.to(jQuery(button.player1),0.5,{width:110,x:0,ease:Linear.easeNone});
+		
+			break;
+		}
+	}
+
+	this.goToinitialState = function(){
+		button.setButtonArrange(-1);
+	}
+
+	this.setHtmlInteractions = function(){
+		button.player0.click(function(){
+			console.log("player0 pulsado");
+			gameEvents.createTurn(0);
+			button.setButtonArrange(1);
+			gameEvents.updateHtml();
+		
+		});
+		button.player1.click(function(){
+			console.log("player1 pulsado");
+			gameEvents.createTurn(1);
+			button.setButtonArrange(0);
+			gameEvents.updateHtml();
+		});
+		
+	}
+
+	this.updateHtml = function(){
+		button.player0 = jQuery('<div class="playerSelection">'+gameEvents.game.playerList[0].name+'</div>');
+		button.player1 = jQuery('<div class="playerSelection">'+gameEvents.game.playerList[1].name+'</div>');
+		jQuery(button.html).empty().append(button.Question).append(button.player0).append(button.player1);
+		button.setButtonArrange(button.nextPlayer);
+		button.setHtmlInteractions();
+	}
+
+	this.getHtml = function(){
+		button.player0 = jQuery('<div class="playerSelection">'+gameEvents.game.playerList[0].name+'</div>');
+		button.player1 = jQuery('<div class="playerSelection">'+gameEvents.game.playerList[1].name+'</div>');
+		jQuery(button.html).empty().append(button.Question).append(button.player0).append(button.player1);
+		button.setButtonArrange(button.nextPlayer);
+		return button.html;
+	}
+
+}

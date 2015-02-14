@@ -14,10 +14,10 @@ IBRS.Canvas2DInterface = function (graphics){
         var contextualMenuOpened = false; 
       
         var mouseDragable = false;
-        C2DI.htmlLayer.addEventListener("mousewheel", C2DI.MouseWheelHandler, false);// IE9, Chrome, Safari, Opera  
-         C2DI.htmlLayer.addEventListener("DOMMouseScroll", C2DI.MouseWheelHandler, false);// Firefox
-        C2DI.htmlLayer.addEventListener('contextmenu', function (evt){evt.preventDefault();}, false);
-        C2DI.htmlLayer.addEventListener('mousedown', function (evt) {
+        C2DIhtmlLayer.addEventListener("mousewheel", C2DI.MouseWheelHandler, false);// IE9, Chrome, Safari, Opera  
+        C2DIhtmlLayer.addEventListener("DOMMouseScroll", C2DI.MouseWheelHandler, false);// Firefox
+        C2DIhtmlLayer.addEventListener('contextmenu', function (evt){evt.preventDefault();}, false);
+        C2DIhtmlLayer.addEventListener('mousedown', function (evt) {
         mouseIsDown=evt.which;
         mouseSigleClick = true;
         mouseDragable = false;
@@ -52,7 +52,7 @@ IBRS.Canvas2DInterface = function (graphics){
 
 
 
-        C2DI.htmlLayer.addEventListener('mousemove', function (evt) {
+        C2DIhtmlLayer.addEventListener('mousemove', function (evt) {
 
             mouseSigleClick = false;
             //hover sobre opciones
@@ -104,7 +104,7 @@ IBRS.Canvas2DInterface = function (graphics){
 
 
 
-        C2DI.htmlLayer.addEventListener('mouseup', function (evt) {
+        C2DIhtmlLayer.addEventListener('mouseup', function (evt) {
             if (mouseIsDown==1 && mouseSigleClick==true){ 
                 if (contextualMenuOpened === false){
                    
@@ -157,12 +157,12 @@ IBRS.Canvas2DInterface = function (graphics){
             
             
         },false);
-    }
-    this.setupKeyboardInteraction = function(C2DI.htmlLayer){
-       C2DI.htmlLayer.setAttribute('tabindex','0');
+    };
+    this.setupKeyboardInteraction = function(C2DIhtmlLayer){
+       C2DIhtmlLayer.setAttribute('tabindex','0');
       
 
-       C2DI.htmlLayer.addEventListener("keydown",function(evt){
+       C2DIhtmlLayer.addEventListener("keydown",function(evt){
            console.log(evt.keyCode);
             switch(evt.keyCode){
                 case 9:
@@ -256,7 +256,7 @@ IBRS.Canvas2DInterface = function (graphics){
         }, false);  
 
 
-       C2DI.htmlLayer.addEventListener("keyup", function(evt){
+       C2DIhtmlLayer.addEventListener("keyup", function(evt){
              switch(evt.keyCode){
                 case 9:
                     C2DI.keyPresed.tab = false;
