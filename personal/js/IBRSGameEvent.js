@@ -206,7 +206,12 @@ IBRS.Declaration = function(order){
 	this.descriptor = 0;
     this.source = 0;
 	this.actions = [];
-	
+	this.html = jQuery("<div class=''></div>");
+
+	this.getHtml = function(){
+
+	}
+
 	this.select = function(){
 		
 	}
@@ -252,6 +257,21 @@ IBRS.Declaration = function(order){
     }
 
 };
+
+IBRS.declarationHandler = function(declarationsList){
+	var handler = this;
+	this.list = declarationsList;
+	this.html = jQuery("<div class='declarationList'></div>");
+
+	this.getHtml = function(){
+		handler.html.empty();
+		for (var i = 0; i< handler.list.length; i++){
+			handler.html.append(handler.list[i].getHtml());
+		}
+
+	}
+
+}
 IBRS.OrderTools = function(Order){
 	var orderTools = this;
 	this.order = Order;
@@ -264,6 +284,8 @@ IBRS.OrderTools = function(Order){
 	this.declaration2Button = jQuery("<img class='orderToolButton' src='img/Orden_regular.png'> </img>");
 	this.aro2Button = jQuery("<img class='orderToolButton' src='img/Orden_regular.png'> </img>");
 	this.resolutionButton = jQuery("<img class='orderToolButton' src='img/Orden_regular.png'> </img>");
+
+
 
 	this.buttonHolder
 		.append(this.configurationButton)
@@ -278,6 +300,13 @@ IBRS.OrderTools = function(Order){
 		.append(this.actionHolder);
 
 
+	this.firstDeclarationHandler = new IBRS.declarationHandler(Order.firstDeclaration);
+	this.secondDeclarationHandler = new IBRS.declarationHandler(Order.secondDeclaration);
+	this.firstAroHandler = new IBRS.declarationHandler(Order.firstAro);
+	this.secondAroHandler = new IBRS.declarationHandler(Order.secondAro);
+	this.resolutionsHandler = new IBRS.declarationHandler(Order.resolutions);	
+
+
 	this.getHtml = function(){
 		return orderTools.html;
 	}
@@ -287,7 +316,24 @@ IBRS.OrderTools = function(Order){
 	}
 
 	this.setHtmlInteractions = function(){
-
+		orderTools.configurationButton.click(function () {
+			// body...
+		});
+		orderTools.declarationButton.click(function () {
+			orderTools.actionHolder.empty().append(firstDeclarationHandler.getHtml());
+		});
+		orderTools.aroButton.click(function () {
+			orderTools.actionHolder.empty().append(firstAroHandler.getHtml());
+		});
+		orderTools.declaration2Button.click(function () {
+			orderTools.actionHolder.empty().append(secondDeclarationHandler.getHtml());
+		});
+		orderTools.aro2Button.click(function () {
+			orderTools.actionHolder.empty().append(secondAroHandler.getHtml());
+		});
+		orderTools.resolutionButton.click(function () {
+			orderTools.actionHolder.empty().append(resolutionsHandler.getHtml());
+		});
 	}
 
 }
