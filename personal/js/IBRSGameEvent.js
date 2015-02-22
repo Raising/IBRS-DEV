@@ -44,7 +44,110 @@ IBRS.DEC.PERMSTATUS = 98;
 IBRS.DEC.DEATH = 100;
 IBRS.DEC.UNCONS = 101;
 
-
+IBRS.TOOL = {};
+IBRS.TOOL.declarationTracutor = function(declarationID){
+	switch(declarationID){
+		case IBRS.DEC.MOVE : 
+			return "MOVE";
+		break;
+		case IBRS.DEC.DODGE : 
+			return "DODGE";
+		break;
+		case IBRS.DEC.JUMP : 
+			return "JUMP";
+		break;
+		case IBRS.DEC.CLIMB : 
+			return "CLIMB";
+		break;
+		case IBRS.DEC.LAND : 
+			return "LAND";
+		break;
+		case IBRS.DEC.WAKEUP : 
+			return "WAKEUP";
+		break;
+		case IBRS.DEC.DISCOVER : 
+			return "DISCOVER";
+		break;
+		case IBRS.DEC.FACE : 
+			return "FACE";
+		break;
+		case IBRS.DEC.OPENCLOSE : 
+			return "OPENCLOSE";
+		break;
+		case IBRS.DEC.DISMOUNT : 
+			return "DISMOUNT";
+		break;
+		case IBRS.DEC.MOUNT : 
+			return "MOUNT";
+		break;
+		case IBRS.DEC.SWIM : 
+			return "SWIM";
+		break;
+		case IBRS.DEC.ALERT : 
+			return "ALERT";
+		break;
+		case IBRS.DEC.SENSOR : 
+			return "SENSOR";
+		break;
+		case IBRS.DEC.CD : 
+			return "CD";
+		break;
+		case IBRS.DEC.CC : 
+			return "CC";
+		break;
+		case IBRS.DEC.SEPSITOR : 
+			return "SEPSITOR";
+		break;
+		case IBRS.DEC.HACK : 
+			return "HACK";
+		break;
+		case IBRS.DEC.OBSERVER : 
+			return "OBSERVER";
+		break;
+		case IBRS.DEC.COMA : 
+			return "COMA";
+		break;
+		case IBRS.DEC.ENGINEER : 
+			return "ENGINEER";
+		break;
+		case IBRS.DEC.DOCTOR : 
+			return "DOCTOR";
+		break;
+		case IBRS.DEC.REGEN : 
+			return "REGEN";
+		break;
+		case IBRS.DEC.RESET : 
+			return "RESET";
+		break;
+		case IBRS.DEC.MEDIKIT : 
+			return "MEDIKIT";
+		break;
+		case IBRS.DEC.AUTOMEDIKIT : 
+			return "AUTOMEDIKIT";
+		break;
+		case IBRS.DEC.CO : 
+			return "CO";
+		break;
+		case IBRS.DEC.INTUITIVE : 
+			return "INTUITIVE";
+		break;
+		case IBRS.DEC.SPECULATIVE : 
+			return "SPECULATIVE";
+		break;
+		case IBRS.DEC.SUPRESIONFIRE : 
+			return "SUPRESIONFIRE";
+		break;
+		case IBRS.DEC.CAUTIOUSMOVE : 
+			return "CAUTIOUSMOVE";
+		break;
+		case IBRS.DEC.DA : 
+			return "DA";
+		break;
+		case IBRS.DEC.HACKDA : 
+			return "HACKDA";
+		break;
+	}
+}
 IBRS.STAT = {ENUM : 'tipo de estados'};
 IBRS.STAT.DEATH = 100;
 IBRS.STAT.UNCONS = 101;
@@ -96,6 +199,13 @@ IBRS.Action = function(declaration){
 	this.endTime = 1;
 	this.startPosition = {x:0,y:0,z:0};
 	this.endPosition = {x:0,y:0,z:0};
+	this.html = jQuery("<span></span>");
+	this.getHtml = function(){
+		action.html.empty().append("Start: "+action.startTime+" End: "+action.endTime+" Type:" +action.type);
+		return action.html;
+	}
+
+
 	this.insertFromData = function(data){
 		action.type= data.type;
 		action.startTime = data.startTime;
@@ -205,11 +315,17 @@ IBRS.Declaration = function(order){
 	this.order = order;
 	this.descriptor = 0;
     this.source = 0;
+
 	this.actions = [];
-	this.html = jQuery("<div class=''></div>");
+	this.html = jQuery("<div class='declarationView'></div>");
 
 	this.getHtml = function(){
-
+		declaration.html.empty().append(declaration.source.name+": "+IBRS.TOOL.declarationTracutor(declaration.descriptor)+" -> ");
+		for (var i = 0;i<declaration.actions.length;i++){
+			
+			declaration.html.append(declaration.actions[i].getHtml());
+		}
+		return declaration.html;
 	}
 
 	this.select = function(){
@@ -258,17 +374,18 @@ IBRS.Declaration = function(order){
 
 };
 
-IBRS.declarationHandler = function(declarationsList){
+IBRS.declarationHandler = function(declarationsList,type){
 	var handler = this;
 	this.list = declarationsList;
 	this.html = jQuery("<div class='declarationList'></div>");
-
+	this.type = type;
 	this.getHtml = function(){
+		IBRS.actualDeclarationHandler = handler;
 		handler.html.empty();
 		for (var i = 0; i< handler.list.length; i++){
 			handler.html.append(handler.list[i].getHtml());
 		}
-
+		return handler.html;
 	}
 
 }
@@ -300,11 +417,11 @@ IBRS.OrderTools = function(Order){
 		.append(this.actionHolder);
 
 
-	this.firstDeclarationHandler = new IBRS.declarationHandler(Order.firstDeclaration);
-	this.secondDeclarationHandler = new IBRS.declarationHandler(Order.secondDeclaration);
-	this.firstAroHandler = new IBRS.declarationHandler(Order.firstAro);
-	this.secondAroHandler = new IBRS.declarationHandler(Order.secondAro);
-	this.resolutionsHandler = new IBRS.declarationHandler(Order.resolutions);	
+	this.firstDeclarationHandler = new IBRS.declarationHandler(Order.firstDeclaration,"firstDeclaration");
+	this.secondDeclarationHandler = new IBRS.declarationHandler(Order.secondDeclaration,"secondDeclaration");
+	this.firstAroHandler = new IBRS.declarationHandler(Order.firstAro,"firstAro");
+	this.secondAroHandler = new IBRS.declarationHandler(Order.secondAro,"secondAro");
+	this.resolutionsHandler = new IBRS.declarationHandler(Order.resolutions,"resolutions");	
 
 
 	this.getHtml = function(){
@@ -320,19 +437,19 @@ IBRS.OrderTools = function(Order){
 			// body...
 		});
 		orderTools.declarationButton.click(function () {
-			orderTools.actionHolder.empty().append(firstDeclarationHandler.getHtml());
+			orderTools.actionHolder.empty().append(orderTools.firstDeclarationHandler.getHtml());
 		});
 		orderTools.aroButton.click(function () {
-			orderTools.actionHolder.empty().append(firstAroHandler.getHtml());
+			orderTools.actionHolder.empty().append(orderTools.firstAroHandler.getHtml());
 		});
 		orderTools.declaration2Button.click(function () {
-			orderTools.actionHolder.empty().append(secondDeclarationHandler.getHtml());
+			orderTools.actionHolder.empty().append(orderTools.secondDeclarationHandler.getHtml());
 		});
 		orderTools.aro2Button.click(function () {
-			orderTools.actionHolder.empty().append(secondAroHandler.getHtml());
+			orderTools.actionHolder.empty().append(orderTools.secondAroHandler.getHtml());
 		});
 		orderTools.resolutionButton.click(function () {
-			orderTools.actionHolder.empty().append(resolutionsHandler.getHtml());
+			orderTools.actionHolder.empty().append(orderTools.resolutionsHandler.getHtml());
 		});
 	}
 
@@ -366,6 +483,7 @@ IBRS.Order =  function(turn){
 		order.container.click(function(){
 			order.select();
 		});
+		order.tools.setHtmlInteractions();
 	}
 
 	this.select = function(){

@@ -181,8 +181,9 @@ IBRS.Graphics = function(){
         }
         graphics.cameraMoved = false;
             
-     
     }
+
+
 
     this.hideTrace = function(){
         jQuery("#trace").opacity(0);
@@ -243,7 +244,12 @@ IBRS.Graphics = function(){
     /* CANVAS INTERACTION
     THIS METODS PURPOSE IS TO HANDLE THE USER INTERACTION OVER THE CANVAS
     */
-    this.OpenContextualMenu = function(targetObject,options){
+    this.OpenContextualMenu = function(targetObject){
+        
+
+
+
+        /*
         var current_target_position = new THREE.Vector3();
         current_target_position.setFromMatrixPosition(targetObject.matrixWorld );
         graphics.contextualMenu.setPosition(current_target_position.x,current_target_position.y,current_target_position.z);
@@ -253,7 +259,7 @@ IBRS.Graphics = function(){
         var option3 = new IBRS.CharacterOption(3);
         var option4 = new IBRS.CharacterOption(4);
         var testOptions =[option1,option2,option3,option4];
-         graphics.contextualMenu.setOptions(testOptions);
+         graphics.contextualMenu.setOptions(testOptions);*/
      };
 
     this.CloseContextualMenu = function(){
@@ -531,7 +537,7 @@ IBRS.Graphics = function(){
                         IBRS.elementSelected = elementClicked.logicModel;
                         graphics.actualiceSelection();
                         IBRS.elementSelected.select();
-                         mouseDragable = true;
+                        mouseDragable = true;
                         //graphics.selectorCamera.CameraReposition(0,0,0,elementClicked)  ;  
                      }
                     break;
@@ -621,7 +627,7 @@ IBRS.Graphics = function(){
                 }
             }
             
-            else if(mouseIsDown==3 && mouseSigleClick==true){
+            else if(mouseIsDown==3 && mouseSigleClick==true){ // menu contextual
                 if (contextualMenuOpened ===false){
                     var elementClicked = graphics.findObjectByProyection(evt,this,graphics.tageteableElementsList);
 
@@ -1417,5 +1423,33 @@ IBRS.CharacterOption = function(code,onOptionClick){
 
     this.clickable = function(){
         return characterOption.optionPlane;
+    }
+}
+
+
+IBRS.ConextMenu = function(logicELement){
+    switch (IBRS.actualStage) {
+        case "animateElements":
+            switch(IBRS.actualDeclarationType){
+                case "firstDeclaration":
+
+                break;
+                case "secondDeclaration":
+
+                break;
+                case "firstAro":
+
+                break;
+                case "secondAro":
+
+                break;
+                case "resolutions":
+                
+                break;
+            }
+        break;
+
+        default:
+        break;
     }
 }
