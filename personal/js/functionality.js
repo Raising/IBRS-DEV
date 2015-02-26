@@ -41,7 +41,7 @@ jQuery(function(){
 	//jQuery("#trace").append("<img src='img/holo_green_3.png' style='position:absolute;width:64px;left:-32px;top:-48px;'>");
 	//jQuery("#trace").append("<img src='img/holo_green_4.png' style='position:absolute;width:64px;left:-32px;top:-48px;'>");
 	jQuery("#trace").append("<img src='img/holo_green_5.png' style='position:absolute;width:64px;left:-32px;top:-48px;'>");
-	
+	jQuery("#trace").append("<div id='contextualMenu' class='contextualMenu'> </div>");
 
 
 	TweenMax.to(jQuery("#trace").children()[0],12,{rotationZ:360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});

@@ -78,8 +78,8 @@ IBRS.Graphics = function(){
 
 
 
-    this.contextualMenu = new IBRS.ContextMenu(this);
-    this.scene.add(this.contextualMenu.getMenu());
+    //this.contextualMenu = new IBRS.ContextMenu(this);
+   //this.scene.add(this.contextualMenu.getMenu());
    
 
     //Puntero LEAP MOTION
@@ -134,7 +134,7 @@ IBRS.Graphics = function(){
         graphics.SetupUpMouseInteraction(graphics.render.domElement);
         graphics.setupKeyboardInteraction(graphics.render.domElement);
         
-        graphics.contextualMenu.start();
+        //graphics.contextualMenu.start();
         //graphics.SetupUpLeapInteraction();
         graphics.CameraReposition(0,0,0);
         graphics.selectorCamera.CameraReposition(0,0,0);
@@ -154,7 +154,7 @@ IBRS.Graphics = function(){
         // this.referenceTime =Date.now();
         //graphics.reproductor.update();
         graphics.selectorCamera.update();
-        graphics.contextualMenu.update();
+       // graphics.contextualMenu.update();
         
          graphics.traceMiniature();
       
@@ -1427,29 +1427,56 @@ IBRS.CharacterOption = function(code,onOptionClick){
 }
 
 
-IBRS.ConextMenu = function(logicELement){
-    switch (IBRS.actualStage) {
-        case "animateElements":
-            switch(IBRS.actualDeclarationType){
-                case "firstDeclaration":
+IBRS.ContextualMenu = function(logicELement){
+    var menu = this;
+    this.element = logicELement;
+    this.html = jQuery("<div class='menuContainer'></div>");
 
-                break;
-                case "secondDeclaration":
+    this.calculateMenu = function(){
+        switch (IBRS.actualStage) {
+            case "animateElements":
+                switch(IBRS.actualDeclarationType){
+                    case "firstDeclaration":
 
-                break;
-                case "firstAro":
+                    break;
+                    case "secondDeclaration":
 
-                break;
-                case "secondAro":
+                    break;
+                    case "firstAro":
 
-                break;
-                case "resolutions":
-                
-                break;
-            }
-        break;
+                    break;
+                    case "secondAro":
 
-        default:
-        break;
+                    break;
+                    case "resolutions":
+
+                    break;
+                }
+            break;
+
+            default:
+            break;
+        }
     }
+
+    this.remove = function(){
+        jQuery("#contextualMenu").empty();
+    }
+    this.show = function () {
+        menu.calculateMenu();
+        jQuery("#contextualMenu").append(menu.html);
+        //anuimations
+    }
+}
+
+
+IBRS.ActionSelector = function(element,tipo){
+    var selector = this;
+    this.elemento = element;
+    switch(tipo){
+        case  
+    }
+   
+    this.html =
+
 }

@@ -93,6 +93,7 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	this.fury = false; // true la  es impetuosa, false no
 	this.active = true; // si aporta o no su orden al grupo
 	this.unitGraphic = new IBRS.UnitGraphic(this.height,this.width,this.bodyTexture,this.baseTexture,this);
+	this.contextualMenu = new IBRS.ContextualMenu(this);
 	this.status = this.unitGraphic.status;
 	this.name = "no name";
 	this.unitIcon =  "img/NORMAL.png"
