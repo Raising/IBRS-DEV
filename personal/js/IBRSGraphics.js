@@ -78,7 +78,7 @@ IBRS.Graphics = function(){
 
 
 
-    //this.contextualMenu = new IBRS.ContextMenu(this);
+    this.contextualMenu = new IBRS.ContextualMenu(this);
    //this.scene.add(this.contextualMenu.getMenu());
    
 
@@ -219,7 +219,7 @@ IBRS.Graphics = function(){
         });
     this.initAnimations = function(events){
         graphics.animation = events.animation(updateSlider);
-       // graphics.animation.resume();
+      // graphics.animation.resume();
     }
 
     this.setTargeteableElements=function(newList){
@@ -561,12 +561,12 @@ IBRS.Graphics = function(){
             mouseSigleClick = false;
             //hover sobre opciones
             if(mouseIsDown===0 && contextualMenuOpened === true){
-                var elementHover = graphics.findObjectByProyection(evt,this,graphics.contextualMenu.getClickableOptions());
+               /* var elementHover = graphics.findObjectByProyection(evt,this,graphics.contextualMenu.show());
                 if (elementHover != undefined){
                     graphics.contextualMenu.highLight(elementHover.position.x,elementHover.position.y,elementHover.position.z);
                 }else{
                     graphics.contextualMenu.stopHighLight();
-                }
+                }*/
             }
             //giro de camara
             else if (mouseIsDown==3){
@@ -614,16 +614,16 @@ IBRS.Graphics = function(){
                 if (contextualMenuOpened === false){
                    
                 }
-                else{
+                else{/*
                     //console.log(graphics.contextualMenu.getClickableOptions());
-                    var elementClicked = graphics.findObjectByProyection(evt,this,graphics.contextualMenu.getClickableOptions());
+                    var elementClicked = ion(evt,thigraphics.findObjectByProyects,graphics.contextualMenu.show());
                     if (elementClicked != undefined){
                       
                         elementClicked.onClick();
                     }
                     else{
                         console.log("click en el aire");
-                    }
+                    }*/
                 }
             }
             
@@ -634,8 +634,18 @@ IBRS.Graphics = function(){
                     if (elementClicked != undefined){
                         elementClicked=elementClicked.parent;
                         //elementClicked.onElementClick();
-                        graphics.OpenContextualMenu(elementClicked);
-                        contextualMenuOpened = true;
+       
+                        if (elementClicked.logicModel === IBRS.elementSelected){
+                             graphics.contextualMenu.show();
+                             contextualMenuOpened = true;
+                         }else{
+                           
+                             graphics.contextualMenu.hide();
+                             contextualMenuOpened = false;
+                         }
+                       
+                        //graphics.OpenContextualMenu(elementClicked);
+                        //contextualMenuOpened = true;
                     }else{
                         graphics.CloseContextualMenu();
                          contextualMenuOpened = false;
@@ -1427,31 +1437,67 @@ IBRS.CharacterOption = function(code,onOptionClick){
 }
 
 
-IBRS.ContextualMenu = function(logicELement){
+IBRS.ContextualMenu = function(){
     var menu = this;
-    this.element = logicELement;
     this.html = jQuery("<div class='menuContainer'></div>");
 
     this.calculateMenu = function(){
+        console.log("QRVWEtvrwTBERYNERYNERYNE/NYBVER");
+        console.log(IBRS.actualStage);
         switch (IBRS.actualStage) {
             case "animateElements":
-                switch(IBRS.actualDeclarationType){
+                
+                var actionList = [];
+                var activeTeam = false;
+                if (IBRS.elementSelected.getPlayer().playerID === IBRS.Current.Turn.playerID){
+                    activeTeam = true;
+                }
+                console.log(IBRS.Current.DeclarationType);
+                switch(IBRS.Current.DeclarationType){
                     case "firstDeclaration":
+
+                        actionList = 
+                        [IBRS.DEC.MOVE,
+                        IBRS.DEC.DISCOVER,
+                        IBRS.DEC.OPENCLOSE,
+                        IBRS.DEC.DA];
 
                     break;
                     case "secondDeclaration":
-
+                        actionList = 
+                        [IBRS.DEC.MOVE,
+                        IBRS.DEC.DISCOVER,
+                        IBRS.DEC.OPENCLOSE,
+                        IBRS.DEC.CD,
+                        IBRS.DEC.DODGE,
+                        IBRS.DEC.CC];
+                        
                     break;
                     case "firstAro":
-
+                        actionList = 
+                        [IBRS.DEC.CD,
+                        IBRS.DEC.DODGE,
+                        IBRS.DEC.CC,
+                        IBRS.DEC.DISCOVER];
+                   
                     break;
                     case "secondAro":
-
+                        actionList = 
+                        [IBRS.DEC.CD,
+                        IBRS.DEC.DODGE,
+                        IBRS.DEC.CC,
+                        IBRS.DEC.DISCOVER];
+                   
                     break;
                     case "resolutions":
 
                     break;
                 }
+            menu.html.empty();
+            for (var i = 0; i< actionList.length;i++){
+                var tempActionselectior = new IBRS.ActionSelector(IBRS.Current.Order,IBRS.elementSelected,actionList[i]);
+                menu.html.append(tempActionselectior.getHtml());
+            }
             break;
 
             default:
@@ -1459,10 +1505,11 @@ IBRS.ContextualMenu = function(logicELement){
         }
     }
 
-    this.remove = function(){
+    this.hide = function(){
         jQuery("#contextualMenu").empty();
     }
     this.show = function () {
+        console.log("contextual show");
         menu.calculateMenu();
         jQuery("#contextualMenu").append(menu.html);
         //anuimations
@@ -1470,13 +1517,57 @@ IBRS.ContextualMenu = function(logicELement){
 }
 
 
-IBRS.ActionSelector = function(element,tipo){
+IBRS.ActionSelector = function(order,element,tipo){
     var selector = this;
     this.elemento = element;
+    this.order = order;
+    this.html = jQuery("<div class='ActionSelector'></div>");
+    this.iconPath = "";
+    var params = {};
+    console.log(tipo);
     switch(tipo){
-        case  
+        case IBRS.DEC.MOVE:
+            this.iconPath = "img/MOVE.png";
+            this.html.click(function(){
+                params.descriptor = IBRS.DEC.MOVE;
+                params.source = selector.elemento;
+                params.actions = [
+                {type:IBRS.ANIM.MOVE,startTime:0,
+                    endTime:1,
+                    startPosition:selector.elemento.getPosition(),
+                    endPosition:{x:selector.elemento.getPosition().x,
+                                y:selector.elemento.getPosition().y,
+                                z:selector.elemento.getPosition().z+10}}];
+                selector.order.createDeclaration(params,IBRS.Current.DeclarationType);
+            });
+        break;
+        case IBRS.DEC.DISCOVER:
+            iconPath = "img/DISCOVER.png";
+        break;
+        case IBRS.DEC.OPENCLOSE:
+            iconPath = "img/OPENCLOSE.png";
+        break;
+        case IBRS.DEC.CD:
+            iconPath = "img/CD.png";
+        break;
+        case IBRS.DEC.DODGE:
+            iconPath = "img/DODGE.png";
+        break;
+        case IBRS.DEC.CC:
+            iconPath = "img/CC.png";
+        break;
+        case IBRS.DEC.DA:
+            iconPath = "img/DA.png";
+        break;
     }
-   
-    this.html =
+    this.icon = jQuery("<img ActionSelectorIcon src='"+this.iconPath+"'></img>");
+    this.html.append(this.icon);
+
+    this.getHtml = function(){
+        return selector.html;
+    }   
+    
 
 }
+
+

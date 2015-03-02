@@ -813,3 +813,13 @@ top:0%;
   width: 100%;
   height: 20px;
 }
+
+.contextualMenu{
+  height: 50px;
+  width: 300px;
+  background-color: grey;
+}
+
+.ActionSelector{
+   pointer-events:auto;
+}

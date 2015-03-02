@@ -322,12 +322,10 @@ var TargeteableElement = function(){
 
     };
 	this.onElementClick = function(){
-
-       
         targeteableElement.enviroment.selectorCamera.CameraReposition(0,0,0,targeteableElement)  ; 
 	};
 	
-	
+    	
 	
 };
 //

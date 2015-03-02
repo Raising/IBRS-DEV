@@ -50,10 +50,12 @@ jQuery(function(){
 	//TweenMax.to(jQuery("#trace").children()[3],5,{rotationZ:360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
 	//TweenMax.to(jQuery("#trace").children()[4],3.5,{rotationZ:360,scale:1,transformOrigin:"50% 50%",repeat:-1,ease:Linear.easeNone});
 
-	TweenMax.staggerFromTo(jQuery("#trace").children(),4,{scale:0.8,transformOrigin:"50% 50%"},{scale:1.1,yoyo:true,transformOrigin:"50% 50%",repeat:-1,ease:Sine.easeInOut},0.8);
+	TweenMax.fromTo(jQuery("#trace").children()[0],4,{scale:0.8,transformOrigin:"50% 50%"},{scale:1.1,yoyo:true,transformOrigin:"50% 50%",repeat:-1,ease:Sine.easeInOut},0.8);
+	TweenMax.fromTo(jQuery("#trace").children()[1],3,{scale:0.8,transformOrigin:"50% 50%"},{scale:1.1,yoyo:true,transformOrigin:"50% 50%",repeat:-1,ease:Sine.easeInOut},0.8);
 	
 	//boton comenzar reproduccion "play"
 	jQuery("#play_button").click(function(){
+	GraphicEnviroment.initAnimations(currentGame.events);
 		GraphicEnviroment.playGame();
 		return false;
 	});	

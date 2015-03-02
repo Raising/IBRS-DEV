@@ -208,10 +208,10 @@ IBRS.Action = function(declaration){
 
 	this.insertFromData = function(data){
 		action.type= data.type;
-		action.startTime = data.startTime;
-		action.endTime = data.endTime;
-		action.startPosition = data.startPosition;
-		action.endPosition = data.endPosition;
+		action.startTime = data.startTime ? data.startTime : 0;
+		action.endTime = data.endTime ? data.endTime : 1;
+		action.startPosition = data.startPosition ? data.startPosition : {x:0,y:0,z:0};
+		action.endPosition = data.endPosition  ? data.endPosition : {x:0,y:0,z:0};
 	}
 
 	this.animation = function(){
@@ -320,6 +320,7 @@ IBRS.Declaration = function(order){
 	this.html = jQuery("<div class='declarationView'></div>");
 
 	this.getHtml = function(){
+
 		declaration.html.empty().append(declaration.source.name+": "+IBRS.TOOL.declarationTracutor(declaration.descriptor)+" -> ");
 		for (var i = 0;i<declaration.actions.length;i++){
 			
@@ -370,6 +371,20 @@ IBRS.Declaration = function(order){
     					unitNumber : declaration.source.unitNumber};
     	return salida;
 
+    }
+
+
+    this.set = function(params){
+    	declaration.descriptor = params.descriptor;
+    	console.log(params.source);
+    	declaration.source = params.source;//logic unit
+	    if (params.actions){
+	    	for (var i = 0; i< params.actions.length; i++){
+	    		var tempAction = new IBRS.Action(declaration);
+	   			tempAction.insertFromData(params.actions[i]);
+	   			declaration.actions.push(tempAction); 
+	    	}
+	    }	
     }
 
 };
@@ -424,6 +439,7 @@ IBRS.OrderTools = function(Order){
 	this.resolutionsHandler = new IBRS.declarationHandler(Order.resolutions,"resolutions");	
 
 
+
 	this.getHtml = function(){
 		return orderTools.html;
 	}
@@ -438,18 +454,23 @@ IBRS.OrderTools = function(Order){
 		});
 		orderTools.declarationButton.click(function () {
 			orderTools.actionHolder.empty().append(orderTools.firstDeclarationHandler.getHtml());
+			IBRS.Current.DeclarationType = "firstDeclaration";
 		});
 		orderTools.aroButton.click(function () {
 			orderTools.actionHolder.empty().append(orderTools.firstAroHandler.getHtml());
+			IBRS.Current.DeclarationType = "firstAro";
 		});
 		orderTools.declaration2Button.click(function () {
 			orderTools.actionHolder.empty().append(orderTools.secondDeclarationHandler.getHtml());
+			IBRS.Current.DeclarationType = "secondDeclaration";
 		});
 		orderTools.aro2Button.click(function () {
 			orderTools.actionHolder.empty().append(orderTools.secondAroHandler.getHtml());
+			IBRS.Current.DeclarationType = "secondAro";
 		});
 		orderTools.resolutionButton.click(function () {
 			orderTools.actionHolder.empty().append(orderTools.resolutionsHandler.getHtml());
+			IBRS.Current.DeclarationType = "resolutions";
 		});
 	}
 
@@ -519,7 +540,28 @@ IBRS.Order =  function(turn){
 		return tlOrder;
 
 	}
-
+	this.createDeclaration = function(params,type){
+		var declaration = new IBRS.Declaration(order);
+		declaration.set(params);
+		console.log(type);
+		switch (type){
+			case "firstDeclaration":
+				order.firstDeclaration.push(declaration);		
+			break;
+			case "firstAro":
+				order.firstAro.push(declaration);
+			break;
+			case "secondDeclaration":
+				order.secondDeclaration.push(declaration);
+			break;
+			case "secondAro":
+				order.SecondAro.push(declaration);
+			break;
+			case "resolutions":
+				order.resolutions.push(resolution);
+			break;
+		}
+	}
 
 	this.addFirstDeclaration= function( declaration){
 		order.firstDeclaration.push(declaration);

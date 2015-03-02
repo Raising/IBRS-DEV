@@ -24,7 +24,7 @@ IBRS.Current.Game = {unSelect:function(){}};
 IBRS.Current.GameEvents ={unSelect:function(){}};
 IBRS.Current.Turn = {unSelect:function(){}};
 IBRS.Current.Order = {unselect:function(){}};
-
+IBRS.Current.DeclarationType = "";
 IBRS.Current.Declaration_Resolution ={unSelect:function(){}};
 
 
@@ -106,6 +106,11 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	//cambiar el glyficon
 	this.modifyButton = jQuery('<span> E</span>');
 
+	this.getPlayer = function () {
+		return unitLogic.tacticalGroup.army.player;
+	}
+
+	
 
 	this.select =function(){
 		unitLogic.unitGraphic.selected=true;
@@ -128,6 +133,10 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	this.delete = function(){
 		unitLogic.tacticalGroup.removeUnit(unitLogic);
 		unitLogic.tacticalGroup.updateHtml();
+	}
+
+	this.getPosition = function(){
+		return unitLogic.position;
 	}
 
 	this.setHtmlInteractions = function(){
@@ -185,57 +194,57 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 		unitLogic.setHtmlInteractions();
 	};
 
-		this.setPosition = function(x,y,z){
-			unitLogic.position.set(x,y,z);
-			unitLogic.unitGraphic.position.set(x,y,z);
-			unitLogic.updateHtml();
-		};
+	this.setPosition = function(x,y,z){
+		unitLogic.position.set(x,y,z);
+		unitLogic.unitGraphic.position.set(x,y,z);
+		unitLogic.updateHtml();
+	};
 
 
-		this.setRotation = function(x,y,z){
-			unitLogic.rotation.set(x,y,z);
-			unitLogic.unitGraphic.rotation.set(x,y,z);
-			unitLogic.updateHtml();
-		};
+	this.setRotation = function(x,y,z){
+		unitLogic.rotation.set(x,y,z);
+		unitLogic.unitGraphic.rotation.set(x,y,z);
+		unitLogic.updateHtml();
+	};
 
-		this.setStatus = function(newStatus){
-			unitLogic.status = newStatus;
-			unitLogic.unitGraphic.status = newStatus;
-			unitLogic.updateStatusIcon();
-			unitLogic.updateHtml();
-		};
+	this.setStatus = function(newStatus){
+		unitLogic.status = newStatus;
+		unitLogic.unitGraphic.status = newStatus;
+		unitLogic.updateStatusIcon();
+		unitLogic.updateHtml();
+	};
 
 /*		this.updateHtml = function(){
-			unitLogic.unitGraphic.updateHtml();
-		}
+		unitLogic.unitGraphic.updateHtml();
+	}
 */
-		this.updateStatusIcon = function(){
-			var actualStatus = unitLogic.status;
-			console.log(actualStatus);
-			switch( actualStatus){
-				case IBRS.STAT.NORMAL:
-					unitLogic.statusIcon = "img/NORMAL.png";
-					break;
-				case IBRS.STAT.DEATH:
-					unitLogic.statusIcon = "img/DEATH.png";
-					unitLogic.unitGraphic.scale.set(1,0.1,1);
-					break;
-				default:
-					unitLogic.statusIcon = "img/NORMAL.png";
-					break;
-			}
+	this.updateStatusIcon = function(){
+		var actualStatus = unitLogic.status;
+		console.log(actualStatus);
+		switch( actualStatus){
+			case IBRS.STAT.NORMAL:
+				unitLogic.statusIcon = "img/NORMAL.png";
+				break;
+			case IBRS.STAT.DEATH:
+				unitLogic.statusIcon = "img/DEATH.png";
+				unitLogic.unitGraphic.scale.set(1,0.1,1);
+				break;
+			default:
+				unitLogic.statusIcon = "img/NORMAL.png";
+				break;
 		}
+	}
 
-		this.asCamo = function(type){
-			if (type == 1){
-				unitGraphic.tempTexture =  new THREE.ImageUtils.loadTexture("img/Camo.png");
-			}
-			else if (type == 2){
-				unitGraphic.tempTexture =  new THREE.ImageUtils.loadTexture("img/TO.png");
-			}
-			unitGraphic.BaseTextureMap = unitGraphic.tempTexture;
-			
+	this.asCamo = function(type){
+		if (type == 1){
+			unitGraphic.tempTexture =  new THREE.ImageUtils.loadTexture("img/Camo.png");
 		}
+		else if (type == 2){
+			unitGraphic.tempTexture =  new THREE.ImageUtils.loadTexture("img/TO.png");
+		}
+		unitGraphic.BaseTextureMap = unitGraphic.tempTexture;
+		
+	}
 
 	this.loadModelFromDataBase = function(modelID){
 		//carga mediante ayax
@@ -662,6 +671,7 @@ IBRS.Game = function(gameID){
 			game.container[i].empty().append(army.header).append(army.container);
 			army.updateHtml();
 		}
+		game.events.updateHtml();
 	}
 
 	this.loadGameFromDataBase = function(gameID){
