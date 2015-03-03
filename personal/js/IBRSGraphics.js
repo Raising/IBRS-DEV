@@ -514,9 +514,10 @@ IBRS.Graphics = function(){
     this.SetupUpMouseInteraction = function(currentRenderDomElement){
         var mouseIsDown = 0;
         var mouseDownPosition = new THREE.Vector3(0,0,0);
-        var mouseSigleClick = false;
+       
         var contextualMenuOpened = false; 
-      
+        var mouseSigleClick = true;
+
         var mouseDragable = false;
         currentRenderDomElement.addEventListener("mousewheel", graphics.MouseWheelHandler, false);// IE9, Chrome, Safari, Opera  
         currentRenderDomElement.addEventListener("DOMMouseScroll", graphics.MouseWheelHandler, false);// Firefox
@@ -558,9 +559,11 @@ IBRS.Graphics = function(){
 
         currentRenderDomElement.addEventListener('mousemove', function (evt) {
 
-            mouseSigleClick = false;
+           
+            
             //hover sobre opciones
             if(mouseIsDown===0 && contextualMenuOpened === true){
+
                /* var elementHover = graphics.findObjectByProyection(evt,this,graphics.contextualMenu.show());
                 if (elementHover != undefined){
                     graphics.contextualMenu.highLight(elementHover.position.x,elementHover.position.y,elementHover.position.z);
@@ -571,6 +574,9 @@ IBRS.Graphics = function(){
             //giro de camara
             else if (mouseIsDown==3){
                 //turn camera
+                 
+                 mouseSigleClick = false;
+                
                 if (graphics.keyPresed.F4 === false){
                     graphics.CameraReposition(0,
                         0.03*(evt.pageX - mouseDownPosition.x),
@@ -587,6 +593,9 @@ IBRS.Graphics = function(){
             graphics.cameraMoved = true;
             }
              else if (mouseIsDown===1 ){
+                 
+                 mouseSigleClick = false;
+             
                 if (graphics.keyPresed.alt){
                     var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
                     if (position != undefined){
@@ -610,6 +619,7 @@ IBRS.Graphics = function(){
 
 
         currentRenderDomElement.addEventListener('mouseup', function (evt) {
+           //console.log(mouseIsDown,mouseSigleClick);
             if (mouseIsDown==1 && mouseSigleClick==true){ 
                 if (contextualMenuOpened === false){
                    
@@ -628,9 +638,11 @@ IBRS.Graphics = function(){
             }
             
             else if(mouseIsDown==3 && mouseSigleClick==true){ // menu contextual
-                if (contextualMenuOpened ===false){
+                 console.log(contextualMenuOpened);
+                  
+                if (contextualMenuOpened === false){
                     var elementClicked = graphics.findObjectByProyection(evt,this,graphics.tageteableElementsList);
-
+                    console.log(elementClicked.parent.logicModel,IBRS.elementSelected);
                     if (elementClicked != undefined){
                         elementClicked=elementClicked.parent;
                         //elementClicked.onElementClick();
@@ -647,12 +659,12 @@ IBRS.Graphics = function(){
                         //graphics.OpenContextualMenu(elementClicked);
                         //contextualMenuOpened = true;
                     }else{
-                        graphics.CloseContextualMenu();
+                         graphics.contextualMenu.hide();
                          contextualMenuOpened = false;
                     }
                 }
                 else{
-                        graphics.CloseContextualMenu();
+                         graphics.contextualMenu.hide();
                          contextualMenuOpened = false;
                     }
             }
@@ -1494,10 +1506,14 @@ IBRS.ContextualMenu = function(){
                     break;
                 }
             menu.html.empty();
+            var tlMenu = new TimelineMax({paused:false});
             for (var i = 0; i< actionList.length;i++){
-                var tempActionselectior = new IBRS.ActionSelector(IBRS.Current.Order,IBRS.elementSelected,actionList[i]);
-                menu.html.append(tempActionselectior.getHtml());
+                var tempActionselectior = new IBRS.ActionSelector(IBRS.Current.Order,IBRS.elementSelected,actionList[i],menu);
+                var selectorHtml = tempActionselectior.getHtml();
+                menu.html.append(selectorHtml);
+                tlMenu.from(selectorHtml,0.6,{left:'300px',opacity:0,ease:Back.easeOut},i*0.2);
             }
+
             break;
 
             default:
@@ -1517,7 +1533,7 @@ IBRS.ContextualMenu = function(){
 }
 
 
-IBRS.ActionSelector = function(order,element,tipo){
+IBRS.ActionSelector = function(order,element,tipo,menuContextual){
     var selector = this;
     this.elemento = element;
     this.order = order;
@@ -1536,31 +1552,34 @@ IBRS.ActionSelector = function(order,element,tipo){
                     endTime:1,
                     startPosition:selector.elemento.getPosition(),
                     endPosition:{x:selector.elemento.getPosition().x,
-                                y:selector.elemento.getPosition().y,
-                                z:selector.elemento.getPosition().z+10}}];
+                                y:selector.elemento.getPosition().y+10,
+                                z:selector.elemento.getPosition().z}}];
                 selector.order.createDeclaration(params,IBRS.Current.DeclarationType);
+                IBRS.actualDeclarationHandler.getHtml();
+                menuContextual.hide();
             });
         break;
         case IBRS.DEC.DISCOVER:
-            iconPath = "img/DISCOVER.png";
+            this.iconPath = "img/DISCOVER.png";
         break;
         case IBRS.DEC.OPENCLOSE:
-            iconPath = "img/OPENCLOSE.png";
+            this.iconPath = "img/OPENCLOSE.png";
         break;
         case IBRS.DEC.CD:
-            iconPath = "img/CD.png";
+            console.log("icon = CD.png");
+            this.iconPath = "img/CD.png";
         break;
         case IBRS.DEC.DODGE:
-            iconPath = "img/DODGE.png";
+            this.iconPath = "img/DODGE.png";
         break;
         case IBRS.DEC.CC:
-            iconPath = "img/CC.png";
+           this.iconPath = "img/CC.png";
         break;
         case IBRS.DEC.DA:
-            iconPath = "img/DA.png";
+            this.iconPath = "img/DA.png";
         break;
     }
-    this.icon = jQuery("<img ActionSelectorIcon src='"+this.iconPath+"'></img>");
+    this.icon = jQuery("<img class='ActionSelectorIcon' src='"+this.iconPath+"' ></img>");
     this.html.append(this.icon);
 
     this.getHtml = function(){

@@ -1,4 +1,4 @@
-// IBRS Copyright (C) 2014  Ignacio Medina Castillo
+    // IBRS Copyright (C) 2014  Ignacio Medina Castillo
 
 THREE.LapidaGeometry = function (weigth,height,deep,radiusTopCornerProportion) {
 
