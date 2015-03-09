@@ -202,9 +202,43 @@ IBRS.Action = function(declaration){
 	this.html = jQuery("<span></span>");
 	this.getHtml = function(){
 		action.html.empty().append("Start: "+action.startTime+" End: "+action.endTime+" Type:" +action.type);
+		action.html.click(function(){
+			action.modifyInteface();
+		});
 		return action.html;
 	}
 
+	this.modifyInteface =function(graphics){
+		IBRS.Current.Action = action;
+		IBRS.actionActive = true;
+
+		switch (action.type){
+			case IBRS.ANIM.MOVE:
+				//var discoMov = new IBRS.discoMovimiento(action);
+				//graphics.addActionAid(discoMov);
+
+			break;
+			case IBRS.ANIM.SHOOT:
+
+			break;
+		}
+	}
+
+	this.setEndPosition = function (position) {
+		console.log(action.endPosition,position);
+		action.endPosition = {x:position.x,y:position.y,z:position.z};	
+		IBRS.actionActive = false;
+		switch (action.type){
+			case IBRS.ANIM.MOVE:
+				declaration.source.setPosition(position.x,position.y,position.z);
+			break;
+			case IBRS.ANIM.SHOOT:
+
+			break;
+		}
+
+
+	}
 
 	this.insertFromData = function(data){
 		action.type= data.type;
@@ -222,9 +256,13 @@ IBRS.Action = function(declaration){
 			case IBRS.ANIM.DECLARATION: //icono
 			break;
 			case IBRS.ANIM.MOVE://movimiento
-				tlAction.to(action.declaration.source.unitGraphic.position,action.endTime-action.startTime,action.endPosition,action.startTime);
+				tlAction.fromTo(action.declaration.source.unitGraphic.position,action.endTime-action.startTime,action.startPosition,action.endPosition,action.startTime);
 			break;
 			case IBRS.ANIM.SHOOT: 
+				tlAction.from(action.declaration.source.bullet.position,0.1,{x:0,y:0,z:0});
+				tlAction.fromTo(action.declaration.source.bullet.position,action.endTime-action.startTime,action.startPosition,action.endPosition,(action.startTime+0.1));
+				//tlAction.to(action.declaration.source.bullet.bulletMaterial.opacity,0.1,1,0.9);
+		
 			break;
 			case IBRS.ANIM.REGULAR:
 			break;
@@ -326,6 +364,8 @@ IBRS.Declaration = function(order){
 			
 			declaration.html.append(declaration.actions[i].getHtml());
 		}
+
+
 		return declaration.html;
 	}
 

@@ -92,7 +92,7 @@ IBRS.Graphics = function(){
     this.pointer.add(cylinderPointer);
     this.scene.add(this.pointer);
     */    
-
+    this.bulletList = [];
     this.tageteableElementsList = [];//tienen uqe ser objetos 3d de THREE
     this.sceneryElementsList = [];
 
@@ -111,20 +111,27 @@ IBRS.Graphics = function(){
         graphics.scene.remove(graphics.sceneObjects);
         graphics.sceneObjects = new THREE.Object3D();
         graphics.scene.add(graphics.sceneObjects);
-        graphics.addListToScene(game.getMiniatures(),true);
-        graphics.addListToScene(game.getSceneryElementList(),false);
+        graphics.addListToScene(game.getMiniatures(),"targeteable");
+        graphics.addListToScene(game.getSceneryElementList(),"scenery");
+        graphics.addListToScene(game.getBullets(),"bullet");
         
+        console.log(graphics);
     };
 
-    this.addListToScene= function(list,targeteable){
+    this.addListToScene= function(list,kind){
         for (var i=0;i<list.length;i++){
             graphics.sceneObjects.add(list[i]);
-            if (targeteable){
-                graphics.tageteableElementsList.push(list[i]);
-                list[i].setEnviroment(graphics);
-            }
-            else{
-                graphics.sceneryElementsList.push(list[i]);
+            switch (kind){
+                case "targeteable":
+                    graphics.tageteableElementsList.push(list[i]);
+                    list[i].setEnviroment(graphics);
+                break;
+                case "scenery":
+                    graphics.sceneryElementsList.push(list[i]);
+                break;
+                case "bullet":
+                    graphics.bulletList.push(list[i]);
+                break;
             }
 
         }
@@ -531,16 +538,27 @@ IBRS.Graphics = function(){
       
             switch (evt.which) {
                 case 1://left mouse
-                     var elementClicked = graphics.findObjectByProyection(evt,this,graphics.tageteableElementsList);
-                     if (elementClicked != undefined){
-                        elementClicked = elementClicked.parent;
-                        IBRS.elementSelected.unSelect();
-                        IBRS.elementSelected = elementClicked.logicModel;
-                        graphics.actualiceSelection();
-                        IBRS.elementSelected.select();
-                        mouseDragable = true;
-                        //graphics.selectorCamera.CameraReposition(0,0,0,elementClicked)  ;  
-                     }
+                    if (IBRS.actionActive  != true)
+                    {
+                         var elementClicked = graphics.findObjectByProyection(evt,this,graphics.tageteableElementsList);
+                         if (elementClicked != undefined){
+                            elementClicked = elementClicked.parent;
+                            IBRS.elementSelected.unSelect();
+                            IBRS.elementSelected = elementClicked.logicModel;
+                            graphics.actualiceSelection();
+                            IBRS.elementSelected.select();
+                            mouseDragable = true;
+                          
+                         }
+                    }else{
+                        //localizar punto
+                        var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
+                            if (position != undefined){
+                                console.log(position);
+
+                               IBRS.Current.Action.setEndPosition(position);                
+                            } 
+                    }
                     break;
                 case 2://middle mouse
                     
@@ -552,24 +570,13 @@ IBRS.Graphics = function(){
                     alert('You have a strange mouse');
             }
         },false);
-
-
-
-
-
         currentRenderDomElement.addEventListener('mousemove', function (evt) {
-
-           
-            
-            //hover sobre opciones
+            //Mover el raton sin pulsar nada
+            mouseSigleClick = false;
+                
             if(mouseIsDown===0 && contextualMenuOpened === true){
 
-               /* var elementHover = graphics.findObjectByProyection(evt,this,graphics.contextualMenu.show());
-                if (elementHover != undefined){
-                    graphics.contextualMenu.highLight(elementHover.position.x,elementHover.position.y,elementHover.position.z);
-                }else{
-                    graphics.contextualMenu.stopHighLight();
-                }*/
+             
             }
             //giro de camara
             else if (mouseIsDown==3){
@@ -593,25 +600,33 @@ IBRS.Graphics = function(){
             graphics.cameraMoved = true;
             }
              else if (mouseIsDown===1 ){
-                 
-                 mouseSigleClick = false;
-             
-                if (graphics.keyPresed.alt){
-                    var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
-                    if (position != undefined){
-                        var angle = Math.atan2(position.x- IBRS.elementSelected.position.x,position.z-IBRS.elementSelected.position.z);
-                        IBRS.elementSelected.setRotation(0,angle,0);
-                        mouseDragable = false;
-                    }
-                }else if (mouseDragable===true){
-                //intime reposition miniature
-                 var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
-                     if (position != undefined){
-                        IBRS.elementSelected.setPosition(position.x,position.y,position.z);
-                        IBRS.elementSelected.traceNew = true;                        
-                        mouseDragable = true;
-                    }
-                }
+                mouseSigleClick = false;
+                 switch (IBRS.actualStage){
+                    case "defineAction":
+                    break;
+                    case "deployElements":
+                        if (graphics.keyPresed.alt){
+                            var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
+                            if (position != undefined){
+                                var angle = Math.atan2(position.x- IBRS.elementSelected.position.x,position.z-IBRS.elementSelected.position.z);
+                                IBRS.elementSelected.setRotation(0,angle,0);
+                                mouseDragable = false;
+                            }
+                        }else if (mouseDragable===true){
+                        //intime reposition miniature
+                         var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
+                             if (position != undefined){
+                                IBRS.elementSelected.setPosition(position.x,position.y,position.z);
+                                IBRS.elementSelected.traceNew = true;                        
+                                mouseDragable = true;
+                            }
+                        }
+                    break;
+                    case "animateElements":
+                    break;
+
+
+                 }
             }
         },false);
 
@@ -671,10 +686,18 @@ IBRS.Graphics = function(){
             else if(mouseSigleClick===false ){
                 //arrastrar miniatura
                 if (mouseIsDown===1  && mouseDragable===true){
-                    var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
-                     if (position != undefined){
-                        IBRS.elementSelected.setPosition(position.x,position.y,position.z);
-                        mouseDragable = false;
+                    switch (IBRS.actualStage){
+                        case "defineAction":
+                        break;
+                        case "deployElements":
+                            var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
+                             if (position != undefined){
+                                IBRS.elementSelected.setPosition(position.x,position.y,position.z);
+                                mouseDragable = false;
+                            }
+                        break;
+                        case "animateElements":
+                        break;
                     }
                 }
             }
@@ -930,7 +953,19 @@ IBRS.Graphics = function(){
 
 };
 
+IBRS.bulletGraphic = function(unitLogic){
+    BasicElement.call(this);
+    this.bulletGeometry = new THREE.SphereGeometry( 0.5, 12, 12 ); 
+    //opacity: 0.8,transparen2t: true
+    console.log("bulletCreated");
+    this.bulletMaterial = new THREE.MeshBasicMaterial( {color: 0xFF0000,wireframe:false} ); 
+    this.bullet = new THREE.Mesh( this.bulletGeometry, this.bulletMaterial );
+    this.bullet.position.set(0,2.5,0);
+    this.position.set(0,-10,0);
+    this.add(this.bullet);
+}
 
+IBRS.bulletGraphic.prototype = Object.create(BasicElement.prototype);
 
 IBRS.UnitGraphic = function(height,baseDiameter,miniatureTexture,baseTexture,logicModel){
        TargeteableElement.call(this);
@@ -1550,7 +1585,9 @@ IBRS.ActionSelector = function(order,element,tipo,menuContextual){
                 params.actions = [
                 {type:IBRS.ANIM.MOVE,startTime:0,
                     endTime:1,
-                    startPosition:selector.elemento.getPosition(),
+                    startPosition:{x:selector.elemento.getPosition().x,
+                                y:selector.elemento.getPosition().y,
+                                z:selector.elemento.getPosition().z},
                     endPosition:{x:selector.elemento.getPosition().x,
                                 y:selector.elemento.getPosition().y+10,
                                 z:selector.elemento.getPosition().z}}];

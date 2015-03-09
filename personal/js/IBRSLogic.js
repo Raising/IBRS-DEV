@@ -26,6 +26,7 @@ IBRS.Current.Turn = {unSelect:function(){}};
 IBRS.Current.Order = {unselect:function(){}};
 IBRS.Current.DeclarationType = "";
 IBRS.Current.Declaration_Resolution ={unSelect:function(){}};
+IBRS.Current.Action ={unSelect:function(){}};
 
 
 
@@ -93,6 +94,7 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	this.fury = false; // true la  es impetuosa, false no
 	this.active = true; // si aporta o no su orden al grupo
 	this.unitGraphic = new IBRS.UnitGraphic(this.height,this.width,this.bodyTexture,this.baseTexture,this);
+	this.bullet = new IBRS.bulletGraphic(this);
 	this.contextualMenu = new IBRS.ContextualMenu(this);
 	this.status = this.unitGraphic.status;
 	this.name = "no name";
@@ -709,7 +711,19 @@ IBRS.Game = function(gameID){
 		for (var i = game.playerList.length - 1; i >= 0; i--) {
 			for (var j = game.playerList[i].army.tacticalGroupList.length - 1; j >= 0; j--) {
 				for (var k = game.playerList[i].army.tacticalGroupList[j].unitList.length - 1; k >= 0; k--) {
-				unitGraphicList.push(game.playerList[i].army.tacticalGroupList[j].unitList[k].unitGraphic)
+				unitGraphicList.push(game.playerList[i].army.tacticalGroupList[j].unitList[k].unitGraphic);
+					}
+			}
+			
+		}
+		return unitGraphicList;
+	};
+		this.getBullets = function(){
+		var unitGraphicList = [];
+		for (var i = game.playerList.length - 1; i >= 0; i--) {
+			for (var j = game.playerList[i].army.tacticalGroupList.length - 1; j >= 0; j--) {
+				for (var k = game.playerList[i].army.tacticalGroupList[j].unitList.length - 1; k >= 0; k--) {
+					unitGraphicList.push(game.playerList[i].army.tacticalGroupList[j].unitList[k].bullet);
 				}
 			}
 			

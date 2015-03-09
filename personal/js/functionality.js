@@ -204,6 +204,39 @@ jQuery(function(){
 				   
 
 					},
+
+				defineAction : function(){
+					
+					IBRS.actualStage = "defineAction";
+					
+						//quitadas de en medio
+						tl.to(jQuery("#deployTools"),1,{bottom:'-30%'});
+						tl.to(jQuery("#scenery_tray"),1,{top:'-30%'} ,"-=1" );
+						tl.to(jQuery("#frontalSelector"),1,{top:'130%'},"-=1" );		
+						tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'} ,"-=1" );		
+						tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'} ,"-=1" );
+						tl.to(jQuery("#searchTools"),1,{bottom:'-30%'},"-=1"  );
+						tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'},"-=1"  );
+
+						//visibles
+
+						tl.to(jQuery("#leftTroop_tray"),1,{left:'-16%'} );		
+						tl.to(jQuery("#rightTroop_tray"),1,{right:'-16%'},"-=1"  );
+						tl.to(jQuery("#editorTools"),1,{bottom:'-1%'}, "-=1");
+						tl.to(jQuery("#timeTracker"),1,{top:'-1%'},"-=1"  );
+						tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-1" );
+						tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1" );
+						tl.set(jQuery("#canvas"),{visibility:'visible'});
+						tl.to(jQuery("#canvas"),1,{opacity:'1'},"+=0");
+						
+					
+
+					retracted_right = true;
+					retracted_left = true;
+				   
+
+					},
+
 				playGame : function(){
 						
 					IBRS.actualStage = "playGame";
