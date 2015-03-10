@@ -226,6 +226,15 @@ IBRS.Graphics = function(){
         });
     this.initAnimations = function(events){
         graphics.animation = events.animation(updateSlider);
+        for ( var i = 0 ; i< graphics.bulletList.length;i++){
+            graphics.bulletList[i].position.y=-5;
+        }
+        for ( var i = 0 ; i< graphics.tageteableElementsList.length;i++){
+            //console.log(graphics.tageteableElementsList[i].position,graphics.tageteableElementsList[i].logicModel.position);
+            graphics.tageteableElementsList[i].position = graphics.tageteableElementsList[i].logicModel.position;
+        
+        }
+   
       // graphics.animation.resume();
     }
 
@@ -962,6 +971,7 @@ IBRS.bulletGraphic = function(unitLogic){
     this.bullet = new THREE.Mesh( this.bulletGeometry, this.bulletMaterial );
     this.bullet.position.set(0,2.5,0);
     this.position.set(0,-10,0);
+    //TweenLite.to(this.position, 6,{y:-10});
     this.add(this.bullet);
 }
 
@@ -1505,35 +1515,39 @@ IBRS.ContextualMenu = function(){
 
                         actionList = 
                         [IBRS.DEC.MOVE,
-                        IBRS.DEC.DISCOVER,
-                        IBRS.DEC.OPENCLOSE,
-                        IBRS.DEC.DA];
+                      //  IBRS.DEC.DISCOVER,
+                      //  IBRS.DEC.OPENCLOSE,
+                      //  IBRS.DEC.DA
+                      ];
 
                     break;
                     case "secondDeclaration":
                         actionList = 
                         [IBRS.DEC.MOVE,
-                        IBRS.DEC.DISCOVER,
-                        IBRS.DEC.OPENCLOSE,
+                     //   IBRS.DEC.DISCOVER,
+                     //   IBRS.DEC.OPENCLOSE,
                         IBRS.DEC.CD,
-                        IBRS.DEC.DODGE,
-                        IBRS.DEC.CC];
+                     //   IBRS.DEC.DODGE,
+                     //   IBRS.DEC.CC
+                     ];
                         
                     break;
                     case "firstAro":
                         actionList = 
                         [IBRS.DEC.CD,
                         IBRS.DEC.DODGE,
-                        IBRS.DEC.CC,
-                        IBRS.DEC.DISCOVER];
+                      //  IBRS.DEC.CC,
+                       // IBRS.DEC.DISCOVER
+                       ];
                    
                     break;
                     case "secondAro":
                         actionList = 
                         [IBRS.DEC.CD,
                         IBRS.DEC.DODGE,
-                        IBRS.DEC.CC,
-                        IBRS.DEC.DISCOVER];
+                        //IBRS.DEC.CC,
+                        //IBRS.DEC.DISCOVER
+                        ];
                    
                     break;
                     case "resolutions":
@@ -1603,8 +1617,25 @@ IBRS.ActionSelector = function(order,element,tipo,menuContextual){
             this.iconPath = "img/OPENCLOSE.png";
         break;
         case IBRS.DEC.CD:
-            console.log("icon = CD.png");
+        
             this.iconPath = "img/CD.png";
+            this.html.click(function(){
+                params.descriptor =  IBRS.DEC.CD;
+                params.source = selector.elemento;
+                params.actions = [
+                {type:IBRS.ANIM.SHOOT,startTime:0,
+                    endTime:0.3,
+                    startPosition:{x:selector.elemento.getPosition().x,
+                                y:selector.elemento.getPosition().y,
+                                z:selector.elemento.getPosition().z},
+                    endPosition:{x:0,
+                                y:20,
+                                z:0}}];
+                selector.order.createDeclaration(params,IBRS.Current.DeclarationType);
+                IBRS.actualDeclarationHandler.getHtml();
+                menuContextual.hide();
+            });
+
         break;
         case IBRS.DEC.DODGE:
             this.iconPath = "img/DODGE.png";

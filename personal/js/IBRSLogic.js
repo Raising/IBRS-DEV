@@ -141,6 +141,11 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 		return unitLogic.position;
 	}
 
+	this.resetPosition = function(){
+		var positionActual = unitLogic.getPosition();
+		unitLogic.setPosition(positionActual.x,positionActual.y,positionActual.z);
+	}
+
 	this.setHtmlInteractions = function(){
 
 		//click en el boton de eliminar

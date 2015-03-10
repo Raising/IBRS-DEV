@@ -259,8 +259,9 @@ IBRS.Action = function(declaration){
 				tlAction.fromTo(action.declaration.source.unitGraphic.position,action.endTime-action.startTime,action.startPosition,action.endPosition,action.startTime);
 			break;
 			case IBRS.ANIM.SHOOT: 
-				tlAction.from(action.declaration.source.bullet.position,0.1,{x:0,y:0,z:0});
+				tlAction.fromTo(action.declaration.source.bullet.position,0.1,{y:-10},{y:-5},0);	
 				tlAction.fromTo(action.declaration.source.bullet.position,action.endTime-action.startTime,action.startPosition,action.endPosition,(action.startTime+0.1));
+				tlAction.set(action.declaration.source.bullet.position,{y:-5});
 				//tlAction.to(action.declaration.source.bullet.bulletMaterial.opacity,0.1,1,0.9);
 		
 			break;
@@ -282,6 +283,7 @@ IBRS.Action = function(declaration){
 				console.error("animacion no reconocida, codigo de animación invalido");
 			break;
 		}
+
 		return tlAction;
 	}
 
