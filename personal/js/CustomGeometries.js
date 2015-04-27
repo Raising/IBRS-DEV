@@ -369,4 +369,30 @@ var Building = function(frontalTexture,tipo){
 Building.prototype = Object.create(BasicElement.prototype);
 
 
+var DistanceIndicator = function(){
+       BasicElement.call(this);
 
+     this.ranges = {
+     "5cm":{color:0xF98900,radius:5, altura:0.20},
+     "10cm":{color:0xF7AA4C,radius:10, altura:0.15},
+     "15cm":{color:0xF4BF81,radius:15, altura:0.10},
+     "20cm":{color:0xF2EBE3,radius:20, altura:0.05},
+    };
+    this.materiales = {};
+    this.geometryes = {};
+    this.meshes = {};
+
+    for (var distancia in this.ranges){
+        this.materiales[distancia] = new THREE.MeshBasicMaterial( {color: this.ranges[distancia].color,wireframe:false,side:THREE.DoubleSide} );
+        this.geometryes[distancia] = new THREE.CircleGeometry(  this.ranges[distancia].radius,32);
+        this.meshes[distancia] = new THREE.Mesh( this.geometryes[distancia] , this.materiales[distancia] );
+        this.meshes[distancia].position.set(0,0, -this.ranges[distancia].altura);
+        this.rotation.set(Math.PI/2,0,0);
+        this.position.set(0,0.05,0);
+        this.add(this.meshes[distancia]);
+    }
+    
+    
+}
+
+DistanceIndicator.prototype = Object.create(BasicElement.prototype);

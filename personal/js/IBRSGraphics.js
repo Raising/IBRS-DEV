@@ -527,6 +527,30 @@ IBRS.Graphics = function(){
             }
         });
     }
+    this.actionAid = {};
+    // graphics.scene.add(new DistanceIndicator);
+     this.addActionAid = function(type){
+     graphics.scene.remove(graphics.actionAid);
+
+        switch (type){
+            case "distancia":
+                graphics.actionAid = new DistanceIndicator();
+                graphics.scene.add( graphics.actionAid);
+                console.log(IBRS.elementSelected.position);
+               graphics.actionAid.position.set(IBRS.elementSelected.position.x,0.5,IBRS.elementSelected.position.z);
+                console.log("añadiendo Distancia");
+
+            break;
+        }
+      
+       
+      
+    };
+
+    this.removeActionAid = function(){
+        graphics.scene.remove(graphics.actionAid);
+    };
+
     this.SetupUpMouseInteraction = function(currentRenderDomElement){
         var mouseIsDown = 0;
         var mouseDownPosition = new THREE.Vector3(0,0,0);
@@ -564,7 +588,7 @@ IBRS.Graphics = function(){
                         var position = graphics.findPointByProyection(evt,this,graphics.sceneryElementsList);
                             if (position != undefined){
                                 console.log(position);
-
+                                graphics.removeActionAid();
                                IBRS.Current.Action.setEndPosition(position);                
                             } 
                     }

@@ -214,8 +214,9 @@ IBRS.Action = function(declaration){
 
 		switch (action.type){
 			case IBRS.ANIM.MOVE:
-				//var discoMov = new IBRS.discoMovimiento(action);
-				//graphics.addActionAid(discoMov);
+				//var discoMov = new DistanceIndicator();
+				console.log("añadi desde evento");
+				IBRS.actualGraphics.addActionAid("distancia");
 
 			break;
 			case IBRS.ANIM.SHOOT:
@@ -361,7 +362,7 @@ IBRS.Declaration = function(order){
 
 	this.getHtml = function(){
 
-		declaration.html.empty().append(declaration.source.name+": "+IBRS.TOOL.declarationTracutor(declaration.descriptor)+" -> ");
+		declaration.html.empty().append(declaration.source.name+": "+IBRS.TOOL.declarationTracutor(declaration.descriptor)+" => ");
 		for (var i = 0;i<declaration.actions.length;i++){
 			
 			declaration.html.append(declaration.actions[i].getHtml());
