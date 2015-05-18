@@ -3,5 +3,29 @@
 				"Tomcat"],
 "SceneryAvaiable":["IS_BUILDING_A",
 					"IS_CONTAINER_B"
-				]
+				],
+"FactionAvaiable":{
+				"11":{"name":"Panoceania","img":"logos/logos60/logo60_11.png"},
+				"12":{"name":"Acontecimiento","img":"logos/logos60/logo60_12.png"},
+				"13":{"name":"Órdenes Militares","img":"logos/logos60/logo60_13.png"},
+				"14":{"name":"Neoterra","img":"logos/logos60/logo60_14.png"},
+				"21":{"name":"Yu Jing","img":"logos/logos60/logo60_21.png"},
+				"22":{"name":"Servicio Imperial","img":"logos/logos60/logo60_22.png"},
+				"23":{"name":"Sectorial Japonés ","img":"logos/logos60/logo60_23.png"},
+				"31":{"name":"Ariadna","img":"logos/logos60/logo60_31.png"},
+				"32":{"name":"Caledonia","img":"logos/logos60/logo60_32.png"},
+				"33":{"name":"Merovingia","img":"logos/logos60/logo60_33.png"},
+				"41":{"name":"Haqqislam","img":"logos/logos60/logo60_41.png"},
+				"42":{"name":"Hassassin","img":"logos/logos60/logo60_42.png"},
+				"43":{"name":"Qapu khalqi","img":"logos/logos60/logo60_43.png"},
+				"51":{"name":"Nómadas","img":"logos/logos60/logo60_51.png"},
+				"52":{"name":"Corregidor","img":"logos/logos60/logo60_52.png"},
+				"53":{"name":"Bakunin","img":"logos/logos60/logo60_53.png"},
+				"61":{"name":"Ejército Combinado","img":"logos/logos60/logo60_61.png"},
+				"62":{"name":"Morat","img":"logos/logos60/logo60_62.png"},
+				"63":{"name":"Shasvastii","img":"logos/logos60/logo60_63.png"},
+				"71":{"name":"Aleph","img":"logos/logos60/logo60_71.png"},
+				"72":{"name":"Falange de acero","img":"logos/logos60/logo60_72.png"},
+				"81":{"name":"Tohaa","img":"logos/logos60/logo60_81.png"}
+	}
 }

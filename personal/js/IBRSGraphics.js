@@ -528,18 +528,30 @@ IBRS.Graphics = function(){
         });
     }
     this.actionAid = {};
+    this.actionTarget = {};
     // graphics.scene.add(new DistanceIndicator);
      this.addActionAid = function(type){
      graphics.scene.remove(graphics.actionAid);
-
+     console.log("añadiendo visor de distancia");
         switch (type){
             case "distancia":
                 graphics.actionAid = new DistanceIndicator();
+                graphics.actionTarget = new TargetIndicator();
+                  graphics.scene.add( graphics.actionAid);
+                 graphics.scene.add( graphics.actionTarget);
+                  graphics.actionTarget.position.set(IBRS.Current.Action.endPosition.x,IBRS.Current.Action.endPosition.y+3,IBRS.Current.Action.endPosition.z);
+                graphics.actionAid.position.set(IBRS.Current.Action.startPosition.x,0.5,IBRS.Current.Action.startPosition.z);
+              
+            break;
+            case "disparo":
+                console.log("Añadiendo visor de distancias para disparos");
+                graphics.actionAid = new DisparoIndicator();
+                graphics.actionTarget = new TargetIndicator();
                 graphics.scene.add( graphics.actionAid);
-                console.log(IBRS.elementSelected.position);
-               graphics.actionAid.position.set(IBRS.elementSelected.position.x,0.5,IBRS.elementSelected.position.z);
-                console.log("añadiendo Distancia");
-
+                 graphics.scene.add( graphics.actionTarget);
+                  graphics.actionTarget.position.set(IBRS.Current.Action.endPosition.x,IBRS.Current.Action.endPosition.y+3,IBRS.Current.Action.endPosition.z);
+                graphics.actionAid.position.set(IBRS.Current.Action.startPosition.x,0.5,IBRS.Current.Action.startPosition.z);
+                
             break;
         }
       
@@ -548,7 +560,9 @@ IBRS.Graphics = function(){
     };
 
     this.removeActionAid = function(){
+        console.log("removeactionAid");
         graphics.scene.remove(graphics.actionAid);
+        graphics.scene.remove(graphics.actionTarget);
     };
 
     this.SetupUpMouseInteraction = function(currentRenderDomElement){

@@ -383,16 +383,64 @@ var DistanceIndicator = function(){
     this.meshes = {};
 
     for (var distancia in this.ranges){
-        this.materiales[distancia] = new THREE.MeshBasicMaterial( {color: this.ranges[distancia].color,wireframe:false,side:THREE.DoubleSide} );
+        this.materiales[distancia] = new THREE.MeshBasicMaterial( {color: this.ranges[distancia].color,wireframe:false,side:THREE.DoubleSide,opacity: 0.7,transparent: true} );
         this.geometryes[distancia] = new THREE.CircleGeometry(  this.ranges[distancia].radius,32);
         this.meshes[distancia] = new THREE.Mesh( this.geometryes[distancia] , this.materiales[distancia] );
-        this.meshes[distancia].position.set(0,0, -this.ranges[distancia].altura);
-        this.rotation.set(Math.PI/2,0,0);
-        this.position.set(0,0.05,0);
+        this.meshes[distancia].position.set(0, this.ranges[distancia].altura,0);
+        this.meshes[distancia].rotation.set(Math.PI/2,0,0);
+         
         this.add(this.meshes[distancia]);
     }
+   this.position.set(0,0.05,0);
     
     
 }
 
 DistanceIndicator.prototype = Object.create(BasicElement.prototype);
+var DisparoIndicator = function(){
+       BasicElement.call(this);
+
+     this.ranges = {
+     "20cm":{color:0x207cca,radius:20, altura:0.35},
+     "40cm":{color:0x2AD321,radius:40, altura:0.30},
+     "80cm":{color:0xD82222,radius:80, altura:0.20},
+     "120cm":{color:0x3D0E09,radius:120, altura:0.10},
+     
+     };
+    this.materiales = {};
+    this.geometryes = {};
+    this.meshes = {};
+
+    for (var distancia in this.ranges){
+        this.materiales[distancia] = new THREE.MeshBasicMaterial( {color: this.ranges[distancia].color,wireframe:false,side:THREE.DoubleSide,opacity: 0.5,transparent: true} );
+        this.geometryes[distancia] = new THREE.CircleGeometry(  this.ranges[distancia].radius,32);
+        this.meshes[distancia] = new THREE.Mesh( this.geometryes[distancia] , this.materiales[distancia] );
+        this.meshes[distancia].position.set(0, this.ranges[distancia].altura,0);
+        this.meshes[distancia].rotation.set(Math.PI/2,0,0);
+    
+        this.add(this.meshes[distancia]);
+    }
+     this.position.set(0,0.05,0);
+    
+}
+
+DisparoIndicator.prototype = Object.create(BasicElement.prototype);
+
+var TargetIndicator = function(){
+       BasicElement.call(this);
+
+  
+    this.materiales = {};
+    this.geometryes = {};
+    this.meshes = {};
+
+    this.material = new THREE.MeshBasicMaterial( {color: 0xFF3333 ,wireframe:false,side:THREE.DoubleSide} );
+    this.geometry = new THREE.CylinderGeometry(0.5,0.01,1,16);
+    this.mesh =  new THREE.Mesh( this.geometry,  this.material);
+   
+    this.add(this.mesh);
+    
+    this.position.set(0,0.05,0);
+    
+}
+TargetIndicator.prototype = Object.create(BasicElement.prototype);

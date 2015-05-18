@@ -199,7 +199,7 @@ IBRS.Action = function(declaration){
 	this.endTime = 1;
 	this.startPosition = {x:0,y:0,z:0};
 	this.endPosition = {x:0,y:0,z:0};
-	this.html = jQuery("<span></span>");
+	this.html = jQuery("<span class='action'></span>");
 	this.getHtml = function(){
 		action.html.empty().append("Start: "+action.startTime+" End: "+action.endTime+" Type:" +action.type);
 		action.html.click(function(){
@@ -207,21 +207,46 @@ IBRS.Action = function(declaration){
 		});
 		return action.html;
 	}
+	this.unSelect = function(){
+		action.html.removeClass("selected");
+	}
+	this.select = function(){
+		action.html.addClass("selected");
+	}
 
 	this.modifyInteface =function(graphics){
-		IBRS.Current.Action = action;
-		IBRS.actionActive = true;
+		var newselection = true;
+		IBRS.actualGraphics.removeActionAid();
+		if (IBRS.actionActive){
+				IBRS.Current.Action.unSelect();
 
-		switch (action.type){
-			case IBRS.ANIM.MOVE:
-				//var discoMov = new DistanceIndicator();
-				console.log("añadi desde evento");
-				IBRS.actualGraphics.addActionAid("distancia");
+				if (IBRS.Current.Action  === action){
+					IBRS.Current.Action = null;
+					IBRS.actionActive = false;
+					IBRS.actualGraphics.removeActionAid();
+					newselection = false;
+				}
+		}
 
-			break;
-			case IBRS.ANIM.SHOOT:
+		if (newselection===true){
 
-			break;
+			action.select();
+			IBRS.Current.Action = action;
+			IBRS.actionActive = true;
+
+			switch (action.type){
+				case IBRS.ANIM.MOVE:
+					//var discoMov = new DistanceIndicator();
+					
+					IBRS.actualGraphics.addActionAid("distancia");
+
+				break;
+				case IBRS.ANIM.SHOOT:
+					
+					IBRS.actualGraphics.addActionAid("disparo");
+
+				break;
+			}
 		}
 	}
 
@@ -229,12 +254,13 @@ IBRS.Action = function(declaration){
 		console.log(action.endPosition,position);
 		action.endPosition = {x:position.x,y:position.y,z:position.z};	
 		IBRS.actionActive = false;
+		IBRS.actualGraphics.removeActionAid();
 		switch (action.type){
 			case IBRS.ANIM.MOVE:
 				declaration.source.setPosition(position.x,position.y,position.z);
 			break;
 			case IBRS.ANIM.SHOOT:
-
+				//declaration.source.setPosition(position.x,position.y,position.z);
 			break;
 		}
 
@@ -453,12 +479,12 @@ IBRS.OrderTools = function(Order){
 	this.html = jQuery("<div class='orderToolContainer'> </div>");
 	this.buttonHolder =  jQuery("<div class='orderButtonHolder'> </div>");
 	this.actionHolder =  jQuery("<div class='orderActionHolder'> </div>");
-	this.configurationButton = jQuery("<img class='orderToolButton' src='img/Orden_regular.png'> </img>");
+	this.configurationButton = jQuery("<img class='orderToolButton' src='img/reproductor.png'> </img>");
 	this.declarationButton =  jQuery("<img class='orderToolButton' src='img/Orden_regular.png'> </img>");
-	this.aroButton =  jQuery("<img class='orderToolButton' src='img/Orden_regular.png'> </img>");
+	this.aroButton =  jQuery("<img class='orderToolButton' src='img/Orden_regular_inv.png'> </img>");
 	this.declaration2Button = jQuery("<img class='orderToolButton' src='img/Orden_regular.png'> </img>");
-	this.aro2Button = jQuery("<img class='orderToolButton' src='img/Orden_regular.png'> </img>");
-	this.resolutionButton = jQuery("<img class='orderToolButton' src='img/Orden_regular.png'> </img>");
+	this.aro2Button = jQuery("<img class='orderToolButton' src='img/Orden_regular_inv.png'> </img>");
+	this.resolutionButton = jQuery("<img class='orderToolButton' src='img/normal.png'> </img>");
 
 
 
@@ -493,26 +519,32 @@ IBRS.OrderTools = function(Order){
 
 	this.setHtmlInteractions = function(){
 		orderTools.configurationButton.click(function () {
-			// body...
+				orderTools.actionHolder.empty().append("Info: zona de gesion de las acciones realizadas durante las respectivas declaraciones");
+					jQuery(this).parent().children().removeClass("selected");jQuery(this).addClass("selected");
 		});
 		orderTools.declarationButton.click(function () {
 			orderTools.actionHolder.empty().append(orderTools.firstDeclarationHandler.getHtml());
+					jQuery(this).parent().children().removeClass("selected");jQuery(this).addClass("selected");
 			IBRS.Current.DeclarationType = "firstDeclaration";
 		});
 		orderTools.aroButton.click(function () {
 			orderTools.actionHolder.empty().append(orderTools.firstAroHandler.getHtml());
-			IBRS.Current.DeclarationType = "firstAro";
+				jQuery(this).parent().children().removeClass("selected");jQuery(this).addClass("selected");
+				IBRS.Current.DeclarationType = "firstAro";
 		});
 		orderTools.declaration2Button.click(function () {
 			orderTools.actionHolder.empty().append(orderTools.secondDeclarationHandler.getHtml());
+				jQuery(this).parent().children().removeClass("selected");jQuery(this).addClass("selected");
 			IBRS.Current.DeclarationType = "secondDeclaration";
 		});
 		orderTools.aro2Button.click(function () {
 			orderTools.actionHolder.empty().append(orderTools.secondAroHandler.getHtml());
+				jQuery(this).parent().children().removeClass("selected");jQuery(this).addClass("selected");	
 			IBRS.Current.DeclarationType = "secondAro";
 		});
 		orderTools.resolutionButton.click(function () {
 			orderTools.actionHolder.empty().append(orderTools.resolutionsHandler.getHtml());
+					jQuery(this).parent().children().removeClass("selected");jQuery(this).addClass("selected");
 			IBRS.Current.DeclarationType = "resolutions";
 		});
 	}
@@ -539,6 +571,7 @@ IBRS.Order =  function(turn){
 	this.updateHtml = function(){
 		order.container.attr("src", order.icon);
 		order.setHtmlInteractions();
+
 	}
 
 
@@ -546,6 +579,9 @@ IBRS.Order =  function(turn){
 	this.setHtmlInteractions = function(){
 		order.container.click(function(){
 			order.select();
+			jQuery(".order").removeClass("selected");
+			jQuery(this).addClass("selected");
+
 		});
 		order.tools.setHtmlInteractions();
 	}
@@ -598,7 +634,7 @@ IBRS.Order =  function(turn){
 				order.secondDeclaration.push(declaration);
 			break;
 			case "secondAro":
-				order.SecondAro.push(declaration);
+				order.secondAro.push(declaration);
 			break;
 			case "resolutions":
 				order.resolutions.push(resolution);

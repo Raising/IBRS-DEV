@@ -889,6 +889,7 @@ IBRS.TroopThumb = function(troopID){
 IBRS.TroopSearcher = function(){
 	var troopSearcher = this;
 	this.troops = [];
+	this.factions = {};
 	
 
 	this.loadAvaiableTroops = function(){
@@ -900,8 +901,11 @@ IBRS.TroopSearcher = function(){
 				troop.instertInTo(jQuery("#element_tray"));
 			
 			}
-			
-			
+
+			for (var i  in data.FactionAvaiable){
+				troopSearcher.factions[i] = new IBRS.Faction(data.FactionAvaiable[i],i);
+				jQuery("#element_filter").append(troopSearcher.factions[i].getHTML());
+			}	
 	    });
 	};
 
@@ -917,7 +921,18 @@ IBRS.TroopSearcher = function(){
 }
 
 
+IBRS.Faction = function(data, index){
+	var faction = this;
+	this.name = data.name;
+	this.img = data.img;
+	this.index = index;
+	this.html = jQuery('<img id="'+IBRS.getID()+'" href="'+faction.name+'" class="thumb"  src="img/'+faction.img +'" draggable="true"></img>'); 
 
+	this.getHTML = function(){
+		return faction.html;
+
+	}
+}
 
 
 

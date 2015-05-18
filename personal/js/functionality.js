@@ -20,13 +20,14 @@ jQuery(function(){
 	
 	var currentGame = new IBRS.Game();
 	// esa instrucccion debe ser llamada usando los menus del sistema
-	currentGame.loadGameFromDataBase("game02");
+	
+	currentGame.loadGameFromDataBase("gameBase");
 
 	
 
-	setTimeout(function(){
+	/*setTimeout(function(){
 			GraphicEnviroment.insertGameData(currentGame);
-	},4000);
+	},4000);*/
 
 //	GraphicEnviroment.playGame(currentGame.events);
 	
