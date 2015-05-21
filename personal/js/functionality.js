@@ -10,6 +10,7 @@ jQuery(function(){
 				evt.preventDefault();
 			}
 		}  , false); 
+
 	jQuery( document ).ajaxError(function() {
 		console.error("fallo de ayax");
 	});
@@ -433,13 +434,11 @@ jQuery(function(){
 				jQuery("#troopKindSwitch").click(function(){		
 					var searcher = new IBRS.TroopSearcher();
 					searcher.loadAvaiableTroops();
-					
-					
 					return false;
 				});
 
 				jQuery("#sceneryKindSwitch").click(function(){		
-					
+
 					return false;
 				});
 

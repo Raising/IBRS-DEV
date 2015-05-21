@@ -548,8 +548,8 @@ IBRS.Graphics = function(){
                 graphics.actionAid = new DisparoIndicator();
                 graphics.actionTarget = new TargetIndicator();
                 graphics.scene.add( graphics.actionAid);
-                 graphics.scene.add( graphics.actionTarget);
-                  graphics.actionTarget.position.set(IBRS.Current.Action.endPosition.x,IBRS.Current.Action.endPosition.y+3,IBRS.Current.Action.endPosition.z);
+                graphics.scene.add( graphics.actionTarget);
+                graphics.actionTarget.position.set(IBRS.Current.Action.endPosition.x,IBRS.Current.Action.endPosition.y+3,IBRS.Current.Action.endPosition.z);
                 graphics.actionAid.position.set(IBRS.Current.Action.startPosition.x,0.5,IBRS.Current.Action.startPosition.z);
                 
             break;

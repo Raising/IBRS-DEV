@@ -505,7 +505,10 @@ IBRS.Army = function(player){
 	}else{
     	this.side = "right";
     }
+
     this.header = jQuery('<div class="armyHeader '+this.side+'">'+ this.faction +' '+ this.player.name+'</div>');
+
+
 	this.container = jQuery('<div id="'+ this.id+'" class="army '+this.side+' inerShadow"></div>');
 	
 
@@ -866,23 +869,32 @@ IBRS.TableLogic = function(TableModelID){
 	}
 };
 
-IBRS.TroopThumb = function(troopID){
+IBRS.TroopThumb = function(troopID,factionID){
 
     var troopThumb = this;
-    this.id = IBRS.getID();
    
-   	this.name = troopID;
+   	this.factionID = factionID;
+   	this.id = troopID;
    	this.kind = "TroopThumb";
    	
 
 	this.instertInTo = function(container){
+		/*
 		jQuery.getJSON("DataBase/Model/"+troopThumb.name+".json",function(data){  
     		troopThumb.htmlVersion = jQuery('<img id="'+IBRS.getID()+'" href="'+troopThumb.name+'" class="thumb"  src="'+data.bodyTexture +'" draggable="true"></img>');
+			troopThumb.htmlVersion.bind("dragstart" ,function(event){
+			IBRS.dragCatcher =troopThumb;						
+			console.log(IBRS.dragCatcher);
+			});
+	}).success(function(){container.append(troopThumb.htmlVersion);  } );
+		*/
+	/*	jQuery.getJSON("DataBase/Model/unidades_"+troopThumb.factionID+".json",function(data){  
+    		troopThumb.htmlVersion = jQuery('<img id="'+IBRS.getID()+'" href="'+troopThumb.name+'" class="thumb"  src="'+data[troopThumb.id].img +'" draggable="true"></img>');
 			troopThumb.htmlVersion.bind("dragstart" ,function(event){
 			IBRS.dragCatcher =troopThumb;					
 			console.log(IBRS.dragCatcher);
 			});
-	}).success(function(){container.append(troopThumb.htmlVersion);  } );
+	}).success(function(){container.append(troopThumb.htmlVersion);  } );*/
 	}
 }
 
@@ -895,11 +907,11 @@ IBRS.TroopSearcher = function(){
 	this.loadAvaiableTroops = function(){
 		jQuery.getJSON("DataBase/dataAvaiable.json",function(data){  
 		   jQuery("#element_tray").empty();
+
 			for (var i =0;i<data.ModelAvaiable.length;i++){
 				troopSearcher.troops.push(new IBRS.TroopThumb(data.ModelAvaiable[i]));
 				var troop = troopSearcher.troops[i];
 				troop.instertInTo(jQuery("#element_tray"));
-			
 			}
 
 			for (var i  in data.FactionAvaiable){
@@ -926,7 +938,7 @@ IBRS.Faction = function(data, index){
 	this.name = data.name;
 	this.img = data.img;
 	this.index = index;
-	this.html = jQuery('<img id="'+IBRS.getID()+'" href="'+faction.name+'" class="thumb"  src="img/'+faction.img +'" draggable="true"></img>'); 
+	this.html = jQuery('<img id="'+IBRS.getID()+'" alt="'+faction.name+'" class="thumb"  src="img/'+faction.img +'" draggable="true"></img>'); 
 
 	this.getHTML = function(){
 		return faction.html;
