@@ -314,7 +314,7 @@ body{
 }
 
 #element_tray{
-  
+  overflow-y: scroll;
   border-radius: 7px;
 
   width: -moz-calc(100% - 16px);
@@ -649,8 +649,8 @@ top:0%;
 .thumb{
   display:inline;
   border-radius: 5px;
-  height: 50px;
-  width: 50px;
+  height: 42px;
+  width: 42px;
   margin: 4px;
   background-size: contain;
   background-repeat:no-repeat;

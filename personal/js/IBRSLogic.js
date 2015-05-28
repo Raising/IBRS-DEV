@@ -84,8 +84,8 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 	this.isMarker = false;
 	this.traced= false;
 	this.traceNew = false;
-	this.bodyTexture = 'img/empty.jpg';
-	this.baseTexture = 'img/empty.jpg'; // por decidir el formato de almacenamiento
+	this.bodyTexture = 'img/NORMAL.png';
+	this.baseTexture = 'img/NORMAL.png'; // por decidir el formato de almacenamiento
 	this.position = new THREE.Vector3();
 	this.rotation = new THREE.Vector3();
 	this.height = 3;
@@ -252,11 +252,40 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 		unitGraphic.BaseTextureMap = unitGraphic.tempTexture;
 		
 	}
+	this.setSilueta = function(silueta){
+		unitLogic.silueta = silueta;
+		var siluetaTemplate = {
+			"1":{width:2.5,height:2.5},
+			"2":{width:2.5,height:4},
+			"3":{width:4,height:3.2},
+			"4":{width:5.5,height:3.2},
+			"5":{width:4,height:4.5	},
+			"6":{width:4,height:5.5},
+			"7":{width:5.5,height:6.7},
+			"8":{width:5.5,height:5.5}		
+		};
+			unitLogic.height = siluetaTemplate[silueta].height;
+			unitLogic.width = siluetaTemplate[silueta].width;
+
+		
+	}
 
 	this.loadModelFromDataBase = function(modelID){
 		//carga mediante ayax
+		IBRS.Server.GetSingleModel(modelID,function(data){
+			unitLogic.bodyTexture = data.textura;
+			unitLogic.baseTexture = data.icon;
+			unitLogic.setSilueta(data.silueta);
+			unitLogic.unitIcon = data.icon;
+			unitLogic.statusIcon = data.icon;
+			unitLogic.unitGraphic.name = data.nombre;
+			unitLogic.name = data.nombre;
+			unitLogic.unitGraphic.refactor(unitLogic.height,unitLogic.width,unitLogic.bodyTexture,unitLogic.baseTexture);
+		});
+
+		/*
 		jQuery.getJSON("DataBase/Model/"+modelID+".json",function(unitModel){
-			if(IBRS.depurarAyax){console.info("Ajax cargando DataBase/Model/"+modelID+".json");}
+			//if(IBRS.depurarAyax){console.info("Ajax cargando DataBase/Model/"+modelID+".json");}
 			unitLogic.bodyTexture = unitModel.bodyTexture;
 			unitLogic.baseTexture = unitModel.baseTexture;
 			unitLogic.height = unitModel.height;
@@ -267,11 +296,11 @@ IBRS.UnitLogic =  function (tacticalGroup) {
 			unitLogic.name = modelID;
 			unitLogic.unitGraphic.refactor(unitModel.height,unitModel.width,unitModel.bodyTexture,unitModel.baseTexture);
 
-		});
+		});*/
 	};
-	this.insertNewModel = function(name){
+	this.insertNewModel = function(troopID){
 		unitLogic.unitNumber = IBRS.getID();
-		unitLogic.loadModelFromDataBase(name);
+		unitLogic.loadModelFromDataBase(troopID);
 		unitLogic.setPosition(0,-10,0);
 		unitLogic.setRotation(0,0,0);	
 	};
@@ -397,8 +426,9 @@ IBRS.TacticalGroup =  function (army) {
 		
 		switch (IBRS.dragCatcher.kind){
 			case "TroopThumb":
+
 					var newUnit = new IBRS.UnitLogic(tacticalGroup);
-					newUnit.insertNewModel(IBRS.dragCatcher.name);
+					newUnit.insertNewModel(IBRS.dragCatcher.id);
 					tacticalGroup.unitList.push(newUnit);
 					tacticalGroup.updateHtml();
 			break;
@@ -522,7 +552,7 @@ IBRS.Army = function(player){
 					
 					var newGroup = new IBRS.TacticalGroup(army);
 					var newUnit = new IBRS.UnitLogic(newGroup);
-					newUnit.insertNewModel(IBRS.dragCatcher.name);
+					newUnit.insertNewModel(IBRS.dragCatcher.id);
 					newGroup.groupNumber = army.tacticalGroupList.length+1;
 					newGroup.unitList.push(newUnit);
 					army.addGroup(newGroup);
@@ -869,33 +899,29 @@ IBRS.TableLogic = function(TableModelID){
 	}
 };
 
-IBRS.TroopThumb = function(troopID,factionID){
+IBRS.TroopThumb = function(params){
 
     var troopThumb = this;
    
-   	this.factionID = factionID;
-   	this.id = troopID;
+   	this.factionID = params.faccion;
+
+   	this.id = params.id;
+   	this.nombre = params.nombre;
+   	this.perfil = params.perfil;
+   	this.silueta = params.silueta;
+   	this.textura = params.textura;
+   	this.icon = params.icon;
    	this.kind = "TroopThumb";
    	
 
 	this.instertInTo = function(container){
-		/*
-		jQuery.getJSON("DataBase/Model/"+troopThumb.name+".json",function(data){  
-    		troopThumb.htmlVersion = jQuery('<img id="'+IBRS.getID()+'" href="'+troopThumb.name+'" class="thumb"  src="'+data.bodyTexture +'" draggable="true"></img>');
+    		troopThumb.htmlVersion = jQuery('<img id="'+IBRS.getID()+'" alt="'+troopThumb.nombre+'" class="thumb"  src="' +troopThumb.icon +'" draggable="true"></img>');
 			troopThumb.htmlVersion.bind("dragstart" ,function(event){
-			IBRS.dragCatcher =troopThumb;						
-			console.log(IBRS.dragCatcher);
+				IBRS.dragCatcher = troopThumb;						
+				console.log(IBRS.dragCatcher);
 			});
-	}).success(function(){container.append(troopThumb.htmlVersion);  } );
-		*/
-	/*	jQuery.getJSON("DataBase/Model/unidades_"+troopThumb.factionID+".json",function(data){  
-    		troopThumb.htmlVersion = jQuery('<img id="'+IBRS.getID()+'" href="'+troopThumb.name+'" class="thumb"  src="'+data[troopThumb.id].img +'" draggable="true"></img>');
-			troopThumb.htmlVersion.bind("dragstart" ,function(event){
-			IBRS.dragCatcher =troopThumb;					
-			console.log(IBRS.dragCatcher);
-			});
-	}).success(function(){container.append(troopThumb.htmlVersion);  } );*/
-	}
+			container.append(troopThumb.htmlVersion);
+		}
 }
 
 IBRS.TroopSearcher = function(){
@@ -904,41 +930,44 @@ IBRS.TroopSearcher = function(){
 	this.factions = {};
 	
 
-	this.loadAvaiableTroops = function(){
-		jQuery.getJSON("DataBase/dataAvaiable.json",function(data){  
+	this.loadAvaiableTroops = function(data){
 		   jQuery("#element_tray").empty();
-
-			for (var i =0;i<data.ModelAvaiable.length;i++){
-				troopSearcher.troops.push(new IBRS.TroopThumb(data.ModelAvaiable[i]));
+		   troopSearcher.troops = [];
+			for (var i in data){
+				troopSearcher.troops.push(new IBRS.TroopThumb(data[i]));
 				var troop = troopSearcher.troops[i];
 				troop.instertInTo(jQuery("#element_tray"));
 			}
+			console.log( troopSearcher.troops);
 
-			for (var i  in data.FactionAvaiable){
-				troopSearcher.factions[i] = new IBRS.Faction(data.FactionAvaiable[i],i);
-				jQuery("#element_filter").append(troopSearcher.factions[i].getHTML());
-			}	
-	    });
 	};
 
-	this.insertTroops = function(){
-		var container = jQuery("#element_tray");
-	
-		for (var i = 0; i<troopSearcher.troops.length;i++){
-			container.append(troopSearcher.troops[i].getHTML);
-		}
-	}
+	this.loadAvaiableFactions = function(data){
+		   jQuery("#element_filter").empty();
+		   troopSearcher.factions = {};
+
+			for (var i  in data){
+				troopSearcher.factions[i] = new IBRS.Faction(data[i]);
+				jQuery("#element_filter").append(troopSearcher.factions[i].getHTML());
+			}	
+	};
 
 
 }
 
 
-IBRS.Faction = function(data, index){
+IBRS.Faction = function(data){
+	console.log(data);
 	var faction = this;
-	this.name = data.name;
-	this.img = data.img;
-	this.index = index;
-	this.html = jQuery('<img id="'+IBRS.getID()+'" alt="'+faction.name+'" class="thumb"  src="img/'+faction.img +'" draggable="true"></img>'); 
+	this.name = data.nombre;
+	this.img = data.icon;
+	this.id = data.id;
+	//this.index = index;
+	this.html = jQuery('<img id="'+IBRS.getID()+'" alt="'+faction.name+'" class="thumb"  src="'+faction.img +'" draggable="true"></img>'); 
+	
+	this.html.click(function(){
+		IBRS.Server.GetModelsOfFaction(faction.id);
+	});
 
 	this.getHTML = function(){
 		return faction.html;

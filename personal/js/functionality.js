@@ -335,7 +335,11 @@ jQuery(function(){
 				jQuery("#checkSombras").click(toggleShadows);
 				toggleShadows();
 
-				jQuery('#atajo').click(function(){IBRS.stage.animateElements();});
+				jQuery('#atajo').click(function(){
+					//IBRS.Server.GetModelsOfFaction(41);
+					IBRS.stage.animateElements();
+
+				});
 				//IBRS.stage.animateElements();
 
 				// Relacion html con los elementos en el canvas 
@@ -432,8 +436,9 @@ jQuery(function(){
 
 
 				jQuery("#troopKindSwitch").click(function(){		
-					var searcher = new IBRS.TroopSearcher();
-					searcher.loadAvaiableTroops();
+					IBRS.Server.GetFactionList();
+			//		var searcher = new IBRS.TroopSearcher();
+			//		searcher.loadAvaiableTroops();
 					return false;
 				});
 
