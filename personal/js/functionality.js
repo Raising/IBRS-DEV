@@ -78,251 +78,317 @@ jQuery(function(){
 
 	IBRS.actualStage = "startMenu";
 	var tl = new TimelineLite();
+	IBRS.usuario = {};
+	IBRS.usuario.identificado = false;
 	IBRS.stage = {
-				searchGame :function(){
-					//visibles
+	searchGame :function(){
+		//visibles
 
 
-					IBRS.actualStage = "searchGame";
-					
+		IBRS.actualStage = "searchGame";
+		
 
-					tl.set(jQuery("#canvas"),{visibility:'hidden'});
-					tl.to(jQuery("#canvas"),1,{opacity:'0'},"+=0");
-					tl.to(jQuery("#leftTroop_tray"),1,{left:'-30%'},"-=1" );		
-					tl.to(jQuery("#rightTroop_tray"),1,{right:'-30%'},"-=1" );
-					tl.to(jQuery("#scenery_tray"),1,{top:'-30%'} ,"-=1");
-					tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} ,"-=1");
-					tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'} ,"-=1");
-					tl.to(jQuery("#deployTools"),1,{bottom:'-30%'},"-=1");
-					tl.to(jQuery("#timeTracker"),1,{top:'-30%'},"-=1" );
-					
+		tl.set(jQuery("#canvas"),{visibility:'hidden'});
+		tl.to(jQuery("#canvas"),1,{opacity:'0'},"+=0");
+		tl.to(jQuery("#leftTroop_tray"),1,{left:'-30%'},"-=1" );		
+		tl.to(jQuery("#rightTroop_tray"),1,{right:'-30%'},"-=1" );
+		tl.to(jQuery("#scenery_tray"),1,{top:'-30%'} ,"-=1");
+		tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} ,"-=1");
+		tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'} ,"-=1");
+		tl.to(jQuery("#deployTools"),1,{bottom:'-30%'},"-=1");
+		tl.to(jQuery("#timeTracker"),1,{top:'-30%'},"-=1" );
+		
 
-					tl.to(jQuery("#frontalSelector"),2,{top:'-180%'},"-=1");
-					
+		tl.to(jQuery("#frontalSelector"),2,{top:'-180%'},"-=1");
+		
 
-					
-					tl.to(jQuery("#leftGameFilter"),1,{left:'-1%'},"-=0.5" );
+		
+		tl.to(jQuery("#leftGameFilter"),1,{left:'-1%'},"-=0.5" );
 
-					tl.to(jQuery("#rightGameFilter"),1,{right:'-1%'} ,"-=1");
-					tl.to(jQuery("#searchTools"),1,{bottom:'-1%'} ,"-=0");	
-					tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1");
-					tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'} ,"-=1");
-					
-						//no visibles
-					
-					
-				} ,
-				selectElements : function(){
-					//visibles
-					IBRS.actualStage = "selectElements";
-					
-					tl.set(jQuery("#canvas"),{visibility:'hidden'});
-					tl.to(jQuery("#canvas"),1,{opacity:'0'},"+=0");
-					tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'},"-=1" );		
-					tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'},"-=1" );
-					tl.to(jQuery("#searchTools"),1,{bottom:'-30%'},"-=1" );
-					tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} ,"-=1");
-					tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'} ,"-=1");
-					tl.to(jQuery("#deployTools"),1,{bottom:'-30%'} ,"-=1");
-					tl.to(jQuery("#timeTracker"),1,{top:'-30%'} ,"-=1");
-					
-					
-
-
-					tl.to(jQuery("#frontalSelector"),2,{top:'30%'},"-=1" );		
-					tl.to(jQuery("#leftTroop_tray"),1,{left:'-1%'} );	
-					tl.to(jQuery("#rightTroop_tray"),1,{right:'-1%'},"-=1" );
-					tl.to(jQuery("#scenery_tray"),1,{top:'-1%'} ,"-=1");
-						
-					tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1");
-					tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-=1" );
-				
-						//quitadas de en medio
-					
-					retracted_right = false;
-					retracted_left = false;
-					retracted_top = false;
-				    },
-				deployElements : function(){
-						//visibles
-					IBRS.actualStage = "deployElements";
-					IBRS.refreshObjects();
-
-					tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} );
-					tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'},"-=1" );		
-					tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'},"-=1" );
-					tl.to(jQuery("#searchTools"),1,{bottom:'-30%'},"-=1" );
-					tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'},"-=1" );
-					tl.to(jQuery("#timeTracker"),1,{top:'-30%'} ,"-=1");
-					tl.to(jQuery("#frontalSelector"),1,{top:'130%'},"-=1" );	
+		tl.to(jQuery("#rightGameFilter"),1,{right:'-1%'} ,"-=1");
+		tl.to(jQuery("#searchTools"),1,{bottom:'-1%'} ,"-=0");	
+		tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1");
+		tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'} ,"-=1");
+		
+			//no visibles
+		
+		
+	} ,
+	selectElements : function(){
+		//visibles
+		IBRS.actualStage = "selectElements";
+		
+		tl.set(jQuery("#canvas"),{visibility:'hidden'});
+		tl.to(jQuery("#canvas"),1,{opacity:'0'},"+=0");
+		tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'},"-=1" );		
+		tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'},"-=1" );
+		tl.to(jQuery("#searchTools"),1,{bottom:'-30%'},"-=1" );
+		tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} ,"-=1");
+		tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'} ,"-=1");
+		tl.to(jQuery("#deployTools"),1,{bottom:'-30%'} ,"-=1");
+		tl.to(jQuery("#timeTracker"),1,{top:'-30%'} ,"-=1");
+		
+		
 
 
-					tl.to(jQuery("#leftTroop_tray"),1,{left:'-16%'} );		
-					tl.to(jQuery("#rightTroop_tray"),1,{right:'-16%'},"-=1" );
-					tl.to(jQuery("#scenery_tray"),1,{top:'-16%'} ,"-=1");
-					tl.to(jQuery("#deployTools"),1,{bottom:'-1%'},"-=1");
-					tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-=1");
-					tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1" );
-					
-					tl.set(jQuery("#canvas"),{visibility:'visible'});
-					tl.to(jQuery("#canvas"),1,{opacity:'1'},"+=0");
-						
-						//quitadas de en medio
-					
+		tl.to(jQuery("#frontalSelector"),2,{top:'30%'},"-=1" );		
+		tl.to(jQuery("#leftTroop_tray"),1,{left:'-1%'} );	
+		tl.to(jQuery("#rightTroop_tray"),1,{right:'-1%'},"-=1" );
+		tl.to(jQuery("#scenery_tray"),1,{top:'-1%'} ,"-=1");
+			
+		tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1");
+		tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-=1" );
+	
+			//quitadas de en medio
+		
+		retracted_right = false;
+		retracted_left = false;
+		retracted_top = false;
+	    },
+	deployElements : function(){
+			//visibles
+		IBRS.actualStage = "deployElements";
+		IBRS.refreshObjects();
 
-					retracted_right = true;
-					retracted_left = true;
-				    retracted_top = true;
-
-					},
-				animateElements : function(){
-					
-					IBRS.actualStage = "animateElements";
-					
-						//quitadas de en medio
-						tl.to(jQuery("#deployTools"),1,{bottom:'-30%'});
-						tl.to(jQuery("#scenery_tray"),1,{top:'-30%'} ,"-=1" );
-						tl.to(jQuery("#frontalSelector"),1,{top:'130%'},"-=1" );		
-						tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'} ,"-=1" );		
-						tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'} ,"-=1" );
-						tl.to(jQuery("#searchTools"),1,{bottom:'-30%'},"-=1"  );
-						tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'},"-=1"  );
-
-						//visibles
-
-						tl.to(jQuery("#leftTroop_tray"),1,{left:'-16%'} );		
-						tl.to(jQuery("#rightTroop_tray"),1,{right:'-16%'},"-=1"  );
-						tl.to(jQuery("#editorTools"),1,{bottom:'-1%'}, "-=1");
-						tl.to(jQuery("#timeTracker"),1,{top:'-1%'},"-=1"  );
-						tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-1" );
-						tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1" );
-						tl.set(jQuery("#canvas"),{visibility:'visible'});
-						tl.to(jQuery("#canvas"),1,{opacity:'1'},"+=0");
-						
-					
-
-					retracted_right = true;
-					retracted_left = true;
-				   
-
-					},
-
-				defineAction : function(){
-					
-					IBRS.actualStage = "defineAction";
-					
-						//quitadas de en medio
-						tl.to(jQuery("#deployTools"),1,{bottom:'-30%'});
-						tl.to(jQuery("#scenery_tray"),1,{top:'-30%'} ,"-=1" );
-						tl.to(jQuery("#frontalSelector"),1,{top:'130%'},"-=1" );		
-						tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'} ,"-=1" );		
-						tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'} ,"-=1" );
-						tl.to(jQuery("#searchTools"),1,{bottom:'-30%'},"-=1"  );
-						tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'},"-=1"  );
-
-						//visibles
-
-						tl.to(jQuery("#leftTroop_tray"),1,{left:'-16%'} );		
-						tl.to(jQuery("#rightTroop_tray"),1,{right:'-16%'},"-=1"  );
-						tl.to(jQuery("#editorTools"),1,{bottom:'-1%'}, "-=1");
-						tl.to(jQuery("#timeTracker"),1,{top:'-1%'},"-=1"  );
-						tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-1" );
-						tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1" );
-						tl.set(jQuery("#canvas"),{visibility:'visible'});
-						tl.to(jQuery("#canvas"),1,{opacity:'1'},"+=0");
-						
-					
-
-					retracted_right = true;
-					retracted_left = true;
-				   
-
-					},
-
-				playGame : function(){
-						
-					IBRS.actualStage = "playGame";
-						
-
-						//quitadas de en medio
-					tl.to(jQuery("#top_right_corner"),1,{top:'-30%',right:'-30%'});
-					tl.to(jQuery("#deployTools"),1,{bottom:'-30%'},"-=1"  );
-					tl.to(jQuery("#scenery_tray"),1,{top:'-30%'},"-=1"  );
-					tl.to(jQuery("#frontalSelector"),1,{top:'-310%'} ,"-=1" );		
-					tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'} ,"-=1" );		
-					tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'} ,"-=1" );
-					tl.to(jQuery("#searchTools"),1,{bottom:'-30%'} ,"-=1" );
-					tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} ,"-=1" );
+		tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} );
+		tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'},"-=1" );		
+		tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'},"-=1" );
+		tl.to(jQuery("#searchTools"),1,{bottom:'-30%'},"-=1" );
+		tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'},"-=1" );
+		tl.to(jQuery("#timeTracker"),1,{top:'-30%'} ,"-=1");
+		tl.to(jQuery("#frontalSelector"),1,{top:'130%'},"-=1" );	
 
 
-					//visibles
-					tl.to(jQuery("#leftTroop_tray"),1,{left:'-16%'} );		
-					tl.to(jQuery("#rightTroop_tray"),1,{right:'-16%'},"-=1" );
-					tl.to(jQuery("#reproductorTools"),1,{bottom:'-9%'} );
-					tl.to(jQuery("#timeTracker"),1,{top:'-1%'},"-=1"  );
-					tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'} );
-					tl.set(jQuery("#canvas"),{visibility:'visible'});
-					tl.to(jQuery("#canvas"),1,{opacity:'1'},"+=0");
-						
+		tl.to(jQuery("#leftTroop_tray"),1,{left:'-16%'} );		
+		tl.to(jQuery("#rightTroop_tray"),1,{right:'-16%'},"-=1" );
+		tl.to(jQuery("#scenery_tray"),1,{top:'-16%'} ,"-=1");
+		tl.to(jQuery("#deployTools"),1,{bottom:'-1%'},"-=1");
+		tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-=1");
+		tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1" );
+		
+		tl.set(jQuery("#canvas"),{visibility:'visible'});
+		tl.to(jQuery("#canvas"),1,{opacity:'1'},"+=0");
+			
+			//quitadas de en medio
+		
 
-					retracted_right = true;
-					retracted_left = true;
-				   
-					},
-				playEditableGame : function(){
-						//visibles
-					IBRS.actualStage = "playEditableGame";
-						
-					tl.to(jQuery("#top_right_corner"),1,{top:'-30%',right:'-30%'});
-					tl.to(jQuery("#deployTools"),1,{bottom:'-30%'},"-=1"  );
-					tl.to(jQuery("#scenery_tray"),1,{top:'-30%'},"-=1"  );
-					tl.to(jQuery("#frontalSelector"),1,{top:'130%'} ,"-=1" );		
-					tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'} ,"-=1" );		
-					tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'} ,"-=1" );
-					tl.to(jQuery("#searchTools"),1,{bottom:'-30%'} ,"-=1" );
-					tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} ,"-=1" );
+		retracted_right = true;
+		retracted_left = true;
+	    retracted_top = true;
+
+		},
+	animateElements : function(){
+		
+		IBRS.actualStage = "animateElements";
+		
+			//quitadas de en medio
+			tl.to(jQuery("#deployTools"),1,{bottom:'-30%'});
+			tl.to(jQuery("#scenery_tray"),1,{top:'-30%'} ,"-=1" );
+			tl.to(jQuery("#frontalSelector"),1,{top:'130%'},"-=1" );		
+			tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'} ,"-=1" );		
+			tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'} ,"-=1" );
+			tl.to(jQuery("#searchTools"),1,{bottom:'-30%'},"-=1"  );
+			tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'},"-=1"  );
+
+			//visibles
+
+			tl.to(jQuery("#leftTroop_tray"),1,{left:'-16%'} );		
+			tl.to(jQuery("#rightTroop_tray"),1,{right:'-16%'},"-=1"  );
+			tl.to(jQuery("#editorTools"),1,{bottom:'-1%'}, "-=1");
+			tl.to(jQuery("#timeTracker"),1,{top:'-1%'},"-=1"  );
+			tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-1" );
+			tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1" );
+			tl.set(jQuery("#canvas"),{visibility:'visible'});
+			tl.to(jQuery("#canvas"),1,{opacity:'1'},"+=0");
+			
+		
+
+		retracted_right = true;
+		retracted_left = true;
+	   
+
+		},
+
+	defineAction : function(){
+		
+		IBRS.actualStage = "defineAction";
+		
+			//quitadas de en medio
+			tl.to(jQuery("#deployTools"),1,{bottom:'-30%'});
+			tl.to(jQuery("#scenery_tray"),1,{top:'-30%'} ,"-=1" );
+			tl.to(jQuery("#frontalSelector"),1,{top:'130%'},"-=1" );		
+			tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'} ,"-=1" );		
+			tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'} ,"-=1" );
+			tl.to(jQuery("#searchTools"),1,{bottom:'-30%'},"-=1"  );
+			tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'},"-=1"  );
+
+			//visibles
+
+			tl.to(jQuery("#leftTroop_tray"),1,{left:'-16%'} );		
+			tl.to(jQuery("#rightTroop_tray"),1,{right:'-16%'},"-=1"  );
+			tl.to(jQuery("#editorTools"),1,{bottom:'-1%'}, "-=1");
+			tl.to(jQuery("#timeTracker"),1,{top:'-1%'},"-=1"  );
+			tl.to(jQuery("#top_right_corner"),1,{top:'-1%',right:'-1%'},"-1" );
+			tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'},"-=1" );
+			tl.set(jQuery("#canvas"),{visibility:'visible'});
+			tl.to(jQuery("#canvas"),1,{opacity:'1'},"+=0");
+			
+		
+
+		retracted_right = true;
+		retracted_left = true;
+	   
+
+		},
+
+	playGame : function(){
+			
+		IBRS.actualStage = "playGame";
+			
+
+			//quitadas de en medio
+		tl.to(jQuery("#top_right_corner"),1,{top:'-30%',right:'-30%'});
+		tl.to(jQuery("#deployTools"),1,{bottom:'-30%'},"-=1"  );
+		tl.to(jQuery("#scenery_tray"),1,{top:'-30%'},"-=1"  );
+		tl.to(jQuery("#frontalSelector"),1,{top:'-310%'} ,"-=1" );		
+		tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'} ,"-=1" );		
+		tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'} ,"-=1" );
+		tl.to(jQuery("#searchTools"),1,{bottom:'-30%'} ,"-=1" );
+		tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} ,"-=1" );
 
 
-					//visibles
-					tl.to(jQuery("#leftTroop_tray"),1,{left:'-16%'} );		
-					tl.to(jQuery("#rightTroop_tray"),1,{right:'-16%'},"-=1" );
-					tl.to(jQuery("#reproductorTools"),1,{bottom:'-9%'} );
-					tl.to(jQuery("#timeTracker"),1,{top:'-1%'},"-=1"  );
-					tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'} );
-					tl.set(jQuery("#canvas"),{visibility:'visible'});
-					tl.to(jQuery("#canvas"),1,{opacity:'1'},"+=0");
+		//visibles
+		tl.to(jQuery("#leftTroop_tray"),1,{left:'-16%'} );		
+		tl.to(jQuery("#rightTroop_tray"),1,{right:'-16%'},"-=1" );
+		tl.to(jQuery("#reproductorTools"),1,{bottom:'-9%'} );
+		tl.to(jQuery("#timeTracker"),1,{top:'-1%'},"-=1"  );
+		tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'} );
+		tl.set(jQuery("#canvas"),{visibility:'visible'});
+		tl.to(jQuery("#canvas"),1,{opacity:'1'},"+=0");
+			
+
+		retracted_right = true;
+		retracted_left = true;
+	   
+		},
+	playEditableGame : function(){
+			//visibles
+		IBRS.actualStage = "playEditableGame";
+			
+		tl.to(jQuery("#top_right_corner"),1,{top:'-30%',right:'-30%'});
+		tl.to(jQuery("#deployTools"),1,{bottom:'-30%'},"-=1"  );
+		tl.to(jQuery("#scenery_tray"),1,{top:'-30%'},"-=1"  );
+		tl.to(jQuery("#frontalSelector"),1,{top:'130%'} ,"-=1" );		
+		tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'} ,"-=1" );		
+		tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'} ,"-=1" );
+		tl.to(jQuery("#searchTools"),1,{bottom:'-30%'} ,"-=1" );
+		tl.to(jQuery("#editorTools"),1,{bottom:'-30%'} ,"-=1" );
 
 
-					retracted_right = true;
-					retracted_left = true;
-				   
-					},
+		//visibles
+		tl.to(jQuery("#leftTroop_tray"),1,{left:'-16%'} );		
+		tl.to(jQuery("#rightTroop_tray"),1,{right:'-16%'},"-=1" );
+		tl.to(jQuery("#reproductorTools"),1,{bottom:'-9%'} );
+		tl.to(jQuery("#timeTracker"),1,{top:'-1%'},"-=1"  );
+		tl.to(jQuery("#top_left_corner"),1,{top:'-1%',left:'-1%'} );
+		tl.set(jQuery("#canvas"),{visibility:'visible'});
+		tl.to(jQuery("#canvas"),1,{opacity:'1'},"+=0");
 
-				startMenu : function(){
-					IBRS.actualStage = "startMenu";
-					
-						//no visibles
-					tl.set(jQuery("#canvas"),{visibility:'visible'});
-					tl.to(jQuery("#canvas"),1,{opacity:'0'},"+=0");
-					tl.to(jQuery("#leftTroop_tray"),1,{left:'-30%'}, "-=1" );		
-					tl.to(jQuery("#rightTroop_tray"),1,{right:'-30%'},"-=1" );
-					tl.to(jQuery("#scenery_tray"),1,{top:'-30%'},"-=1" );
-					tl.to(jQuery("#top_right_corner"),1,{top:'-30%',right:'-30%'} ,"-=1" );
-					tl.to(jQuery("#top_left_corner"),1,{top:'-30%',left:'-30%'},"-=1"  );
-					tl.to(jQuery("#editorTools"),1,{bottom:'-30%'},"-=1"  );
-					tl.to(jQuery("#deployTools"),1,{bottom:'-30%'} ,"-=1" );
-					
-						
-					tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'} ,"-=1" );		
-					tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'} ,"-=1" );
-					tl.to(jQuery("#searchTools"),1,{bottom:'-30%'} ,"-=1" );
-					tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'} ,"-=1" );
-					tl.to(jQuery("#timeTracker"),1,{top:'-30%'},"-=1"  );
-					tl.to(jQuery("#canvas"),1,{opacity:'0'},"-=1" );
-					
-					tl.to(jQuery("#frontalSelector"),1,{top:'-80%'} );	
-					}
+
+		retracted_right = true;
+		retracted_left = true;
+	   
+		},
+
+	startMenu : function(){
+		IBRS.actualStage = "startMenu";
+		
+			//no visibles
+		tl.set(jQuery("#canvas"),{visibility:'visible'});
+		tl.to(jQuery("#canvas"),1,{opacity:'0'},"+=0");
+		tl.to(jQuery("#leftTroop_tray"),1,{left:'-30%'}, "-=1" );		
+		tl.to(jQuery("#rightTroop_tray"),1,{right:'-30%'},"-=1" );
+		tl.to(jQuery("#scenery_tray"),1,{top:'-30%'},"-=1" );
+		tl.to(jQuery("#top_right_corner"),1,{top:'-30%',right:'-30%'} ,"-=1" );
+		tl.to(jQuery("#top_left_corner"),1,{top:'-30%',left:'-30%'},"-=1"  );
+		tl.to(jQuery("#editorTools"),1,{bottom:'-30%'},"-=1"  );
+		tl.to(jQuery("#deployTools"),1,{bottom:'-30%'} ,"-=1" );
+		
+			
+		tl.to(jQuery("#leftGameFilter"),1,{left:'-30%'} ,"-=1" );		
+		tl.to(jQuery("#rightGameFilter"),1,{right:'-30%'} ,"-=1" );
+		tl.to(jQuery("#searchTools"),1,{bottom:'-30%'} ,"-=1" );
+		tl.to(jQuery("#reproductorTools"),1,{bottom:'-30%'} ,"-=1" );
+		tl.to(jQuery("#timeTracker"),1,{top:'-30%'},"-=1"  );
+		tl.to(jQuery("#canvas"),1,{opacity:'0'},"-=1" );
+		
+		tl.to(jQuery("#frontalSelector"),1,{top:'-80%'} );	
+		}
+	};
+
+	IBRS.Loggin = {
+		open:false,
+		hide:function(){
+			tl.to(jQuery("#logginScreen"),0.75,{right:'-25%',ease:Sine.easeIn},"+=0");
+				IBRS.Loggin.open = false;
+		},
+		show:function(){
+			tl.to(jQuery("#logginScreen"),1.75,{right:'12%',ease:Elastic.easeOut},"+=0");
+				IBRS.Loggin.open = true;
+		},
+		toggle: function(){
+			if (!IBRS.Loggin.open){//abrir
+				if (IBRS.usuario.identificado){}
+				else{
+					IBRS.Loggin.show();
 				}
+			}else{//cerrar
+				IBRS.Loggin.hide();
+			}
+		},
+		login: function(){
+			var user = jQuery("#userInput").val();
+			var password = jQuery("#passwordInput").val();
+			
+			if (user.trim().replace("'","").replace('"','') != ""){
+				if (password.trim().replace("'","").replace('"','') != ""){
+					IBRS.Server.UserLogin(user,password,function(serverReply){
+						if (serverReply != ""){
+							console.log(serverReply);
+							IBRS.Loggin.hide();
+							IBRS.Loggin.recogized(serverReply,user);
+						}else{
+							console.log(serverReply);
+							jQuery("#userInput").val('');
+							jQuery("#passwordInput").val('');
+						}
+					});
+				}
+				else{
+					jQuery("#passwordInput").addClass("error");
+				}
+			}else{
+				jQuery("#userInput").addClass("error");
+			}
+
+
+		},
+		recogized:function(userId,userName){
+			IBRS.usuario.identificado = true;
+			IBRS.usuario.nombre = userName;
+			IBRS.usuario.id = userId;
+			jQuery("#userStatusImage").parent().removeClass("unlogged");
+		},
+		logout:function(){
+			IBRS.usuario.identificado = false;
+			IBRS.usuario.nombre = "";
+			IBRS.usuario.id = "";
+			jQuery("#userStatusImage").parent().removeClass("recogniced");
+		}
+
+
+	};
+
 
 
 				var toggleShadows = function(){
@@ -333,7 +399,7 @@ jQuery(function(){
 					}
 				}
 				jQuery("#checkSombras").click(toggleShadows);
-				toggleShadows();
+				//toggleShadows();
 
 				jQuery('#atajo').click(function(){
 					//IBRS.Server.GetModelsOfFaction(41);
@@ -446,6 +512,18 @@ jQuery(function(){
 
 					return false;
 				});
+
+
+				jQuery("#userStatusImage").click(function(){		
+					IBRS.Loggin.toggle();
+					return false;
+				});
+
+				jQuery("#loginButton").click(function(){		
+					IBRS.Loggin.login();
+					return false;
+				});
+
 
 
 

@@ -39,7 +39,14 @@ IBRS.Server.GetSingleModel = function(modelID,callback){
 }
 
 IBRS.Server.GetGameList = function(params){//params son variables para ser usadas de filtros
-
+   jQuery.ajax({ url: '/IBRS-DEV/personal/php/actions.php',
+         data: {action: 'getGameList'},
+         type: 'post',
+         success: function(output) {
+                  //console.log(output);
+                  callback(JSON.parse(output.replace("\\/","/")));
+         }
+   });
 }
 
 
@@ -65,12 +72,26 @@ IBRS.Server.SaveCurrentGameArea = function(){
 	
 }
 
-IBRS.Server.UserLogin = function(params){// ej: {usuario:r23nf2, password:23f249gun4}
-	
+IBRS.Server.UserLogin = function(user,password,callback){// ej: {usuario:r23nf2, password:23f249gun4}
+	jQuery.ajax({ url: '/IBRS-DEV/personal/php/actions.php',
+         data: {action: 'login',user:user,pasword:password},
+         type: 'post',
+         success: function(output) {
+                  //console.log(output);
+                  callback(output);
+         }
+   });
 }
 
-IBRS.Server.UserRegister = function(params){
-	
+IBRS.Server.UserRegister = function(user,password,email,callback){
+	jQuery.ajax({ url: '/IBRS-DEV/personal/php/actions.php',
+         data: {action: 'register',user:user,pasword:password, email:email},
+         type: 'post',
+         success: function(output) {
+                  //console.log(output);
+                  callback(output);
+         }
+   });
 }
 
 

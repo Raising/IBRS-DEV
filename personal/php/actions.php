@@ -1,6 +1,22 @@
 <?php
 
+
+
 if (isset($_POST["action"])){
+
+	str_replace("world","Peter","Hello world!");
+
+
+	$whitelist = array('var1','var2','var3');
+
+	foreach($_POST as $key => $value) {
+	   // Only handle $_POST keys you expect to receive...
+	  // if (in_array($key, $whitelist)) {
+	      $_POST[$key] = htmlspecialchars($value);
+	    //}
+	}
+
+
 	switch ($_POST["action"]) {
 		case 'getFactionModels':
 			 getFactionModels();	
@@ -13,6 +29,9 @@ if (isset($_POST["action"])){
 			break;
 		case 'free':
 			doQuery();
+		break;
+		case 'login':
+			login();
 		break;
 		default:
 			# code...
@@ -146,7 +165,39 @@ function doQuery()
 }
 
 
+function login(){
+	$servername = "localhost";
+	$username = "ibrs";
+	$password = "infinity006";
+	$dbname = "IBRS";
+	$conn = new mysqli($servername, $username, $password, $dbname);
+	if ($conn->connect_error) {
+		 die("Connection failed: " . $conn->connect_error);
+	} 
+    
+    $sql = "SELECT * from Usuario where nombre = '".$_POST["user"] ."' and password = '".$_POST["password"]."'";
+  
+    $result = $conn->query($sql);
+	
+	
+	if ($result->num_rows == 1) {
+	    // output data of each row
+	    $row = $result->fetch_assoc();
+	    echo $row["UserID"];
+	    
+	} else {
+		echo $result->num_rows;
+	   // echo "ERROR";
+	}
+
+	
+	
+	$conn->close();
+}
+
 // Check connection
+
+
 
 
 ?>

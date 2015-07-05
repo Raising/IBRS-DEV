@@ -59,6 +59,8 @@ ultimoEvento int default 0,
 fechaDeVisualiado date,
 primary key(VisualizacionID));
 
+INSERT INTO Usuario (nombre,email,password, permisos) VALUES ('user', 'free@raising.com', 'pass','b');
+
 
 INSERT INTO Faccion (FaccionID, nombre, icon_path) VALUES ('11', 'Panoceania', 'img/logos/logos60/logo60_11.png');
 INSERT INTO Faccion (FaccionID, nombre, icon_path) VALUES ('12', 'Acontecimiento', 'img/logos/logos60/logo60_12.png');

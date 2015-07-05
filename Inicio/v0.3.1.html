@@ -51,9 +51,12 @@
     		<div id="canvas" class="canvas">
                 <div id="#C2DI_referenceLayer" class="canvas"></div>
             </div>
+
             <input id="checkSombras" type="checkbox"></input>
             <!--FRONTSELECTOR -->
-
+            <div id="userLogin" class= "noAuto topUserButton unlogged">
+                <img id="userStatusImage" src="img/Usuario.png"></img>
+            </div>
     		<div id="frontalSelector" class="noAuto frontalSlider">
 
 
@@ -71,9 +74,7 @@
  	 					</button>
                     <button id="atajo" type="button" > atajo </button>
     				<div id="texto_central">
-					<h3>Infinity Battle Report System   <small>By Raising Spirit</small></h3>
-					<h6>Herramienta de creación y visualización de informes de batalla
-					</h6>
+					<h3>Infinity Battle Report System   <small>By Raising Spirit</small></h3>  
 					</div>
 					<button id="buton_search" type="button"> Buscar Partida ya existente
  	 				</button>
@@ -226,6 +227,24 @@
     			<button id="next_button" type="button" class="control_button"> NEXT
  	 			</button>
     		</div>
+
+
+            <div id="logginScreen" class="noAuto">
+                <div id="loggin">
+                    <div class="row">
+                        <span>Usuario</span><input id="userInput" type="text"></input>
+                    </div> 
+                    <div class="row">
+                        <span>Contraseña</span><input id="passwordInput" type="password"></input>
+                    </div>
+                     <div class="row">
+                         <div id="loginButton" class="buttonLoginScreen">Login</div>
+                        <div id="gotoRegisterButton"  class="buttonLoginScreen">Registrarse</div>
+                    </div>
+                </div>
+                <div id="register"></div>
+                <div id="logout"></div>
+            </div>
     	</div>
 
 
